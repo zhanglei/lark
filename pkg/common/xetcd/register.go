@@ -117,7 +117,7 @@ func (r *RegEtcd) Register() (err error) {
 			case _, ok := <-kresp:
 				r.connected = ok
 				if ok {
-					xlog.Info("续约成功")
+					//xlog.Info("续约成功")
 				} else {
 					xlog.Error("租约失效")
 					r.UnRegisterEtcd()
