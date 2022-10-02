@@ -1,11 +1,12 @@
 sudo vim /etc/hosts
 
-# 通用名称
+# 通用
 10.0.115.108       etcd
 10.0.115.108       redis
 10.0.115.108       mysql
 10.0.115.108       lark.com
-# 授权 auth
+
+# 基础服务器
 10.0.115.108       lark-etcd
 10.0.115.108       lark-mysql-user
 10.0.115.108       lark-mysql-msg
