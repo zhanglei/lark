@@ -6,7 +6,6 @@ require (
 	github.com/Shopify/sarama v1.35.0
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/elastic/go-elasticsearch/v7 v7.17.1
-	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-redis/redis/v9 v9.0.0-beta.2
@@ -18,14 +17,11 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/minio/minio-go/v7 v7.0.34
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
-	github.com/opentracing-contrib/go-gin v0.0.0-20201220185307-1dd2273433a4
 	github.com/opentracing-contrib/go-grpc v0.0.0-20210225150812-73cb765af46e
-	github.com/opentracing-contrib/go-stdlib v1.0.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.13.0
 	github.com/satori/go.uuid v1.2.0
-	github.com/shimingyah/pool v1.0.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.etcd.io/etcd/api/v3 v3.5.4
