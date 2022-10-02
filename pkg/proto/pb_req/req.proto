@@ -1,0 +1,74 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_req;
+option go_package = "./pb_req;pb_req";
+
+enum REQUEST_ROLE
+{
+  UNKNOWN_REQUEST_ROLE = 0;
+  INITIATOR = 1; // 发起者
+  APPROVER = 2; // 审批人
+}
+
+enum REQUEST_HANDLE_RESULT
+{
+  UNKNOWN_HANDLE_RESULT = 0;
+  ACCEPT = 1; // 同意
+  REFUSE = 2; // 拒绝
+}
+
+message NewChatRequestReq {
+  pb_enum.CHAT_TYPE chat_type = 1; // 1:私聊/2:群聊
+  int64 initiator_uid = 2; // 发起人 UID
+  int64 target_id = 3; // 被邀请人UID/群ID
+  string request_msg = 4; // 邀请消息
+}
+
+message NewChatRequestResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+message ChatRequestListReq {
+  string uid = 1;
+  REQUEST_ROLE role = 2; // 角色
+  int32 max_request_id = 3;
+  REQUEST_HANDLE_RESULT handle_result = 4; // 结果
+  int32 page_size = 5;
+}
+
+message ChatRequestListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated ChatRequestInfo list = 3;
+}
+
+message ChatRequestInfo {
+  int64 request_id = 1; // request ID
+  int64 request_ts = 2; // 申请时间
+  pb_enum.CHAT_TYPE chat_type = 3; // 1:私聊/2:群聊
+  int64 initiator_uid = 4; // 发起人 UID
+  int64 target_id = 5; // 被邀请人UID/群ID
+  string request_msg = 6; // request消息
+  REQUEST_HANDLE_RESULT handle_result = 7; // 结果
+  string handle_msg = 8; // 处理消息
+  int64 handled_ts = 9; // 处理时间
+}
+
+message ChatRequestHandlerReq {
+  int64 request_id = 1; // request ID
+  int64 handler_uid = 2; // 处理人 UID
+  REQUEST_HANDLE_RESULT handle_result = 3; // 结果
+  string handle_msg = 4; // 处理消息
+}
+
+message ChatRequestHandlerResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service Request {
+  rpc NewChatRequest(NewChatRequestReq) returns(NewChatRequestResp);
+  rpc ChatRequestList(ChatRequestListReq) returns(ChatRequestListResp);
+  rpc ChatRequestHandler(ChatRequestHandlerReq) returns(ChatRequestHandlerResp);
+}

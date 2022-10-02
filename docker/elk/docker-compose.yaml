@@ -1,0 +1,81 @@
+version: "3"
+services:
+  lark-es:
+    container_name: lark-es
+    hostname: lark-es
+    image: elastic/elasticsearch:7.17.6
+    restart: always
+    user: root
+    ports:
+      - 9200:9200
+    volumes:
+      - ./configs/docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Volumes/data/docket-volumes/elasticsearch/data:/usr/share/elasticsearch/data
+      - /Volumes/data/docket-volumes/elasticsearch/logs:/usr/share/elasticsearch/logs
+    privileged: true
+    environment:
+      - "discovery.type=single-node"
+      - "TAKE_FILE_OWNERSHIP=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "TZ=Asia/Shanghai"
+      - "ELASTIC_PASSWORD=lark2022"
+
+  lark-kibana:
+    container_name: lark-kibana
+    hostname: lark-kibana
+    image: elastic/kibana:7.17.6
+    restart: always
+    ports:
+      - 5601:5601
+    volumes:
+      - ./configs/docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    privileged: true
+    environment:
+      - elasticsearch.hosts=http://lark-es:9200
+      - "TZ=Asia/Shanghai"
+    depends_on:
+      - lark-es
+
+  lark-logstash:
+    container_name: lark-logstash
+    hostname: lark-logstash
+    image: logstash:7.17.6
+    restart: always
+    ports:
+      - 7701:7701
+      - 7702:7702
+      - 7703:7703
+      - 5044:5044
+      - 9600:9600
+    volumes:
+      - ./configs/docker/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      #- /Volumes/data/docket-volumes/logstash/logs:/usr/share/logstash/logs
+      - ./configs/docker/logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      #- ./configs/docker/logstash/certs:/usr/share/logstash/config/certs
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTICSEARCH_HOSTS: http://lark-es:9200
+    depends_on:
+      - lark-es
+
+  lark-filebeat:
+    container_name: lark-filebeat
+    hostname: lark-filebeat
+    image: elastic/filebeat:7.17.6
+    restart: always
+    volumes:
+      - ./configs/docker/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /var/log/lark:/usr/share/filebeat/logs
+      #- ./configs/docker/filebeat/certs:/etc/filebeat/config/certs
+      #- /Volumes/data/docket-volumes/filebeat/containers:/var/lib/docker/containers:ro
+      #- /Volumes/data/docket-volumes/filebeat/docker.sock:/var/run/docker.sock:ro
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+      ELASTICSEARCH_HOSTS: http://lark-es:9200
+    depends_on:
+      - lark-logstash
+      - lark-kibana

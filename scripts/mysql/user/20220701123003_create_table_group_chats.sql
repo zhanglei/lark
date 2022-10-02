@@ -1,0 +1,14 @@
+-- DROP TABLE IF EXISTS `group_chats`;
+-- CREATE TABLE `group_chats` (
+--   `group_chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'chat ID',
+--   `creator_uid` bigint NOT NULL DEFAULT '0' COMMENT '创建者 UID',
+--   `chat_name` varchar(128) NOT NULL DEFAULT '' COMMENT 'chat名称',
+--   `avatar_id` bigint NOT NULL DEFAULT '0' COMMENT '头像ID',
+--   `title` varchar(128) NOT NULL DEFAULT '' COMMENT '标题',
+--   `about` varchar(128) NOT NULL DEFAULT '' COMMENT 'about',
+--   `created_ts` bigint DEFAULT '0',
+--   `updated_ts` bigint DEFAULT '0',
+--   `deleted_ts` bigint DEFAULT '0',
+--   PRIMARY KEY (`group_chat_id`),
+--   UNIQUE KEY `group_chat_id` (`group_chat_id`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

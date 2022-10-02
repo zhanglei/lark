@@ -1,0 +1,17 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+import "pb_msg/msg.proto";
+package pb_mq;
+option go_package = "lark/pkg/proto/pb_mq;pb_mq";
+
+message InboxMessage {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  pb_msg.SrvChatMessage msg = 3;
+}
+
+message UserOnline {
+  int64 uid = 1;
+  pb_enum.PLATFORM_TYPE platform = 2;
+  int32 server_id = 3;
+}

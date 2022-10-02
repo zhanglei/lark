@@ -1,0 +1,11 @@
+version: "3"
+services:
+  imageproxy:
+    image: willnorris/imageproxy
+    container_name: imageproxy
+    command: -baseURL http://lark-minio.com:9000/ -addr 0.0.0.0:8080 -cache s3://us-east/bucket/photos?endpoint=lark-minio.com:9000&disableSSL=1&s3ForcePathStyle=1
+    environment:
+      AWS_ACCESS_KEY_ID: SEv0QKlwqQ36M1eV
+      AWS_SECRET_KEY: sZVZR1RD8Pcy73NANvk6vbMmoDsGSSOk
+    ports:
+      - "8080:8080"

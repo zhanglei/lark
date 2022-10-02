@@ -1,0 +1,21 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+import "pb_msg/msg.proto";
+package pb_push;
+option go_package = "./pb_push;pb_push";
+
+message PushMessageReq {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  pb_msg.SrvChatMessage msg = 3;
+}
+
+message PushMessageResp {
+  int32 code = 1;
+  string msg = 2;
+  bytes data = 3;
+}
+
+service Push {
+  rpc PushMessage(PushMessageReq) returns(PushMessageResp);
+}

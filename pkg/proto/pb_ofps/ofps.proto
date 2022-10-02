@@ -1,0 +1,27 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_ofps;
+option go_package = "./pb_ofps;pb_ofps";
+
+message OfflinePushMessageReq {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  int64 chat_id = 3;
+  repeated OfflinePushMember member = 4;
+  pb_enum.MSG_TYPE msg_type = 5;
+  bytes body = 6;
+}
+
+message OfflinePushMessageResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+message OfflinePushMember {
+  int64 uid = 1;
+  pb_enum.PLATFORM_TYPE platform = 3;
+}
+
+service OfflinePush {
+  rpc OfflinePushMessage(OfflinePushMessageReq) returns(OfflinePushMessageResp);
+}

@@ -1,0 +1,18 @@
+sudo vim /etc/hosts
+
+# 通用名称
+10.0.115.108       etcd
+10.0.115.108       redis
+10.0.115.108       mysql
+10.0.115.108       lark.com
+# 授权 auth
+10.0.115.108       lark-etcd
+10.0.115.108       lark-mysql-user
+10.0.115.108       lark-mysql-msg
+10.0.115.108       lark-mysql_member
+10.0.115.108       lark-mongo-msg
+10.0.115.108       lark-redis
+10.0.115.108       lark-rabbitmq
+10.0.115.108       lark-zookeeper
+10.0.115.108       lark-kafka
+10.0.115.108       lark-minio

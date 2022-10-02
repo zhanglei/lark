@@ -1,0 +1,46 @@
+name: lark_api_gateway
+port: 10080
+log: "./configs/logger.yaml"
+etcd:
+  endpoints: ["lark-etcd:12379"]
+  schema: lark
+  read_timeout: 5000
+  write_timeout: 5000
+  dial_timeout: 5000
+auth_server:
+  name: lark_auth_server
+  cert:
+    cert_file: ./configs/tls/grpc/server.pem
+    enabled: true
+    server_name_override: lark.com
+user_server:
+  name: lark_user_server
+  cert:
+    cert_file: ./configs/tls/grpc/server.pem
+    enabled: true
+    server_name_override: lark.com
+chat_msg_server:
+  name: lark_chat_msg_server
+  cert:
+    cert_file: ./configs/tls/grpc/server.pem
+    enabled: true
+    server_name_override: lark.com
+link_server:
+  name: lark_link_server
+  cert:
+    cert_file: ./configs/tls/grpc/server.pem
+    enabled: true
+    server_name_override: lark.com
+msg_producer:
+  address: ["lark-kafka:9092"]
+  topic: "online_broadcast"
+minio:
+  photo_directory: "/Users/saeipi/Desktop/photos"
+jaeger:
+  host_port: "lark-jaeger:6831"
+  sampler_type: "const"
+  param: 1
+  log_spans: true
+  buffer_flush_interval: 1
+  max_packet_size: 0
+  enabled: true

@@ -1,0 +1,70 @@
+syntax ="proto3";
+package pb_enum;
+option go_package = "lark/pkg/proto/pb_enum;pb_enum";
+
+enum ACCOUNT_TYPE
+{
+  UNKNOWN_ACCOUNT_TYPE = 0;
+  MOBILE = 1; // 手机登录
+  LARK = 2; // lark账户登录
+}
+
+enum TOPIC
+{
+  UNKNOWN_TOPIC = 0;
+  CHAT = 1; // 聊天
+}
+
+enum SUB_TOPIC
+{
+  UNKNOWN_SUB_TOPIC = 0;
+  DEFAULT = 1; // 默认
+}
+
+enum MESSAGE_TYPE
+{
+  NEW = 0;
+  RESP = 1;
+}
+
+enum CHAT_TYPE
+{
+  UNKNOWN_CHAT_TYPE = 0;
+  PRIVATE = 1; // 私聊
+  GROUP = 2; // 群聊
+}
+
+enum PLATFORM_TYPE
+{
+  UNKNOWN_PLATFORM_TYPE = 0;
+  IOS = 1;
+  ANDROID = 2;
+}
+
+enum MSG_FROM
+{
+  UNKNOWN_MSG_FROM = 0;
+  USER = 1; // 用户消息
+  SYSTEM = 2; // 系统消息
+}
+
+enum MSG_TYPE
+{
+  UNKNOWN_MSG_TYPE = 0;
+  TEXT = 1; // 文本
+  POST = 2;
+  IMAGE = 3;
+  FILE = 4;
+  AUDIO = 5;
+  MEDIA = 6;
+  STICKER = 7;
+  INTERACTIVE = 8;
+  SHARE_CHAT = 9;
+  SHARE_USER = 10;
+}
+
+enum MUTE_TYPE
+{
+  CLOSED = 0; // 关闭免打扰
+  OPENED = 1; // 开启免打扰
+}

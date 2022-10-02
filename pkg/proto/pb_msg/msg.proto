@@ -1,0 +1,63 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_msg;
+option go_package = "lark/pkg/proto/pb_msg;pb_msg";
+
+message Packet {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  pb_enum.MESSAGE_TYPE msg_type = 3;
+  bytes data = 4;
+}
+
+message MessageResp {
+  int32 code = 1;
+  string msg = 2;
+  int64 msg_id = 3;
+}
+
+message CliChatMessage {
+  int64 cli_msg_id = 1;
+  int64 sender_id = 2;
+  int64 receiver_id = 3;
+  pb_enum.PLATFORM_TYPE sender_platform = 4;
+  int64 chat_id = 5;
+  pb_enum.CHAT_TYPE chat_type = 6;
+  pb_enum.MSG_TYPE msg_type = 7;
+  bytes body = 8;
+  int64 sent_ts = 9;
+}
+
+message SrvChatMessage {
+  int64 srv_msg_id = 1;
+  int64 cli_msg_id = 2;
+  int64 sender_id = 3;
+  int64 receiver_id = 4;
+  pb_enum.PLATFORM_TYPE sender_platform = 5;
+  string sender_nickname = 6;
+  string sender_avatar_url = 7;
+  int64 chat_id = 8;
+  pb_enum.CHAT_TYPE chat_type = 9;
+  int64 seq_id = 10;
+  pb_enum.MSG_FROM msg_from = 11;
+  pb_enum.MSG_TYPE msg_type = 12;
+  bytes body = 13;
+  int32 status = 14;
+  int64 sent_ts = 15;
+  int64 srv_ts = 16;
+}
+
+message SendChatMessageReq {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  CliChatMessage msg = 3;
+}
+
+message SendChatMessageResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service Message {
+  rpc SendChatMessage(SendChatMessageReq) returns(SendChatMessageResp);
+}

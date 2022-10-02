@@ -1,0 +1,20 @@
+ -- 废弃!!!
+-- DROP TABLE IF EXISTS `chat_invites`;
+-- CREATE TABLE `chat_invites` (
+--   `invite_id` bigint NOT NULL DEFAULT '0' COMMENT 'invite ID',
+--   `invite_ts` bigint DEFAULT '0' COMMENT '邀请时间',
+--   `chat_id` bigint NOT NULL DEFAULT '0' COMMENT 'chat ID',
+--   `chat_type` tinyint(1) DEFAULT '0' COMMENT '1:私聊/2:群聊',
+--   `initiator_uid` bigint NOT NULL DEFAULT '0' COMMENT '发起人 UID',
+--   `invitee_uid`  bigint NOT NULL DEFAULT '0' COMMENT '被邀请人 UID',
+--   `invitation_msg` varchar(255) NOT NULL DEFAULT '' COMMENT '邀请消息',
+--   `handle_result` tinyint(1) DEFAULT '0' COMMENT '结果',
+--   `handle_msg` varchar(255) DEFAULT '' COMMENT '处理消息',
+--   `handled_ts` bigint DEFAULT '0',
+--   `updated_ts` bigint DEFAULT '0',
+--   `deleted_ts` bigint DEFAULT '0',
+--   PRIMARY KEY (`chat_id`),
+--   UNIQUE KEY `chat_id` (`chat_id`),
+--   KEY `id_initiatorUid_handleResult` (`initiator_uid`,`handle_result`),
+--   KEY `id_inviteeUid_handleResult` (`invitee_uid`,`handle_result`)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

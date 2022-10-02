@@ -1,0 +1,46 @@
+version: '2.1'
+services:
+  sync-mysql:
+    image: mysql:8.0.29
+    container_name: sync-mysql
+    restart: always
+    ports:
+      - 53306:3306
+    volumes:
+      - /Volumes/data/docket-volumes/mysql/user/data:/var/lib/mysql
+      - /Volumes/data/docket-volumes/mysql/user/mysql-files:/var/lib/mysql-files
+      - /Volumes/data/docket-volumes/mysql/user/log:/var/log/mysql
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: lark2022
+      MYSQL_USER: lark
+      MYSQL_PASSWORD: lark2022
+      ALLOW_HOST: "%"
+      MYSQL_DATABASE: lark_user
+    command: [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+        '--default-time-zone=+8:00'
+    ]
+  elasticsearch:
+    image: elastic/elasticsearch:7.6.0
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+  sync-kibana:
+    image: elastic/kibana:7.6.0
+    ports:
+      - "5601:5601"

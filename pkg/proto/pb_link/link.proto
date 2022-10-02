@@ -1,0 +1,30 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_link;
+option go_package = "./pb_link;pb_link";
+
+message UserOnlineReq {
+  int64 uid = 1;
+  pb_enum.PLATFORM_TYPE platform = 2;
+  int32 server_id = 3;
+}
+
+message UserOnlineResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+message UserOfflineReq {
+  int64 uid = 1;
+  pb_enum.PLATFORM_TYPE platform = 2;
+}
+
+message UserOfflineResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service Link {
+  rpc UserOnline(UserOnlineReq) returns(UserOnlineResp);
+  rpc UserOffline(UserOfflineReq) returns(UserOfflineResp);
+}

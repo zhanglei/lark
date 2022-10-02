@@ -1,0 +1,20 @@
+syntax ="proto3";
+package pb_invite;
+option go_package = "./pb_invite;pb_invite";
+
+message ChatInviteReq {
+  int64 chat_id = 1; // chat ID
+  int32 chat_type = 2; // 1:私聊/2:群聊
+  int64 initiator_uid = 3; // 发起人 UID
+  int64 invitee_uid = 4; // 被邀请人 UID
+  string invitation_msg = 5; // 邀请消息
+}
+
+message ChatInviteResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service ChatInvite {
+  rpc ChatInvite(ChatInviteReq) returns(ChatInviteResp);
+}

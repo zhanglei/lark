@@ -1,0 +1,88 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_wallet;
+option go_package = "./pb_wallet;pb_wallet";
+
+enum WALLET_TYPE
+{
+  UNKNOWN_WALLET_TYPE = 0;
+  CURRENCY = 1; // 货币 单位(分)
+  DIAMOND = 2; // 砖石
+  GOLD_COIN = 3; // 金币
+  SILVER_COIN = 4; // 银币
+  BRONZE_COIN = 5; // 铜币
+  POINT = 6; // 积分
+}
+
+//查询余额
+message CheckBalanceReq {
+  int64 uid = 1;
+}
+
+message CheckBalanceResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated WalletBalance balances = 3;
+}
+
+message WalletBalance {
+  int64 account_id = 1;
+  WALLET_TYPE wallet_type = 2;
+  int64 balances = 3;
+}
+
+//兑换
+message ExchangeReq {
+  int64 uid = 1;
+  WALLET_TYPE from = 2;
+  WALLET_TYPE to = 3;
+  int64 amount = 4; // from的数量
+}
+
+message ExchangeResp {
+  int64 uid = 1;
+  WALLET_TYPE from = 2;
+  WALLET_TYPE to = 3;
+  int64 quantity = 4; // 兑换金额
+}
+
+//转账
+message TransferReq {
+  WALLET_TYPE wallet_type = 1;
+  int64 from_uid = 2;
+  int64 to_uid = 3;
+  int64 amount = 4; // 转账金额
+}
+
+message TransferResp {
+  WALLET_TYPE wallet_type = 1;
+  int64 from_uid = 2;
+  int64 to_uid = 3;
+  int64 amount = 4; // 转账金额
+}
+
+//充值
+message RechargeReq {
+  int64 uid = 1;
+  WALLET_TYPE wallet_type = 2;
+  int64 amount = 3; // 金额
+}
+
+message RechargeResp{
+  WALLET_TYPE wallet_type = 1;
+  string trade_no = 2; // 订单id
+  int64 amount = 3; // 金额
+  string partnerid = 4; // 商家id
+  string prepayid = 5; //
+  string noncestr = 6; // 随机编码
+  int64 timestamp = 7; // 后台生成的时间戳
+  string sign = 8; // 签名
+  string notify_url = 9;//回调URL
+}
+
+service Wallet {
+  rpc CheckBalance(CheckBalanceReq) returns(CheckBalanceResp);
+  rpc Exchange(ExchangeReq) returns(ExchangeResp);
+  rpc Transfer(TransferReq) returns(TransferResp);
+  rpc Recharge(RechargeReq) returns(RechargeResp);
+}

@@ -1,0 +1,35 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+import "pb_msg/msg.proto";
+package pb_gw;
+option go_package = "./pb_gw;pb_gw";
+
+message OnlinePushMessageReq {
+  pb_enum.TOPIC topic = 1;
+  pb_enum.SUB_TOPIC sub_topic = 2;
+  repeated OnlinePushMember members  = 3;
+  pb_msg.SrvChatMessage msg = 4;
+}
+
+message OnlinePushMessageResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated PlatformPushResp push_resps = 3;
+}
+
+message PlatformPushResp {
+  int32 code = 1;
+  string msg = 2;
+  pb_enum.PLATFORM_TYPE platform = 3;
+}
+
+message OnlinePushMember {
+  int64 uid = 1;
+  int32 server_id = 2;
+  pb_enum.PLATFORM_TYPE platform = 3;
+  pb_enum.MUTE_TYPE mute= 4;
+}
+
+service MessageGateway {
+  rpc OnlinePushMessage(OnlinePushMessageReq) returns(OnlinePushMessageResp);
+}

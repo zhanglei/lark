@@ -1,0 +1,112 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_chat_member;
+option go_package = "./pb_chat_member;pb_chat_member";
+
+message GetChatMemberUidListReq {
+  int64 chat_id = 1;
+}
+
+message GetChatMemberUidListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated int64 list = 3;
+}
+
+message GetChatMemberPushConfigListReq {
+  int64 chat_id = 1;
+}
+
+message GetChatMemberPushConfigListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated ChatMemberPushConfig list = 3;
+}
+
+message GetChatMemberPushConfigReq {
+  int64 chat_id = 1;
+  int64 uid = 2;
+}
+
+message GetChatMemberPushConfigResp {
+  int32 code = 1;
+  string msg = 2;
+  ChatMemberPushConfig config = 3;
+}
+
+
+message GetChatMemberSettingReq {
+  int64 chat_id = 1;
+  int64 uid = 2;
+}
+
+message GetChatMemberSettingResp {
+  int32 code = 1;
+  string msg = 2;
+  string setting = 3;
+}
+
+message GetChatMemberInfoReq {
+  int64 chat_id = 1;
+  int64 uid = 2;
+}
+
+message GetChatMemberInfoResp {
+  int32 code = 1;
+  string msg = 2;
+  ChatMemberInfo info = 3;
+}
+
+message ChatMemberInfo {
+  int64 chat_id = 1;
+  pb_enum.CHAT_TYPE chat_type = 2;
+  int64 uid = 3;
+  string display_name = 4;
+  string avatar_url = 5;
+}
+
+message ChatMemberVerifyReq {
+  int64 chat_id = 1;
+  pb_enum.CHAT_TYPE chat_type = 2;
+  repeated int64 uid_list = 3;
+}
+
+message ChatMemberVerifyResp {
+  int32 code = 1;
+  string msg = 2;
+  bool ok = 3;
+}
+
+message ChatSetting {
+  int32 server_id = 1;
+  repeated int32 platforms = 2;
+}
+
+message ChatMemberOnlineReq {
+  int64 uid = 1;
+  int32 server_id = 2; // 分配的ws服务器
+  pb_enum.PLATFORM_TYPE platform = 3; // 上线终端平台
+}
+
+message ChatMemberOnlineResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service ChatMember {
+  rpc GetChatMemberUidList(GetChatMemberUidListReq) returns (GetChatMemberUidListResp);
+  rpc GetChatMemberPushConfig(GetChatMemberPushConfigReq) returns (GetChatMemberPushConfigResp);
+  rpc GetChatMemberPushConfigList(GetChatMemberPushConfigListReq) returns (GetChatMemberPushConfigListResp);
+  rpc GetChatMemberSetting(GetChatMemberSettingReq) returns (GetChatMemberSettingResp);
+  rpc GetChatMemberInfo(GetChatMemberInfoReq) returns (GetChatMemberInfoResp);
+  rpc ChatMemberVerify(ChatMemberVerifyReq) returns (ChatMemberVerifyResp);
+  rpc ChatMemberOnline(ChatMemberOnlineReq) returns (ChatMemberOnlineResp);
+}
+
+message ChatMemberPushConfig {
+  int64 chat_id = 1;
+  int64 uid = 2;
+  pb_enum.MUTE_TYPE mute = 3;
+  pb_enum.PLATFORM_TYPE platform = 4;
+  int32 server_id = 5;
+}

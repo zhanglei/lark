@@ -1,0 +1,59 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:8.0.29
+    container_name: sync-mysql
+    restart: always
+    ports:
+      - 53306:3306
+    volumes:
+      - /Volumes/data/docket-volumes/mysql/user/data:/var/lib/mysql
+      - /Volumes/data/docket-volumes/mysql/user/mysql-files:/var/lib/mysql-files
+      - /Volumes/data/docket-volumes/mysql/user/log:/var/log/mysql
+    privileged: true
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: lark2022
+      MYSQL_USER: lark
+      MYSQL_PASSWORD: lark2022
+      ALLOW_HOST: "%"
+      MYSQL_DATABASE: lark_user
+    command: [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci',
+        '--default-time-zone=+8:00'
+    ]
+
+  elasticsearch:
+    container_name: elasticsearch
+    hostname: elasticsearch
+    image: elastic/elasticsearch:7.17.6
+    restart: always
+    user: root
+    ports:
+      - 9200:9200
+    volumes:
+      - ./configs/docker/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Volumes/data/docket-volumes/elasticsearch/data:/usr/share/elasticsearch/data
+      - /Volumes/data/docket-volumes/elasticsearch/logs:/usr/share/elasticsearch/logs
+    environment:
+      - "discovery.type=single-node"
+      - "TAKE_FILE_OWNERSHIP=true"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "TZ=Asia/Shanghai"
+      - "ELASTIC_PASSWORD=lark2022"
+
+  kibana:
+    container_name: kibana
+    hostname: kibana
+    image: elastic/kibana:7.17.6
+    restart: always
+    ports:
+      - 5601:5601
+    volumes:
+      - ./configs/docker/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - elasticsearch.hosts=http://10.0.115.108:9200
+      - "TZ=Asia/Shanghai"
+    depends_on:
+      - elasticsearch
