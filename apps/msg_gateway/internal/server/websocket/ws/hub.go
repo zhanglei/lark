@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"runtime"
 	"runtime/debug"
 	"sync"
 	"sync/atomic"
@@ -96,7 +97,7 @@ func (h *Hub) Run() {
 
 	var (
 		index int
-		loop  = 100
+		loop  = runtime.NumCPU() * 2
 	)
 	for index = 0; index < loop; index++ {
 		var (
