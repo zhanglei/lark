@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"google.golang.org/protobuf/proto"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/common/xsnowflake"
@@ -54,6 +55,12 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 		xlog.Warn(ERROR_CODE_MESSAGE_VALIDATOR_ERR, ERROR_MESSAGE_VALIDATOR_ERR, err.Error())
 		return
 	}
+	if err = s.verifyMessage(req); err != nil {
+		setSendChatMessageResp(resp, ERROR_CODE_MESSAGE_VALIDATOR_ERR, ERROR_MESSAGE_VALIDATOR_ERR)
+		xlog.Warn(ERROR_CODE_MESSAGE_VALIDATOR_ERR, ERROR_MESSAGE_VALIDATOR_ERR, err.Error())
+		return
+	}
+
 	// 3、校验是否可以发送消息 & 获取发送人信息
 	if ok = s.verifySession(msg.ChatId, pb_enum.CHAT_TYPE(msg.ChatType), msg.SenderId, msg.ReceiverId); ok == false {
 		setSendChatMessageResp(resp, ERROR_CODE_MESSAGE_VERIFY_IDENTITY_FAILED, ERROR_MESSAGE_VERIFY_IDENTITY_FAILED)
@@ -124,6 +131,52 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 	}
 	if resp.MemberInfo != nil && resp.MemberInfo.Uid > 0 {
 		ok = true
+	}
+	return
+}
+
+func (s *messageService) verifyMessage(req *pb_msg.SendChatMessageReq) (err error) {
+	switch req.Msg.MsgType {
+	case pb_enum.MSG_TYPE_IMAGE:
+		var (
+			body    = new(protocol.Image)
+			content = new(pb_msg.Image)
+		)
+		proto.Unmarshal(req.Msg.Body, content)
+		copier.Copy(body, content)
+		err = s.validate.Struct(body)
+	case pb_enum.MSG_TYPE_FILE:
+		var (
+			body    = new(protocol.File)
+			content = new(pb_msg.File)
+		)
+		proto.Unmarshal(req.Msg.Body, content)
+		copier.Copy(body, content)
+		err = s.validate.Struct(body)
+	case pb_enum.MSG_TYPE_AUDIO:
+		var (
+			body    = new(protocol.Audio)
+			content = new(pb_msg.Audio)
+		)
+		proto.Unmarshal(req.Msg.Body, content)
+		copier.Copy(body, content)
+		err = s.validate.Struct(body)
+	case pb_enum.MSG_TYPE_MEDIA:
+		var (
+			body    = new(protocol.Media)
+			content = new(pb_msg.Media)
+		)
+		proto.Unmarshal(req.Msg.Body, content)
+		copier.Copy(body, content)
+		err = s.validate.Struct(body)
+	case pb_enum.MSG_TYPE_STICKER:
+		var (
+			body    = new(protocol.Sticker)
+			content = new(pb_msg.Sticker)
+		)
+		proto.Unmarshal(req.Msg.Body, content)
+		copier.Copy(body, content)
+		err = s.validate.Struct(body)
 	}
 	return
 }

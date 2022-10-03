@@ -16,3 +16,33 @@ type ChatMessage struct {
 	SentTs         int64  `json:"sent_ts" validate:"required,gte=0"`         // 客户端本地发送时间
 	SrvTs          int64  `json:"srv_ts"`                                    // 服务端接收消息的时间
 }
+
+// 图片 image
+type Image struct {
+	ImageKey string `json:"image_key" validate:"required,min=32,max=36"`
+}
+
+// 文件 file
+type File struct {
+	FileKey  string `json:"file_key" validate:"required,min=32,max=36"`
+	FileName string `json:"file_name" validate:"required"` // 文件名
+}
+
+// 音频 audio
+type Audio struct {
+	FileKey  string `json:"file_key" validate:"required,min=32,max=36"` // 文件key
+	Duration int    `json:"duration" validate:"gt=500"`                 // 时长 毫秒级
+}
+
+// 视频 media
+type Media struct {
+	FileKey  string `json:"file_key" validate:"required,min=32,max=36"`  // 文件key
+	ImageKey string `json:"image_key" validate:"required,min=32,max=36"` // 视频封面图片key
+	FileName string `json:"file_name" validate:"required"`               // 文件名
+	Duration int    `json:"duration" validate:"gt=500"`                  // 视频时长 毫秒级
+}
+
+// 表情包 sticker
+type Sticker struct {
+	FileKey string `json:"file_key" validate:"required,min=32,max=36"` // 文件key
+}

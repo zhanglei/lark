@@ -45,6 +45,31 @@ message SrvChatMessage {
   int64 srv_ts = 14;
 }
 
+message Image {
+  string image_key = 1;
+}
+
+message File {
+  string file_key = 1;
+  string file_name = 2;
+}
+
+message Audio {
+  string file_key = 1;
+  int32 duration = 2;
+}
+
+message Media {
+  string file_key = 1;
+  string image_key = 2;
+  string file_name = 3;
+  int32 duration = 4;
+}
+
+message Sticker {
+  string file_key = 1;
+}
+
 message SendChatMessageReq {
   pb_enum.TOPIC topic = 1;
   pb_enum.SUB_TOPIC sub_topic = 2;
