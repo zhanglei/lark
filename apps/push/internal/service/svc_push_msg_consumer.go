@@ -23,7 +23,7 @@ var (
 )
 
 func init() {
-	isTest = true
+	isTest = false
 	if len(testHashmap) == 0 {
 		for i := 1; i <= 10000; i++ {
 			testHashmap[strconv.Itoa(i)] = fmt.Sprintf("{\"chat_id\":%d,\"uid\":%d,\"mute\":0,\"platform\":1,\"server_id\":1}", 3333336666669999990, i)
@@ -31,7 +31,7 @@ func init() {
 	}
 }
 
-func (s *pushService) MessageHandler(msg []byte, chatId string) (err error) {
+func (s *pushService) MessageHandler(msg []byte, msgKey string) (err error) {
 	var (
 		req     = new(pb_mq.InboxMessage)
 		pushReq *pb_push.PushMessageReq
@@ -56,11 +56,6 @@ func (s *pushService) PushMessage(req *pb_push.PushMessageReq) (err error) {
 	var (
 		conf *pb_chat_member.ChatMemberPushConfig
 	)
-	//conf = s.getChatMemberPushConfig(req.Msg.ChatId, req.Msg.SenderId)
-	//if conf == nil {
-	//	return
-	//}
-	//logic.PushMessageToMembers(req, []*pb_chat_member.ChatMemberPushConfig{conf}, s.privateChatMessagePush)
 	switch req.Msg.ChatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
 		conf = s.getChatMemberPushConfig(req.Msg.ChatId, req.Msg.ReceiverId)
