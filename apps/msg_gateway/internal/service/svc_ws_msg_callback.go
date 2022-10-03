@@ -9,7 +9,7 @@ import (
 	"lark/pkg/utils"
 )
 
-func (s *wsService) sendErrMsg(client *ws.Client, topic pb_enum.TOPIC, subTopic pb_enum.SUB_TOPIC, msgId int64, code int32, msg string) {
+func (s *wsService) replyMessage(client *ws.Client, topic pb_enum.TOPIC, subTopic pb_enum.SUB_TOPIC, msgId int64, code int32, msg string) {
 	var (
 		resp *pb_msg.MessageResp
 		buf  []byte
@@ -42,7 +42,7 @@ func (s *wsService) MessageCallback(msg *ws.Message) {
 	case pb_enum.TOPIC_CHAT:
 		s.dispatchMessage(msg.Client, req)
 	default:
-		s.sendErrMsg(msg.Client,
+		s.replyMessage(msg.Client,
 			req.Topic,
 			req.SubTopic,
 			0,
@@ -65,7 +65,7 @@ func (s *wsService) dispatchMessage(client *ws.Client, req *pb_msg.Packet) {
 	}
 	err = proto.Unmarshal(req.Data, chatMessageReq.Msg)
 	if err != nil {
-		s.sendErrMsg(client,
+		s.replyMessage(client,
 			req.Topic,
 			req.SubTopic,
 			0,
@@ -76,7 +76,7 @@ func (s *wsService) dispatchMessage(client *ws.Client, req *pb_msg.Packet) {
 	}
 	resp = s.msgClient.SendChatMessage(chatMessageReq)
 	if resp == nil {
-		s.sendErrMsg(client,
+		s.replyMessage(client,
 			chatMessageReq.Topic,
 			chatMessageReq.SubTopic,
 			chatMessageReq.Msg.CliMsgId,
@@ -85,15 +85,14 @@ func (s *wsService) dispatchMessage(client *ws.Client, req *pb_msg.Packet) {
 		xlog.Warn(ERROR_CODE_WS_GRPC_SERVICE_FAILURE, ERROR_WS_GRPC_SERVICE_FAILURE)
 		return
 	}
+	s.replyMessage(client,
+		chatMessageReq.Topic,
+		chatMessageReq.SubTopic,
+		chatMessageReq.Msg.CliMsgId,
+		resp.Code,
+		resp.Msg)
 	if resp.Code > 0 {
-		s.sendErrMsg(client,
-			chatMessageReq.Topic,
-			chatMessageReq.SubTopic,
-			chatMessageReq.Msg.CliMsgId,
-			resp.Code,
-			resp.Msg)
 		xlog.Warn(resp.Code, resp.Msg)
 		return
 	}
-	// TODO: 收到消息响应
 }
