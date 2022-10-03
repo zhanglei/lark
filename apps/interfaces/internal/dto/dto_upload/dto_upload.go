@@ -18,3 +18,15 @@ type PresignedReq struct {
 type PresignedResp struct {
 	Url string `form:"url" json:"url"`
 }
+
+type ObjectStorage struct {
+	Bucket      string `json:"bucket"`
+	Key         string `json:"key"`
+	ETag        string `json:"e_tag"`
+	Size        int64  `json:"size"`
+	ContentType string `json:"content_type"`
+	//Format      string `json:"format"`
+	//UUID        string `json:"uuid"`
+	FileName string `json:"file_name"`
+	Tag      string `json:"tag"`
+}

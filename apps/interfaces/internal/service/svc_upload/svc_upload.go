@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"lark/apps/interfaces/internal/config"
 	"lark/apps/interfaces/internal/dto/dto_upload"
+	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xminio"
 	"lark/pkg/constant"
@@ -57,17 +58,45 @@ func (s *uploadService) UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhot
 	switch req.PhotoType {
 	case constant.PHOTO_TYPE_AVATAR:
 		var (
-			new        *utils.NewPhoto
+			photos     *utils.Photos
 			resultList *xminio.PutResultList
+			pr         *xminio.PutResult
+			list       []*dto_upload.ObjectStorage
 		)
-		new = utils.CropAvatar(file, s.cfg.Minio.PhotoDirectory, utils.NewUUID())
-		if new.Error != nil {
+		photos = utils.CropAvatar(file, s.cfg.Minio.PhotoDirectory)
+		if photos.Error != nil {
 			return
 		}
-		resultList = xminio.FPutPhotoListToMinio(new.List)
+		resultList = xminio.FPutPhotoListToMinio(photos)
 		if resultList.Err != nil {
 			return
 		}
+		list = make([]*dto_upload.ObjectStorage, 3)
+		for _, pr = range resultList.List {
+			os := &dto_upload.ObjectStorage{
+				Bucket:      pr.Info.Bucket,
+				Key:         pr.Info.Key,
+				ETag:        pr.Info.ETag,
+				Size:        pr.Info.Size,
+				ContentType: photos.ContentType,
+				FileName:    fileHeader.Filename,
+			}
+			os.Tag = photos.Maps[pr.Info.Key].Tag
+			switch os.Tag {
+			case "small":
+				list[0] = os
+			case "medium":
+				list[1] = os
+			case "large":
+				list[2] = os
+			}
+			path := photos.Maps[pr.Info.Key].Path
+			xgopool.Go(func() {
+				utils.Remove(path)
+			})
+		}
+		// TODO:入库
+		resp.Data = list
 	}
 	return
 }

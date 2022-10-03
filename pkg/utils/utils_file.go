@@ -133,3 +133,8 @@ func (l *LimitedReaderWithError) Read(p []byte) (int, error) {
 	}
 	return n, err
 }
+
+func Remove(name string) (err error) {
+	fmt.Println(name)
+	return os.Remove(name)
+}

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func GetGetUUID(t *testing.T) {
+func TestGetGetUUID(t *testing.T) {
 	id := NewUUID()
 	fmt.Println(id)
 }

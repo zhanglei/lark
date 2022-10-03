@@ -35,7 +35,7 @@ msg_producer:
   address: ["lark-kafka:9092"]
   topic: "online_broadcast"
 minio:
-  photo_directory: "/Users/saeipi/Desktop/photos"
+  photo_directory: "/Users/saeipi/Desktop/photos/"
 jaeger:
   host_port: "lark-jaeger:6831"
   sampler_type: "const"

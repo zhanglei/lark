@@ -22,7 +22,7 @@ func (ctrl *UploadCtrl) UploadPhoto(ctx *gin.Context) {
 		resp   *xhttp.Resp
 		err    error
 	)
-	if err = ctx.BindJSON(params); err != nil {
+	if err = ctx.Bind(&params); err != nil {
 		xhttp.Error(ctx, xhttp.ERROR_CODE_HTTP_REQ_DESERIALIZE_FAILED, xhttp.ERROR_HTTP_REQ_DESERIALIZE_FAILED)
 		xlog.Warn(xhttp.ERROR_CODE_HTTP_REQ_DESERIALIZE_FAILED, xhttp.ERROR_HTTP_REQ_DESERIALIZE_FAILED, err.Error())
 		return
