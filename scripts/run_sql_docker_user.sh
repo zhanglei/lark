@@ -5,7 +5,7 @@ MYSQL_HOST="127.0.0.1"
 MYSQL_PORT=13306
 MYSQL_DB="lark_user"
 
-folder="mysql/user"
+folder="mysql/lark_user/sqls"
 
 for file in ${folder}/*
 do
