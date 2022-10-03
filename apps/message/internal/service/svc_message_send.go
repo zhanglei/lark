@@ -73,6 +73,9 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 	inbox.Msg.MsgFrom = pb_enum.MSG_FROM_USER
 	inbox.Msg.SenderNickname = memberInfo.DisplayName
 	inbox.Msg.SenderAvatarUrl = memberInfo.AvatarUrl
+	if req.Msg.ChatType == pb_enum.CHAT_TYPE_GROUP {
+		inbox.Msg.ReceiverId = 0
+	}
 
 	// 5、将消息推送到kafka消息队列
 	_, _, err = s.producer.EnQueue(inbox, utils.Int64ToStr(inbox.Msg.ChatId))
