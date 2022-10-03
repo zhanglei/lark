@@ -29,11 +29,11 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 			SubTopic: req.SubTopic,
 			Msg:      new(pb_msg.SrvChatMessage),
 		}
-		memberInfo *pb_chat_member.ChatMemberInfo
-		ok         bool
-		seqId      int64
-		key        string
-		err        error
+		//memberInfo *pb_chat_member.ChatMemberInfo
+		ok    bool
+		seqId int64
+		key   string
+		err   error
 	)
 	// 1、重复消息校验
 	key = constant.RK_MSG_CLI_MSG_ID + utils.Int64ToStr(req.Msg.ChatId) + ":" + utils.Int64ToStr(req.Msg.CliMsgId)
@@ -55,7 +55,7 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 		return
 	}
 	// 3、校验是否可以发送消息 & 获取发送人信息
-	if memberInfo, ok = s.verifySession(msg.ChatId, pb_enum.CHAT_TYPE(msg.ChatType), msg.SenderId, msg.ReceiverId); ok == false {
+	if ok = s.verifySession(msg.ChatId, pb_enum.CHAT_TYPE(msg.ChatType), msg.SenderId, msg.ReceiverId); ok == false {
 		setSendChatMessageResp(resp, ERROR_CODE_MESSAGE_VERIFY_IDENTITY_FAILED, ERROR_MESSAGE_VERIFY_IDENTITY_FAILED)
 		xlog.Warn(ERROR_CODE_MESSAGE_VERIFY_IDENTITY_FAILED, ERROR_MESSAGE_VERIFY_IDENTITY_FAILED)
 		return
@@ -71,8 +71,6 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 	inbox.Msg.SeqId = seqId
 	inbox.Msg.SrvTs = utils.NowMilli()
 	inbox.Msg.MsgFrom = pb_enum.MSG_FROM_USER
-	inbox.Msg.SenderNickname = memberInfo.DisplayName
-	inbox.Msg.SenderAvatarUrl = memberInfo.AvatarUrl
 	if req.Msg.ChatType == pb_enum.CHAT_TYPE_GROUP {
 		inbox.Msg.ReceiverId = 0
 	}
@@ -87,8 +85,7 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 	return
 }
 
-func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE, senderId int64, receiverId int64) (member *pb_chat_member.ChatMemberInfo, ok bool) {
-	member = new(pb_chat_member.ChatMemberInfo)
+func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE, senderId int64, receiverId int64) (ok bool) {
 	var (
 		key     string
 		uidList []int64
@@ -97,17 +94,20 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 		resp    *pb_chat_member.ChatMemberVerifyResp
 	)
 	key = constant.RK_SYNC_CHAT_MEMBERS_INFO_HASH + utils.Int64ToStr(chatId)
-	list = xredis.HMGet(key, utils.Int64ToStr(senderId))
-	if len(list) == 1 && list[0] != nil {
-		ok = true
-		utils.Unmarshal(list[0].(string), member)
-		return
-	}
-
 	switch chatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
+		list = xredis.HMGet(key, utils.Int64ToStr(receiverId))
+		if len(list) == 1 && list[0] != nil {
+			ok = true
+			return
+		}
 		uidList = []int64{senderId, receiverId}
 	case pb_enum.CHAT_TYPE_GROUP:
+		list = xredis.HMGet(key, utils.Int64ToStr(senderId))
+		if len(list) == 1 && list[0] != nil {
+			ok = true
+			return
+		}
 		uidList = []int64{senderId}
 	}
 
@@ -124,7 +124,6 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 	}
 	if resp.MemberInfo != nil && resp.MemberInfo.Uid > 0 {
 		ok = true
-		member = resp.MemberInfo
 	}
 	return
 }

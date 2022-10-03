@@ -27,8 +27,6 @@ CREATE TABLE `messages` (
   `sender_id` bigint NOT NULL DEFAULT '0' COMMENT '发送者uid',
   `receiver_id` bigint NOT NULL DEFAULT '0' COMMENT '接收者uid',
   `sender_platform` tinyint(1) NOT NULL DEFAULT '0' COMMENT '发送者平台',
-  `sender_nickname` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '发送者昵称',
-  `sender_avatar_url` varchar(255) CHARACTER SET utf8mb4 NOT NULL DEFAULT '' COMMENT '发送者头像',
   `chat_id` bigint NOT NULL DEFAULT '0' COMMENT '会话ID',
   `chat_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '会话类型',
   `seq_id` int NOT NULL DEFAULT '0' COMMENT '消息唯一ID',

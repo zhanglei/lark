@@ -34,17 +34,15 @@ message SrvChatMessage {
   int64 sender_id = 3;
   int64 receiver_id = 4;
   pb_enum.PLATFORM_TYPE sender_platform = 5;
-  string sender_nickname = 6;
-  string sender_avatar_url = 7;
-  int64 chat_id = 8;
-  pb_enum.CHAT_TYPE chat_type = 9;
-  int64 seq_id = 10;
-  pb_enum.MSG_FROM msg_from = 11;
-  pb_enum.MSG_TYPE msg_type = 12;
-  bytes body = 13;
-  int32 status = 14;
-  int64 sent_ts = 15;
-  int64 srv_ts = 16;
+  int64 chat_id = 6;
+  pb_enum.CHAT_TYPE chat_type = 7;
+  int64 seq_id = 8;
+  pb_enum.MSG_FROM msg_from = 9;
+  pb_enum.MSG_TYPE msg_type = 10;
+  bytes body = 11;
+  int32 status = 12;
+  int64 sent_ts = 13;
+  int64 srv_ts = 14;
 }
 
 message SendChatMessageReq {
