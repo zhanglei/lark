@@ -214,6 +214,7 @@ const (
 )
 
 func (c *Client) decode(buf []byte) {
+	msgTimer.UpdateEndTime()
 	var (
 		lengthBuff   []byte
 		length       uint32
@@ -228,8 +229,9 @@ func (c *Client) decode(buf []byte) {
 	)
 	var (
 		msgCount  int
-		msgLenght = len(buf)
-		err       error
+		msgLength = len(buf)
+		resp      *pb_msg.MessageResp
+		msg       *pb_msg.SrvChatMessage
 	)
 	for {
 		totalLength = uint32(len(buf))
@@ -254,19 +256,24 @@ func (c *Client) decode(buf []byte) {
 		if length > 0 && topic > 0 && subtopic > 0 && msgType > 0 && len(body) > 0 {
 
 		}
+		switch pb_enum.MESSAGE_TYPE(msgType) {
+		case pb_enum.MESSAGE_TYPE_RESP:
+			resp = new(pb_msg.MessageResp)
+			proto.Unmarshal(body, resp)
+			xlog.Info("应答消息:", topic, subtopic, resp.Code, resp.Msg)
+		case pb_enum.MESSAGE_TYPE_NEW:
+			msg = new(pb_msg.SrvChatMessage)
+			proto.Unmarshal(body, msg)
+			xlog.Info("新消息:", topic, subtopic, msg.SeqId, string(msg.Body))
+		}
 		msgCount++
-		//xlog.Info(length, topic, subtopic, msgType, len(body))
 		if totalLength < MessageType+length+MessageType {
 			break
 		}
 		buf = buf[MessageType+length:]
 	}
 	if msgCount > 1 {
-		var msg = new(pb_msg.SrvChatMessage)
-		err = proto.Unmarshal(body, msg)
-		if err != nil {
-			xlog.Info("收到合并消息", msgLenght, msg.String())
-		}
+		xlog.Info("收到合并消息", msgLength, msg.String())
 	}
 }
 

@@ -91,7 +91,7 @@ func (m *Manager) loopSend() {
 		for {
 			select {
 			case <-ticker.C:
-				for i = 0; i < 500; i++ {
+				for i = 1; i < 10; i++ {
 					if client, ok := m.clients[i]; ok {
 						go client.SendUser(i + 1)
 					}
