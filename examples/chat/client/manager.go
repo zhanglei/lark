@@ -97,7 +97,7 @@ func (m *Manager) loopSend() {
 					}
 				}
 				count++
-				if count > 10 {
+				if count > 0 {
 					return
 				}
 			}

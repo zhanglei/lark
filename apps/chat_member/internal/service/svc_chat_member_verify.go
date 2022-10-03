@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/jinzhu/copier"
 	"lark/apps/chat_member/internal/domain/po"
+	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -20,10 +21,16 @@ func setChatMemberVerifyResp(resp *pb_chat_member.ChatMemberVerifyResp, code int
 
 func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_member.ChatMemberVerifyReq) (resp *pb_chat_member.ChatMemberVerifyResp, _ error) {
 	resp = new(pb_chat_member.ChatMemberVerifyResp)
+	if len(req.UidList) == 0 {
+		return
+	}
 	var (
-		w    = entity.NewMysqlWhere()
-		list []*po.ChatMember
-		err  error
+		w        = entity.NewMysqlWhere()
+		list     []*po.ChatMember
+		members  []*pb_chat_member.ChatMemberInfo
+		member   *po.ChatMember
+		pbMember *pb_chat_member.ChatMemberInfo
+		err      error
 	)
 	w.Query += " AND chat_id = ?"
 	w.Args = append(w.Args, req.ChatId)
@@ -39,37 +46,44 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 	switch req.ChatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
 		if len(list) == 2 {
-			resp.Ok = true
+			for _, member = range list {
+				pbMember = new(pb_chat_member.ChatMemberInfo)
+				copier.Copy(pbMember, member)
+				if pbMember.Uid == req.UidList[0] {
+					resp.MemberInfo = pbMember
+				}
+				members = append(members, pbMember)
+			}
 		}
 	case pb_enum.CHAT_TYPE_GROUP:
 		if len(list) == 1 {
-			resp.Ok = true
+			pbMember = new(pb_chat_member.ChatMemberInfo)
+			copier.Copy(pbMember, list[0])
+			resp.MemberInfo = pbMember
+			members = append(members, pbMember)
 		}
 	}
-	if resp.Ok == true {
-		go s.CacheChatMemberInfo(req.ChatId, list)
-	}
+	xgopool.Go(func() {
+		s.CacheChatMemberInfo(req.ChatId, members)
+	})
 	return
 }
 
-func (s *chatMemberService) CacheChatMemberInfo(chatId int64, list []*po.ChatMember) {
+func (s *chatMemberService) CacheChatMemberInfo(chatId int64, list []*pb_chat_member.ChatMemberInfo) {
 	if len(list) == 0 {
 		return
 	}
 	var (
-		member   *po.ChatMember
 		pbMember *pb_chat_member.ChatMemberInfo
 		key      string
 		jsonStr  string
 	)
-	for _, member = range list {
-		pbMember = new(pb_chat_member.ChatMemberInfo)
-		copier.Copy(pbMember, member)
+	for _, pbMember = range list {
 		jsonStr, _ = utils.Marshal(pbMember)
 		if jsonStr == "" {
 			continue
 		}
 		key = constant.RK_SYNC_CHAT_MEMBERS_INFO_HASH + utils.Int64ToStr(chatId)
-		xredis.HSetNX(key, utils.Int64ToStr(member.Uid), jsonStr)
+		xredis.HSetNX(key, utils.Int64ToStr(pbMember.Uid), jsonStr)
 	}
 }

@@ -56,7 +56,7 @@ func NewClient(uid int64, mgr *Manager) (client *Client) {
 		nickname:  "昵称:" + utils.Int64ToStr(uid),
 	}
 
-	u = url.URL{Scheme: "ws", Host: "lark.com:32001", Path: "/"}
+	u = url.URL{Scheme: "ws", Host: "127.0.01:32001", Path: "/"}
 	/*
 		q := u.Query()
 		q.Set("uid", uid)

@@ -94,22 +94,17 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 		resp    *pb_chat_member.ChatMemberVerifyResp
 	)
 	key = constant.RK_SYNC_CHAT_MEMBERS_INFO_HASH + utils.Int64ToStr(chatId)
+	list = xredis.HMGet(key, utils.Int64ToStr(senderId))
+	if len(list) == 1 && list[0] != nil {
+		ok = true
+		utils.Unmarshal(list[0].(string), member)
+		return
+	}
+
 	switch chatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
-		list = xredis.HMGet(key, utils.Int64ToStr(senderId), utils.Int64ToStr(receiverId))
-		if len(list) == 2 && list[0] != nil {
-			ok = true
-			utils.Unmarshal(list[0].(string), member)
-			return
-		}
 		uidList = []int64{senderId, receiverId}
 	case pb_enum.CHAT_TYPE_GROUP:
-		list = xredis.HMGet(key, utils.Int64ToStr(senderId))
-		if len(list) == 1 && list[0] != nil {
-			ok = true
-			utils.Unmarshal(list[0].(string), member)
-			return
-		}
 		uidList = []int64{senderId}
 	}
 
@@ -124,6 +119,9 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 		xlog.Warn(ERROR_CODE_MESSAGE_GRPC_SERVICE_FAILURE, ERROR_MESSAGE_GRPC_SERVICE_FAILURE)
 		return
 	}
-	ok = resp.Ok
+	if resp.MemberInfo != nil && resp.MemberInfo.Uid > 0 {
+		ok = true
+		member = resp.MemberInfo
+	}
 	return
 }
