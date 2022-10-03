@@ -10,6 +10,9 @@ const (
 type Message struct {
 	SrvMsgId       int64  `gorm:"column:srv_msg_id;primary_key" json:"srv_msg_id" bson:"srv_msg_id"`                       // 服务端消息号
 	CliMsgId       int64  `gorm:"column:cli_msg_id;default:0;NOT NULL" json:"cli_msg_id" bson:"cli_msg_id"`                // 客户端消息号
+	RootId         int64  `gorm:"column:root_id;default:0;NOT NULL" json:"root_id"`                                        // 根消息id
+	ParentId       int64  `gorm:"column:parent_id;default:0;NOT NULL" json:"parent_id"`                                    // 父消息的id
+	UpperMessageId int64  `gorm:"column:upper_message_id;default:0;NOT NULL" json:"upper_message_id"`                      // 合并转发消息中，上一层级的消息id srv_msg_id
 	SenderId       int64  `gorm:"column:sender_id;default:0;NOT NULL" json:"sender_id" bson:"sender_id"`                   // 发送者uid
 	ReceiverId     int64  `gorm:"column:receiver_id;default:0;NOT NULL" json:"receiver_id" bson:"receiver_id"`             // 接收者uid
 	SenderPlatform int    `gorm:"column:sender_platform;default:0;NOT NULL" json:"sender_platform" bson:"sender_platform"` // 发送者平台

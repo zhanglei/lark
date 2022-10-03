@@ -24,6 +24,9 @@ DROP TABLE IF EXISTS `messages`;
 CREATE TABLE `messages` (
   `srv_msg_id` bigint NOT NULL COMMENT '服务端消息号',
   `cli_msg_id` bigint NOT NULL DEFAULT '0' COMMENT '客户端消息号',
+  `root_id` bigint NOT NULL DEFAULT '0' COMMENT '根消息id',
+  `parent_id` bigint NOT NULL DEFAULT '0' COMMENT '父消息的id',
+  `upper_message_id` bigint NOT NULL DEFAULT '0' COMMENT '合并转发消息中，上一层级的消息id srv_msg_id',
   `sender_id` bigint NOT NULL DEFAULT '0' COMMENT '发送者uid',
   `receiver_id` bigint NOT NULL DEFAULT '0' COMMENT '接收者uid',
   `sender_platform` tinyint(1) NOT NULL DEFAULT '0' COMMENT '发送者平台',
