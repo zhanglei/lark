@@ -23,6 +23,7 @@ func (s *authService) Register(params *dto_auth.RegisterReq) (resp *xhttp.Resp) 
 	if reply.Code > 0 {
 		resp.SetRespInfo(reply.Code, reply.Msg)
 		xlog.Warn(reply.Code, reply.Msg)
+		return
 	}
 	copier.Copy(registerResp, reply)
 	resp.Data = registerResp

@@ -23,6 +23,7 @@ func (s *userService) UserList(params *dto_user.UserListReq) (resp *xhttp.Resp) 
 	}
 	if getUserListResp.Code > 0 {
 		resp.SetRespInfo(getUserListResp.Code, getUserListResp.Msg)
+		return
 	}
 	copier.Copy(list, getUserListResp.List)
 	resp.Data = list

@@ -28,6 +28,7 @@ func (s *authService) Login(params *dto_auth.LoginReq) (resp *xhttp.Resp) {
 	if reply.Code > 0 {
 		resp.SetRespInfo(reply.Code, reply.Msg)
 		xlog.Warn(reply.Code, reply.Msg)
+		return
 	}
 	copier.Copy(loginResp, reply)
 
