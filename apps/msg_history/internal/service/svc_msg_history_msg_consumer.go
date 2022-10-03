@@ -25,6 +25,7 @@ func (s *messageHistoryService) MessageHandler(msg []byte, msgKey string) (err e
 	}
 	// 消息入库
 	copier.Copy(message, req.Msg)
+	message.Body = utils.MsgBodyToStr(req.Msg.MsgType, req.Msg.Body)
 	if err = s.messageHistoryRepo.Create(message); err != nil {
 		xlog.Warn(ERROR_CODE_MSG_HISTORY_INSERT_MESSAGE_FAILED, ERROR_MSG_HISTORY_INSERT_MESSAGE_FAILED, err.Error())
 		if err.(*mysql.MySQLError).Number == constant.ERROR_CODE_MYSQL_DUPLICATE_ENTRY {

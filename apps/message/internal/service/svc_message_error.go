@@ -1,5 +1,7 @@
 package service
 
+import "errors"
+
 const (
 	ERROR_CODE_MESSAGE_UNMARSHAL_ERR          int32 = 71001
 	ERROR_CODE_MESSAGE_VALIDATOR_ERR          int32 = 71002
@@ -22,4 +24,8 @@ const (
 	ERROR_MESSAGE_VERIFY_IDENTITY_FAILED = "验证身份失败"
 	ERROR_MESSAGE_REDIS_GET_FAILED       = "读取redis缓存失败"
 	ERROR_MESSAGE_GRPC_SERVICE_FAILURE   = "服务故障"
+)
+
+var (
+	ERROR_MESSAGE_BODY_TEXT_EMPTY_ERR = errors.New("消息为空")
 )

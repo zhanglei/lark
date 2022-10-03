@@ -20,6 +20,7 @@ func (s *messageHotService) MessageHandler(msg []byte, msgKey string) (err error
 	}
 	// 消息入库
 	copier.Copy(message, req.Msg)
+	message.Body = utils.MsgBodyToStr(req.Msg.MsgType, req.Msg.Body)
 	message.UpdatedTs = utils.NowMilli()
 	if err = s.messageHotRepo.Create(message); err != nil {
 		xlog.Error(err)
