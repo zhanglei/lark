@@ -6,25 +6,25 @@ import (
 	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xsnowflake"
-	"lark/pkg/proto/pb_req"
+	"lark/pkg/proto/pb_invite"
 )
 
-func setNewChatRequestResp(resp *pb_req.NewChatRequestResp, code int32, msg string) {
+func setNewChatInviteResp(resp *pb_invite.NewChatInviteResp, code int32, msg string) {
 	resp.Code = code
 	resp.Msg = msg
 }
 
-func (s *chatInviteService) NewChatRequest(_ context.Context, req *pb_req.NewChatRequestReq) (resp *pb_req.NewChatRequestResp, _ error) {
-	resp = new(pb_req.NewChatRequestResp)
+func (s *chatInviteService) NewChatInvite(_ context.Context, req *pb_invite.NewChatInviteReq) (resp *pb_invite.NewChatInviteResp, _ error) {
+	resp = new(pb_invite.NewChatInviteResp)
 	var (
-		request = new(po.ChatRequest)
-		err     error
+		invite = new(po.ChatInvite)
+		err    error
 	)
-	copier.Copy(request, req)
-	request.RequestId = xsnowflake.NewSnowflakeID()
-	err = s.chatInviteRepo.RequestCreate(request)
+	copier.Copy(invite, req)
+	invite.InviteId = xsnowflake.NewSnowflakeID()
+	err = s.chatInviteRepo.NewChatInvite(invite)
 	if err != nil {
-		setNewChatRequestResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
+		setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
 		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
 		return
 	}

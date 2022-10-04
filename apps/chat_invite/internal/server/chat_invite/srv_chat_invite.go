@@ -6,7 +6,7 @@ import (
 	"lark/apps/chat_invite/internal/config"
 	"lark/apps/chat_invite/internal/service"
 	"lark/pkg/common/xgrpc"
-	"lark/pkg/proto/pb_req"
+	"lark/pkg/proto/pb_invite"
 )
 
 type ChatInviteServer interface {
@@ -14,7 +14,7 @@ type ChatInviteServer interface {
 }
 
 type chatInviteServer struct {
-	pb_req.UnimplementedRequestServer
+	pb_invite.UnimplementedInviteServer
 	cfg            *config.Config
 	grpcServer     *xgrpc.GrpcServer
 	requestService service.ChatInviteService
@@ -36,7 +36,7 @@ func (s *chatInviteServer) Run() {
 		}
 	}()
 
-	pb_req.RegisterRequestServer(srv, s)
+	pb_invite.RegisterInviteServer(srv, s)
 	s.grpcServer = xgrpc.NewGrpcServer(s.cfg.GrpcServer, s.cfg.Etcd)
 	s.grpcServer.RunServer(srv)
 }

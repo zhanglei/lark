@@ -9,22 +9,22 @@ import (
 	"lark/pkg/common/xsnowflake"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_enum"
-	"lark/pkg/proto/pb_req"
+	"lark/pkg/proto/pb_invite"
 )
 
-func setChatRequestHandlerResp(resp *pb_req.ChatRequestHandlerResp, code int32, msg string) {
+func setChatInviteHandleResp(resp *pb_invite.ChatInviteHandleResp, code int32, msg string) {
 	resp.Code = code
 	resp.Msg = msg
 }
 
-func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.ChatRequestHandlerReq) (resp *pb_req.ChatRequestHandlerResp, _ error) {
+func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite.ChatInviteHandleReq) (resp *pb_invite.ChatInviteHandleResp, _ error) {
 	var (
-		tx      *gorm.DB
-		u       = entity.NewMysqlUpdate()
-		w       = entity.NewMysqlWhere()
-		request *po.ChatRequest
-		chatId  int64
-		err     error
+		tx     *gorm.DB
+		u      = entity.NewMysqlUpdate()
+		w      = entity.NewMysqlWhere()
+		invite *po.ChatInvite
+		chatId int64
+		err    error
 	)
 	defer func() {
 		if err == nil {
@@ -34,49 +34,49 @@ func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.Ch
 		}
 	}()
 
-	u.Query += " AND request_id=?"
-	u.Args = append(u.Args, req.RequestId)
+	u.AndQuery("invite_id=?")
+	u.AppendArg(req.InviteId)
+
 	u.Set("handler_uid", req.HandlerUid)
 	u.Set("handle_result", req.HandleResult)
 	u.Set("handle_msg", req.HandleMsg)
 
 	tx = xmysql.GetTX()
-	err = s.chatInviteRepo.TxRequestUpdate(tx, u)
+	err = s.chatInviteRepo.TxUpdateChatInvite(tx, u)
 	if err != nil {
-		setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED)
+		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED)
 		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED, err)
 		return
 	}
-	if req.HandleResult == pb_req.REQUEST_HANDLE_RESULT_ACCEPT {
-		w.Query += " AND request_id=?"
-		w.Args = append(w.Args, req.RequestId)
-		request, err = s.chatInviteRepo.TxRequest(tx, w)
+	if req.HandleResult == pb_enum.INVITE_HANDLE_RESULT_ACCEPT {
+		w.And("invite_id=?", req.InviteId)
+		invite, err = s.chatInviteRepo.TxChatInvite(tx, w)
 		if err != nil {
-			setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
 			xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
 			return
 		}
-		switch pb_enum.CHAT_TYPE(request.ChatType) {
+		switch pb_enum.CHAT_TYPE(invite.ChatType) {
 		case pb_enum.CHAT_TYPE_PRIVATE:
 			chatId = xsnowflake.NewSnowflakeID()
 			user1 := &po.ChatUser{
 				ChatId: chatId,
-				Uid:    request.InitiatorUid,
+				Uid:    invite.InitiatorUid,
 			}
 			user2 := &po.ChatUser{
 				ChatId: chatId,
-				Uid:    request.TargetId,
+				Uid:    invite.InviteeId,
 			}
 			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user1, user2})
 		case pb_enum.CHAT_TYPE_GROUP:
 			user := &po.ChatUser{
-				ChatId: request.TargetId,
-				Uid:    request.InitiatorUid,
+				ChatId: invite.InviteeId,
+				Uid:    invite.InitiatorUid,
 			}
 			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
 		}
 		if err != nil {
-			setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
+			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
 			xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
 			return
 		}

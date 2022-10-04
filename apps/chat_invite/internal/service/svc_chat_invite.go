@@ -3,13 +3,13 @@ package service
 import (
 	"context"
 	"lark/domain/repo"
-	"lark/pkg/proto/pb_req"
+	"lark/pkg/proto/pb_invite"
 )
 
 type ChatInviteService interface {
-	NewChatRequest(ctx context.Context, req *pb_req.NewChatRequestReq) (resp *pb_req.NewChatRequestResp, err error)
-	ChatRequestHandler(ctx context.Context, req *pb_req.ChatRequestHandlerReq) (resp *pb_req.ChatRequestHandlerResp, err error)
-	ChatRequestList(ctx context.Context, req *pb_req.ChatRequestListReq) (resp *pb_req.ChatRequestListResp, err error)
+	NewChatInvite(_ context.Context, req *pb_invite.NewChatInviteReq) (resp *pb_invite.NewChatInviteResp, err error)
+	ChatInviteHandle(ctx context.Context, req *pb_invite.ChatInviteHandleReq) (resp *pb_invite.ChatInviteHandleResp, err error)
+	ChatInviteList(_ context.Context, req *pb_invite.ChatInviteListReq) (resp *pb_invite.ChatInviteListResp, err error)
 }
 
 type chatInviteService struct {

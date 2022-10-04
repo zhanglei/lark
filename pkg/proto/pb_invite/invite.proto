@@ -19,7 +19,7 @@ message NewChatInviteResp {
 message ChatInviteListReq {
   string uid = 1;
   pb_enum.INVITE_ROLE role = 2; // 角色
-  int32 max_request_id = 3;
+  int32 max_invite_id = 3;
   pb_enum.INVITE_HANDLE_RESULT handle_result = 4; // 结果
   int32 page_size = 5;
 }

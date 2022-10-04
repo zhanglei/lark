@@ -44,6 +44,11 @@ func NewMysqlWhere() *MysqlWhere {
 	}
 }
 
+func (m *MysqlWhere) And(query string, value interface{}) {
+	m.Query += " AND " + query
+	m.Args = append(m.Args, value)
+}
+
 func (m *MysqlWhere) AndQuery(query string) {
 	m.Query += " AND " + query
 }
@@ -72,6 +77,11 @@ func NewMysqlUpdate() *MysqlUpdate {
 
 func (m *MysqlUpdate) Set(key string, value interface{}) {
 	m.Values[key] = value
+}
+
+func (m *MysqlUpdate) And(query string, value interface{}) {
+	m.Query += " AND " + query
+	m.Args = append(m.Args, value)
 }
 
 func (m *MysqlUpdate) AndQuery(query string) {
