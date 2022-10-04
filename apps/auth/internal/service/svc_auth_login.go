@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"lark/domain/pos"
 	"lark/pkg/common/xjwt"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
@@ -20,7 +21,7 @@ func (s *authService) Login(ctx context.Context, req *pb_auth.LoginReq) (resp *p
 	resp = &pb_auth.LoginResp{UserInfo: new(pb_user.UserInfo), Token: new(pb_auth.Token)}
 	var (
 		w    = entity.NewMysqlWhere()
-		user *entity.User
+		user *pos.User
 		err  error
 	)
 	switch req.AccountType {

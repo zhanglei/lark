@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"lark/apps/chat_member/internal/domain/po"
+	"lark/domain/pos"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -20,7 +20,7 @@ func (s *chatMemberService) GetChatMemberSetting(ctx context.Context, req *pb_ch
 	resp = new(pb_chat_member.GetChatMemberSettingResp)
 	var (
 		w    = entity.NewMysqlWhere()
-		user *po.ChatMember
+		user *pos.ChatMember
 		err  error
 	)
 	w.Query += " AND chat_id = ?"

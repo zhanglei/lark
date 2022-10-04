@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/apps/user/internal/domain/po"
+	"lark/domain/pos"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -64,7 +64,7 @@ func (s *userService) GetUserInfo(ctx context.Context, req *pb_user.UserInfoReq)
 func (s *userService) queryUserInfo(uid int64, resp *pb_user.UserInfoResp) (err error) {
 	var (
 		w    = entity.NewMysqlWhere()
-		user *po.User
+		user *pos.User
 	)
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, uid)
@@ -81,7 +81,7 @@ func (s *userService) queryUserInfo(uid int64, resp *pb_user.UserInfoResp) (err 
 func (s *userService) queryUserAvatar(uid int64, resp *pb_user.UserInfoResp) (err error) {
 	var (
 		w      = entity.NewMysqlWhere()
-		avatar *po.UserAvatar
+		avatar *pos.UserAvatar
 	)
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, uid)

@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/Shopify/sarama"
 	"lark/apps/chat_member/internal/config"
-	"lark/apps/chat_member/internal/domain/repo"
 	user_client "lark/apps/user/client"
+	"lark/domain/repos"
 	"lark/pkg/common/xkafka"
 	"lark/pkg/global"
 	"lark/pkg/proto/pb_chat_member"
@@ -24,13 +24,13 @@ type ChatMemberService interface {
 
 type chatMemberService struct {
 	cfg                *config.Config
-	chatMemberUserRepo repo.ChatMemberRepository
+	chatMemberUserRepo repos.ChatMemberRepository
 	userClient         user_client.UserClient
 	consumerGroup      *xkafka.MConsumerGroup
 	msgHandle          map[string]global.KafkaMessageHandler
 }
 
-func NewChatMemberService(cfg *config.Config, chatMemberUserRepo repo.ChatMemberRepository) ChatMemberService {
+func NewChatMemberService(cfg *config.Config, chatMemberUserRepo repos.ChatMemberRepository) ChatMemberService {
 	userClient := user_client.NewUserClient(cfg.Etcd, cfg.UserServer, cfg.GrpcServer.Jaeger, cfg.Name)
 	svc := &chatMemberService{cfg: cfg, chatMemberUserRepo: chatMemberUserRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler

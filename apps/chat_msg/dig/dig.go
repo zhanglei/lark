@@ -3,10 +3,10 @@ package dig
 import (
 	"go.uber.org/dig"
 	"lark/apps/chat_msg/internal/config"
-	"lark/apps/chat_msg/internal/domain/repo"
 	"lark/apps/chat_msg/internal/server"
 	"lark/apps/chat_msg/internal/server/chat_msg"
 	"lark/apps/chat_msg/internal/service"
+	"lark/domain/repos"
 )
 
 var container = dig.New()
@@ -16,7 +16,7 @@ func init() {
 	container.Provide(server.NewServer)
 	container.Provide(chat_msg.NewChatMessageServer)
 	container.Provide(service.NewChatMessageService)
-	container.Provide(repo.NewChatMessageRepository)
+	container.Provide(repos.NewChatMessageRepository)
 }
 
 func Invoke(i interface{}) error {

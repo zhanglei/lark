@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Shopify/sarama"
 	"lark/apps/user/internal/config"
-	"lark/apps/user/internal/domain/repo"
+	"lark/domain/repos"
 	"lark/pkg/common/xkafka"
 	"lark/pkg/global"
 	"lark/pkg/proto/pb_user"
@@ -20,13 +20,13 @@ type UserService interface {
 
 type userService struct {
 	cfg            *config.Config
-	userRepo       repo.UserRepository
-	userAvatarRepo repo.UserAvatarRepository
+	userRepo       repos.UserRepository
+	userAvatarRepo repos.UserAvatarRepository
 	consumerGroup  *xkafka.MConsumerGroup
 	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewUserService(cfg *config.Config, userRepo repo.UserRepository, userAvatarRepo repo.UserAvatarRepository) UserService {
+func NewUserService(cfg *config.Config, userRepo repos.UserRepository, userAvatarRepo repos.UserAvatarRepository) UserService {
 	svc := &userService{cfg: cfg, userRepo: userRepo, userAvatarRepo: userAvatarRepo, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},

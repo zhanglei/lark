@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"lark/domain/pos"
 	"lark/pkg/common/xredis"
-	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_msg"
 	"lark/pkg/proto/pb_msg"
 	"lark/pkg/utils"
@@ -15,10 +15,10 @@ func (s *chatMessageService) GetChatMessages(_ context.Context, req *pb_chat_msg
 	resp = &pb_chat_msg.GetChatMessagesResp{List: make([]*pb_msg.SrvChatMessage, 0)}
 	var (
 		nowTs       = utils.NowMilli()
-		list        = make([]*entity.Message, 0)
-		cacheList   []*entity.Message
-		hotList     []*entity.Message
-		historyList []*entity.Message
+		list        = make([]*pos.Message, 0)
+		cacheList   []*pos.Message
+		hotList     []*pos.Message
+		historyList []*pos.Message
 		msgCount    int
 		maxSeqId    uint64
 		next        bool
@@ -92,7 +92,7 @@ func (s *chatMessageService) GetChatMessages(_ context.Context, req *pb_chat_msg
 	return
 }
 
-func sortMessageList(list []*entity.Message, asc bool) {
+func sortMessageList(list []*pos.Message, asc bool) {
 	sort.Slice(list, func(i, j int) bool {
 		if asc == true {
 			return list[i].SeqId < list[j].SeqId

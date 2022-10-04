@@ -1,15 +1,15 @@
 package service
 
 import (
+	"lark/domain/pos"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
-	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_msg"
 	"lark/pkg/utils"
 	"strconv"
 )
 
-func (s *chatMessageService) GetCacheMessages(req *pb_chat_msg.GetChatMessagesReq, maxSeqId int64) (list []*entity.Message, next bool, err error) {
+func (s *chatMessageService) GetCacheMessages(req *pb_chat_msg.GetChatMessagesReq, maxSeqId int64) (list []*pos.Message, next bool, err error) {
 	var (
 		msgCount int
 	)
@@ -33,8 +33,8 @@ func (s *chatMessageService) GetCacheMessages(req *pb_chat_msg.GetChatMessagesRe
 	return
 }
 
-func (s *chatMessageService) GetCacheChatMessages(req *pb_chat_msg.GetChatMessagesReq, max int) (list []*entity.Message) {
-	list = make([]*entity.Message, 0)
+func (s *chatMessageService) GetCacheChatMessages(req *pb_chat_msg.GetChatMessagesReq, max int) (list []*pos.Message) {
+	list = make([]*pos.Message, 0)
 	var (
 		minSeqId int
 		maxSeqId int
@@ -70,19 +70,19 @@ func (s *chatMessageService) GetCacheChatMessages(req *pb_chat_msg.GetChatMessag
 		if err != nil || jsonStr == "" {
 			break
 		}
-		var msg entity.Message
+		var msg pos.Message
 		utils.Unmarshal(jsonStr, &msg)
 		list = append(list, &msg)
 	}
 	return
 }
 
-func (s *chatMessageService) SaveCacheChatMessageCache(list []*entity.Message) {
+func (s *chatMessageService) SaveCacheChatMessageCache(list []*pos.Message) {
 	if len(list) == 0 {
 		return
 	}
 	var (
-		msg     *entity.Message
+		msg     *pos.Message
 		jsonStr string
 		key     string
 	)

@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"lark/apps/request/internal/domain/repo"
+	"lark/domain/repos"
 	"lark/pkg/proto/pb_req"
 )
 
@@ -13,9 +13,9 @@ type RequestService interface {
 }
 
 type requestService struct {
-	requestRepo repo.RequestRepository
+	requestRepo repos.RequestRepository
 }
 
-func NewRequestService(requestRepo repo.RequestRepository) RequestService {
+func NewRequestService(requestRepo repos.RequestRepository) RequestService {
 	return &requestService{requestRepo: requestRepo}
 }

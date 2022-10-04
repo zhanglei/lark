@@ -3,10 +3,10 @@ package dig
 import (
 	"go.uber.org/dig"
 	"lark/apps/user/internal/config"
-	"lark/apps/user/internal/domain/repo"
 	"lark/apps/user/internal/server"
 	"lark/apps/user/internal/server/user"
 	"lark/apps/user/internal/service"
+	"lark/domain/repos"
 )
 
 var container = dig.New()
@@ -16,8 +16,8 @@ func init() {
 	container.Provide(server.NewServer)
 	container.Provide(user.NewUserServer)
 	container.Provide(service.NewUserService)
-	container.Provide(repo.NewUserRepository)
-	container.Provide(repo.NewUserAvatarRepository)
+	container.Provide(repos.NewUserRepository)
+	container.Provide(repos.NewUserAvatarRepository)
 }
 
 func Invoke(i interface{}) error {

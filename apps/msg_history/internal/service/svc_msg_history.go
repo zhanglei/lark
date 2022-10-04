@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/Shopify/sarama"
 	"lark/apps/msg_history/internal/config"
-	"lark/apps/msg_history/internal/domain/repo"
+	"lark/domain/repos"
 	"lark/pkg/common/xkafka"
 	"lark/pkg/global"
 )
@@ -13,12 +13,12 @@ type MessageHistoryService interface {
 
 type messageHistoryService struct {
 	conf               *config.Config
-	messageHistoryRepo repo.MessageHistoryRepository
+	messageHistoryRepo repos.MessageHistoryRepository
 	consumerGroup      *xkafka.MConsumerGroup
 	msgHandle          map[string]global.KafkaMessageHandler
 }
 
-func NewMessageHistoryService(conf *config.Config, messageHistoryRepo repo.MessageHistoryRepository) MessageHistoryService {
+func NewMessageHistoryService(conf *config.Config, messageHistoryRepo repos.MessageHistoryRepository) MessageHistoryService {
 	svc := &messageHistoryService{conf: conf, messageHistoryRepo: messageHistoryRepo}
 
 	svc.msgHandle = make(map[string]global.KafkaMessageHandler)
