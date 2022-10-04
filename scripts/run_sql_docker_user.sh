@@ -23,9 +23,9 @@ done
 for i in {1..10000};
 do
   INSERT="INSERT INTO chat_members
-          ( chat_id, uid, display_name, avatar_url, mute, platform,server_id, settings )
+          ( chat_id, uid, display_name, avatar_key, mute, platform,server_id, settings )
           VALUES
-          ( 3333336666669999990, ${i},CONCAT('name:',${i}),CONCAT('avatar_url',${i}),0,1,1, CONCAT('{"uid":',${i},',','"receive":', true,',','"platforms":', ' [1,2]',\"}\"));"
+          ( 3333336666669999990, ${i},CONCAT('name:',${i}),CONCAT('avatar_key',${i}),0,1,1, CONCAT('{"uid":',${i},',','"receive":', true,',','"platforms":', ' [1,2]',\"}\"));"
   mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" -D${MYSQL_DB} -e "$INSERT"
 done
 

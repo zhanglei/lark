@@ -33,7 +33,7 @@ type UserInfo struct {
 	BirthTs   int64  `json:"birth_ts"`   // 生日
 	Email     string `json:"email"`      // Email
 	Mobile    string `json:"mobile"`     // 手机号
-	AvatarUrl string `json:"avatar_url"` // 头像
+	AvatarKey string `json:"avatar_key"` // 头像
 	CityId    int64  `json:"city_id"`    // 城市ID
 }
 

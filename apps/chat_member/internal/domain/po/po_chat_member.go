@@ -9,7 +9,7 @@ type ChatMember struct {
 	Uid         int64  `gorm:"column:uid;NOT NULL" json:"uid"`                       // 用户ID
 	Mute        int    `gorm:"column:mute;default:0;NOT NULL" json:"mute"`           // 是否开启免打扰
 	DisplayName string `gorm:"column:display_name;NOT NULL" json:"display_name"`     // 显示名称
-	AvatarUrl   string `gorm:"column:avatar_url;NOT NULL" json:"avatar_url"`         // 头像72
+	AvatarKey   string `gorm:"column:avatar_key;NOT NULL" json:"avatar_key"`         // 头像 72*72
 	Sync        int    `gorm:"column:sync;default:0;NOT NULL" json:"sync"`           // 是否同步用户信息
 	Status      int    `gorm:"column:status;default:0;NOT NULL" json:"status"`       // chat状态
 	Platform    int    `gorm:"column:platform;default:0;NOT NULL" json:"platform"`   // 1:iOS 2:安卓

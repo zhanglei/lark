@@ -63,7 +63,7 @@ message ChatUserInfo {
   string lark_id = 2; // 账户ID
   string nickname = 3; // 昵称
   int32 gender = 4; // 性别
-  string avatar_url = 5; // 头像
+  string avatar_key = 5; // 头像
 }
 
 message UserOnlineReq {

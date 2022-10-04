@@ -6,7 +6,7 @@ message MessageBody {
   string receiver_id = 4;
   int32 sender_platform = 5;
   string sender_nickname = 6;
-  string sender_avatar_url = 7;
+  string sender_avatar_key = 7;
   string chat_id = 8;
   chat_type chat_type = 9;
 //  int32 seq_id = 10;

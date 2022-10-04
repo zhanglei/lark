@@ -14,7 +14,7 @@ message RegisterReq {
   int64 birth_ts = 7; // 生日
   string email = 8; // Email
   string mobile = 9; // 手机号
-  string avatar_url = 10; // 头像
+  string avatar_key = 10; // 头像
   int64 city_id = 11; // 城市ID
   int64 code = 12; // 验证码
 }

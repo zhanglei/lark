@@ -18,7 +18,7 @@ type RegisterReq struct {
 	BirthTs     int64                 `json:"birth_ts" validate:"omitempty,gte=0"`          // 生日
 	Email       string                `json:"email" validate:"omitempty,email"`             // Email
 	Mobile      string                `json:"mobile" validate:"required,min=8,max=20"`      // 手机号
-	AvatarUrl   string                `json:"avatar_url" validate:"omitempty,url"`          // 头像
+	AvatarKey   string                `json:"avatar_key" validate:"omitempty"`              // 头像
 	CityId      int64                 `json:"city_id" validate:"omitempty,gte=0"`           // 城市ID
 	Code        string                `json:"code" validate:"omitempty,min=4,max=6"`        // 城市ID
 }
