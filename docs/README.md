@@ -29,10 +29,10 @@ grpc_server:
   port: 36000
   
 mysql:
-  address: "lark-mysql-member:13308"
+  address: "lark-mysql-user:13306"
   username: root
   password: lark2022
-  db: lark_chat_member
+  db: lark_user
   
 redis:
   address: ["lark-redis:63791"]

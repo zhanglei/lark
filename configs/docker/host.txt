@@ -11,7 +11,6 @@ sudo vim /etc/hosts
 127.0.0.1       lark-etcd
 127.0.0.1       lark-mysql-user
 127.0.0.1       lark-mysql-msg
-127.0.0.1       lark-mysql-member
 127.0.0.1       lark-mongo-msg
 127.0.0.1       lark-redis
 127.0.0.1       lark-rabbitmq

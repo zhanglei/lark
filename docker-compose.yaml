@@ -115,35 +115,6 @@ services:
         '--default-time-zone=+8:00'
     ]
 
-  lark-mysql-member:
-    image: mysql:8.0.29
-    container_name: lark-mysql-member
-    restart: always
-    ports:
-      - 13308:3306
-    networks:
-      lark-network:
-        ipv4_address: "192.168.9.22"
-    volumes:
-      - ./configs/docker/mysql/lark_chat_member:/docker-entrypoint-initdb.d
-      - /Volumes/data/lark/mysql/chat_user/data:/var/lib/mysql
-      #- /Volumes/data/lark/mysql/chat_user/conf:/etc/mysql
-      - /Volumes/data/lark/mysql/chat_user/mysql-files:/var/lib/mysql-files
-      - /Volumes/data/lark/mysql/chat_user/log:/var/log/mysql
-    privileged: true
-    environment:
-      TZ: Asia/Shanghai
-      MYSQL_ROOT_PASSWORD: lark2022
-      MYSQL_USER: lark
-      MYSQL_PASSWORD: lark2022
-      ALLOW_HOST: "%"
-      MYSQL_DATABASE: lark_chat_member
-    command: [
-        '--character-set-server=utf8mb4',
-        '--collation-server=utf8mb4_unicode_ci',
-        '--default-time-zone=+8:00'
-    ]
-
   lark-redis:
     image: redis:6.2.7
     container_name: lark-redis
