@@ -1,8 +1,9 @@
-package utils
+package xresize
 
 import (
 	"image"
 	"io"
+	"lark/pkg/utils"
 	"os"
 	"sync"
 )
@@ -51,7 +52,7 @@ func CropAvatar(in io.Reader, path string) (photos *Photos) {
 	if photos.Error != nil {
 		return
 	}
-	photos.ContentType = GetContentType(format)
+	photos.ContentType = utils.GetContentType(format)
 	photos.Format = format
 
 	for i = 0; i < count; i++ {
@@ -72,7 +73,7 @@ func CropAvatar(in io.Reader, path string) (photos *Photos) {
 func cropPhoto(wg *sync.WaitGroup, origin image.Image, fm string, photo chan *PhotoInfo, size *PhotoSize, path string) {
 	var (
 		pi = &PhotoInfo{
-			Key: NewUUID(),
+			Key: utils.NewUUID(),
 			Tag: size.Tag,
 		}
 		file *os.File

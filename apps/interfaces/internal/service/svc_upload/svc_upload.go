@@ -7,6 +7,7 @@ import (
 	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xminio"
+	"lark/pkg/common/xresize"
 	"lark/pkg/constant"
 	"lark/pkg/utils"
 	"lark/pkg/xhttp"
@@ -58,12 +59,12 @@ func (s *uploadService) UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhot
 	switch req.PhotoType {
 	case constant.PHOTO_TYPE_AVATAR:
 		var (
-			photos     *utils.Photos
+			photos     *xresize.Photos
 			resultList *xminio.PutResultList
 			pr         *xminio.PutResult
 			list       []*dto_upload.ObjectStorage
 		)
-		photos = utils.CropAvatar(file, s.cfg.Minio.PhotoDirectory)
+		photos = xresize.CropAvatar(file, s.cfg.Minio.PhotoDirectory)
 		if photos.Error != nil {
 			return
 		}
