@@ -16,6 +16,7 @@ type ChatMemberClient interface {
 	ChatMemberOnline(req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp)
 	GetChatMemberPushConfigList(req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp)
 	GetChatMemberPushConfig(req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp)
+	GetChatMemberList(req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp)
 }
 
 type chatMemberClient struct {
@@ -98,5 +99,15 @@ func (c *chatMemberClient) GetChatMemberPushConfig(req *pb_chat_member.GetChatMe
 	}
 	client := pb_chat_member.NewChatMemberClient(conn)
 	resp, _ = client.GetChatMemberPushConfig(context.Background(), req)
+	return
+}
+
+func (c *chatMemberClient) GetChatMemberList(req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp) {
+	conn := c.GetClientConn()
+	if conn == nil {
+		return
+	}
+	client := pb_chat_member.NewChatMemberClient(conn)
+	resp, _ = client.GetChatMemberList(context.Background(), req)
 	return
 }

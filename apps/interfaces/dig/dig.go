@@ -13,6 +13,7 @@ func init() {
 	provideUser()
 	provideChat()
 	provideUpload()
+	provideChatMember()
 }
 
 func Invoke(i interface{}) error {

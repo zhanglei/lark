@@ -32,3 +32,7 @@ func (s *chatMemberServer) GetChatMemberPushConfigList(ctx context.Context, req 
 func (s *chatMemberServer) GetChatMemberPushConfig(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp, err error) {
 	return s.chatMemberService.GetChatMemberPushConfig(ctx, req)
 }
+
+func (s *chatMemberServer) GetChatMemberList(ctx context.Context, req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp, err error) {
+	return s.chatMemberService.GetChatMemberList(ctx, req)
+}

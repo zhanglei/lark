@@ -44,6 +44,18 @@ func NewMysqlWhere() *MysqlWhere {
 	}
 }
 
+func (m *MysqlWhere) AndQuery(query string) {
+	m.Query += " AND " + query
+}
+
+func (m *MysqlWhere) AppendArg(value interface{}) {
+	m.Args = append(m.Args, value)
+}
+
+func (m *MysqlWhere) SetLimit(limit int32) {
+	m.Limit = int(limit)
+}
+
 type MysqlUpdate struct {
 	Query  string
 	Args   []interface{}

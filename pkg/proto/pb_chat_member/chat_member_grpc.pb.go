@@ -29,6 +29,7 @@ type ChatMemberClient interface {
 	GetChatMemberInfo(ctx context.Context, in *GetChatMemberInfoReq, opts ...grpc.CallOption) (*GetChatMemberInfoResp, error)
 	ChatMemberVerify(ctx context.Context, in *ChatMemberVerifyReq, opts ...grpc.CallOption) (*ChatMemberVerifyResp, error)
 	ChatMemberOnline(ctx context.Context, in *ChatMemberOnlineReq, opts ...grpc.CallOption) (*ChatMemberOnlineResp, error)
+	GetChatMemberList(ctx context.Context, in *GetChatMemberListReq, opts ...grpc.CallOption) (*GetChatMemberListResp, error)
 }
 
 type chatMemberClient struct {
@@ -102,6 +103,15 @@ func (c *chatMemberClient) ChatMemberOnline(ctx context.Context, in *ChatMemberO
 	return out, nil
 }
 
+func (c *chatMemberClient) GetChatMemberList(ctx context.Context, in *GetChatMemberListReq, opts ...grpc.CallOption) (*GetChatMemberListResp, error) {
+	out := new(GetChatMemberListResp)
+	err := c.cc.Invoke(ctx, "/pb_chat_member.ChatMember/GetChatMemberList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ChatMemberServer is the server API for ChatMember service.
 // All implementations must embed UnimplementedChatMemberServer
 // for forward compatibility
@@ -113,6 +123,7 @@ type ChatMemberServer interface {
 	GetChatMemberInfo(context.Context, *GetChatMemberInfoReq) (*GetChatMemberInfoResp, error)
 	ChatMemberVerify(context.Context, *ChatMemberVerifyReq) (*ChatMemberVerifyResp, error)
 	ChatMemberOnline(context.Context, *ChatMemberOnlineReq) (*ChatMemberOnlineResp, error)
+	GetChatMemberList(context.Context, *GetChatMemberListReq) (*GetChatMemberListResp, error)
 	mustEmbedUnimplementedChatMemberServer()
 }
 
@@ -140,6 +151,9 @@ func (UnimplementedChatMemberServer) ChatMemberVerify(context.Context, *ChatMemb
 }
 func (UnimplementedChatMemberServer) ChatMemberOnline(context.Context, *ChatMemberOnlineReq) (*ChatMemberOnlineResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChatMemberOnline not implemented")
+}
+func (UnimplementedChatMemberServer) GetChatMemberList(context.Context, *GetChatMemberListReq) (*GetChatMemberListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetChatMemberList not implemented")
 }
 func (UnimplementedChatMemberServer) mustEmbedUnimplementedChatMemberServer() {}
 
@@ -280,6 +294,24 @@ func _ChatMember_ChatMemberOnline_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatMember_GetChatMemberList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetChatMemberListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatMemberServer).GetChatMemberList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb_chat_member.ChatMember/GetChatMemberList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatMemberServer).GetChatMemberList(ctx, req.(*GetChatMemberListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ChatMember_ServiceDesc is the grpc.ServiceDesc for ChatMember service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -314,6 +346,10 @@ var ChatMember_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChatMemberOnline",
 			Handler:    _ChatMember_ChatMemberOnline_Handler,
+		},
+		{
+			MethodName: "GetChatMemberList",
+			Handler:    _ChatMember_GetChatMemberList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

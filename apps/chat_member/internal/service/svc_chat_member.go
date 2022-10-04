@@ -19,6 +19,7 @@ type ChatMemberService interface {
 	ChatMemberOnline(ctx context.Context, req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp, err error)
 	GetChatMemberPushConfigList(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp, err error)
 	GetChatMemberPushConfig(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp, err error)
+	GetChatMemberList(ctx context.Context, req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp, err error)
 }
 
 type chatMemberService struct {

@@ -8,17 +8,18 @@ import (
 )
 
 type Config struct {
-	Name          string              `yaml:"name"`
-	Port          int                 `yaml:"port"`
-	Log           string              `yaml:"log"`
-	Etcd          *conf.Etcd          `yaml:"etcd"`
-	AuthServer    *conf.GrpcServer    `yaml:"auth_server"`
-	UserServer    *conf.GrpcServer    `yaml:"user_server"`
-	ChatMsgServer *conf.GrpcServer    `yaml:"chat_msg_server"`
-	LinkServer    *conf.GrpcServer    `yaml:"link_server"`
-	MsgProducer   *conf.KafkaProducer `yaml:"msg_producer"`
-	Minio         *conf.Minio         `yaml:"minio"`
-	Jaeger        *conf.Jaeger        `yaml:"jaeger"`
+	Name             string              `yaml:"name"`
+	Port             int                 `yaml:"port"`
+	Log              string              `yaml:"log"`
+	Etcd             *conf.Etcd          `yaml:"etcd"`
+	AuthServer       *conf.GrpcServer    `yaml:"auth_server"`
+	UserServer       *conf.GrpcServer    `yaml:"user_server"`
+	ChatMsgServer    *conf.GrpcServer    `yaml:"chat_msg_server"`
+	LinkServer       *conf.GrpcServer    `yaml:"link_server"`
+	ChatMemberServer *conf.GrpcServer    `yaml:"chat_member_server"`
+	MsgProducer      *conf.KafkaProducer `yaml:"msg_producer"`
+	Minio            *conf.Minio         `yaml:"minio"`
+	Jaeger           *conf.Jaeger        `yaml:"jaeger"`
 }
 
 var (

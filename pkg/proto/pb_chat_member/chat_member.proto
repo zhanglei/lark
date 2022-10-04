@@ -65,6 +65,12 @@ message ChatMemberInfo {
   string avatar_key = 5;
 }
 
+message ChatMemberBasicInfo {
+  int64 uid = 1;
+  string display_name = 2;
+  string avatar_key = 3;
+}
+
 message ChatMemberVerifyReq {
   int64 chat_id = 1;
   pb_enum.CHAT_TYPE chat_type = 2;
@@ -93,6 +99,18 @@ message ChatMemberOnlineResp {
   string msg = 2;
 }
 
+message GetChatMemberListReq {
+  int64 chat_id = 1;
+  int32 limit = 2;
+  int32 last_uid = 3;
+}
+
+message GetChatMemberListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated ChatMemberBasicInfo list = 3;
+}
+
 service ChatMember {
   rpc GetChatMemberUidList(GetChatMemberUidListReq) returns (GetChatMemberUidListResp);
   rpc GetChatMemberPushConfig(GetChatMemberPushConfigReq) returns (GetChatMemberPushConfigResp);
@@ -101,6 +119,7 @@ service ChatMember {
   rpc GetChatMemberInfo(GetChatMemberInfoReq) returns (GetChatMemberInfoResp);
   rpc ChatMemberVerify(ChatMemberVerifyReq) returns (ChatMemberVerifyResp);
   rpc ChatMemberOnline(ChatMemberOnlineReq) returns (ChatMemberOnlineResp);
+  rpc GetChatMemberList(GetChatMemberListReq) returns (GetChatMemberListResp);
 }
 
 message ChatMemberPushConfig {

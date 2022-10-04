@@ -15,6 +15,7 @@ type ChatMemberRepository interface {
 	ChatMemberPushConfig(w *entity.MysqlWhere) (conf *pb_chat_member.ChatMemberPushConfig, err error)
 	ChatMemberInfo(w *entity.MysqlWhere) (member *po.ChatMember, err error)
 	UpdateChatMember(u *entity.MysqlUpdate) (err error)
+	ChatMemberBasicInfoList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberBasicInfo, err error)
 }
 
 type chatMemberRepository struct {
@@ -70,5 +71,13 @@ func (r *chatMemberRepository) ChatMemberInfo(w *entity.MysqlWhere) (member *po.
 func (r *chatMemberRepository) UpdateChatMember(u *entity.MysqlUpdate) (err error) {
 	db := xmysql.GetDB()
 	err = db.Model(po.ChatMember{}).Where(u.Query, u.Args...).Updates(u.Values).Error
+	return
+}
+
+func (r *chatMemberRepository) ChatMemberBasicInfoList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberBasicInfo, err error) {
+	list = make([]*pb_chat_member.ChatMemberBasicInfo, 0)
+	db := xmysql.GetDB()
+	err = db.Model(po.ChatMember{}).Select("uid,display_name,avatar_key").Where(w.Query, w.Args...).
+		Limit(w.Limit).Find(&list).Error
 	return
 }
