@@ -1,20 +1,63 @@
 syntax ="proto3";
+import "pb_enum/enum.proto";
 package pb_invite;
 option go_package = "./pb_invite;pb_invite";
 
-message ChatInviteReq {
+message NewChatInviteReq {
   int64 chat_id = 1; // chat ID
-  int32 chat_type = 2; // 1:私聊/2:群聊
+  pb_enum.CHAT_TYPE chat_type = 2; // 1:私聊/2:群聊
   int64 initiator_uid = 3; // 发起人 UID
   int64 invitee_uid = 4; // 被邀请人 UID
   string invitation_msg = 5; // 邀请消息
 }
 
-message ChatInviteResp {
+message NewChatInviteResp {
   int32 code = 1;
   string msg = 2;
 }
 
-service ChatInvite {
-  rpc ChatInvite(ChatInviteReq) returns(ChatInviteResp);
+message ChatInviteListReq {
+  string uid = 1;
+  pb_enum.INVITE_ROLE role = 2; // 角色
+  int32 max_request_id = 3;
+  pb_enum.INVITE_HANDLE_RESULT handle_result = 4; // 结果
+  int32 page_size = 5;
+}
+
+message ChatInviteListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated ChatInviteInfo list = 3;
+}
+
+message ChatInviteInfo {
+  int64 invite_id = 1;
+  int64 invited_ts = 2; // 邀请时间
+  int64 chat_id = 3; // chat ID
+  pb_enum.CHAT_TYPE chat_type = 4; // 1:私聊/2:群聊
+  int64 initiator_uid = 5; // 发起人 UID
+  int64 invitee_uid = 6; // 被邀请人 UID
+  string invitation_msg = 7; // 邀请消息
+  int64 handler_uid = 8; // 处理人 UID
+  pb_enum.INVITE_HANDLE_RESULT  handle_result = 9; // 结果
+  string handle_msg = 10; // 处理消息
+  int64 handled_ts = 11; // 处理时间
+}
+
+message ChatInviteHandleReq {
+  int64 invite_id = 1;
+  int64 handler_uid = 2; // 处理人 UID
+  pb_enum.INVITE_HANDLE_RESULT  handle_result = 3; // 结果
+  string handle_msg = 4; // 处理消息
+}
+
+message ChatInviteHandleResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service Invite {
+  rpc NewChatInvite(NewChatInviteReq) returns(NewChatInviteResp);
+  rpc ChatInviteList(ChatInviteListReq) returns(ChatInviteListResp);
+  rpc ChatInviteHandle(ChatInviteHandleReq) returns(ChatInviteHandleResp);
 }

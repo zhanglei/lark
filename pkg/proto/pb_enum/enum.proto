@@ -68,3 +68,17 @@ enum MUTE_TYPE
   CLOSED = 0; // 关闭免打扰
   OPENED = 1; // 开启免打扰
 }
+
+enum INVITE_ROLE
+{
+  UNKNOWN_INVITE_ROLE = 0;
+  INITIATOR = 1; // 发起者
+  APPROVER = 2; // 审批人
+}
+
+enum INVITE_HANDLE_RESULT
+{
+  UNKNOWN_INVITE_HANDLE_RESULT = 0;
+  ACCEPT = 1; // 同意
+  REFUSE = 2; // 拒绝
+}

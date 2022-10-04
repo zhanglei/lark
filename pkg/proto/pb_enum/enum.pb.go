@@ -473,6 +473,104 @@ func (MUTE_TYPE) EnumDescriptor() ([]byte, []int) {
 	return file_pb_enum_enum_proto_rawDescGZIP(), []int{8}
 }
 
+type INVITE_ROLE int32
+
+const (
+	INVITE_ROLE_UNKNOWN_INVITE_ROLE INVITE_ROLE = 0
+	INVITE_ROLE_INITIATOR           INVITE_ROLE = 1 // 发起者
+	INVITE_ROLE_APPROVER            INVITE_ROLE = 2 // 审批人
+)
+
+// Enum value maps for INVITE_ROLE.
+var (
+	INVITE_ROLE_name = map[int32]string{
+		0: "UNKNOWN_INVITE_ROLE",
+		1: "INITIATOR",
+		2: "APPROVER",
+	}
+	INVITE_ROLE_value = map[string]int32{
+		"UNKNOWN_INVITE_ROLE": 0,
+		"INITIATOR":           1,
+		"APPROVER":            2,
+	}
+)
+
+func (x INVITE_ROLE) Enum() *INVITE_ROLE {
+	p := new(INVITE_ROLE)
+	*p = x
+	return p
+}
+
+func (x INVITE_ROLE) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (INVITE_ROLE) Descriptor() protoreflect.EnumDescriptor {
+	return file_pb_enum_enum_proto_enumTypes[9].Descriptor()
+}
+
+func (INVITE_ROLE) Type() protoreflect.EnumType {
+	return &file_pb_enum_enum_proto_enumTypes[9]
+}
+
+func (x INVITE_ROLE) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use INVITE_ROLE.Descriptor instead.
+func (INVITE_ROLE) EnumDescriptor() ([]byte, []int) {
+	return file_pb_enum_enum_proto_rawDescGZIP(), []int{9}
+}
+
+type INVITE_HANDLE_RESULT int32
+
+const (
+	INVITE_HANDLE_RESULT_UNKNOWN_INVITE_HANDLE_RESULT INVITE_HANDLE_RESULT = 0
+	INVITE_HANDLE_RESULT_ACCEPT                       INVITE_HANDLE_RESULT = 1 // 同意
+	INVITE_HANDLE_RESULT_REFUSE                       INVITE_HANDLE_RESULT = 2 // 拒绝
+)
+
+// Enum value maps for INVITE_HANDLE_RESULT.
+var (
+	INVITE_HANDLE_RESULT_name = map[int32]string{
+		0: "UNKNOWN_INVITE_HANDLE_RESULT",
+		1: "ACCEPT",
+		2: "REFUSE",
+	}
+	INVITE_HANDLE_RESULT_value = map[string]int32{
+		"UNKNOWN_INVITE_HANDLE_RESULT": 0,
+		"ACCEPT":                       1,
+		"REFUSE":                       2,
+	}
+)
+
+func (x INVITE_HANDLE_RESULT) Enum() *INVITE_HANDLE_RESULT {
+	p := new(INVITE_HANDLE_RESULT)
+	*p = x
+	return p
+}
+
+func (x INVITE_HANDLE_RESULT) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (INVITE_HANDLE_RESULT) Descriptor() protoreflect.EnumDescriptor {
+	return file_pb_enum_enum_proto_enumTypes[10].Descriptor()
+}
+
+func (INVITE_HANDLE_RESULT) Type() protoreflect.EnumType {
+	return &file_pb_enum_enum_proto_enumTypes[10]
+}
+
+func (x INVITE_HANDLE_RESULT) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use INVITE_HANDLE_RESULT.Descriptor instead.
+func (INVITE_HANDLE_RESULT) EnumDescriptor() ([]byte, []int) {
+	return file_pb_enum_enum_proto_rawDescGZIP(), []int{10}
+}
+
 var File_pb_enum_enum_proto protoreflect.FileDescriptor
 
 var file_pb_enum_enum_proto_rawDesc = []byte{
@@ -513,9 +611,19 @@ var file_pb_enum_enum_proto_rawDesc = []byte{
 	0x0a, 0x53, 0x48, 0x41, 0x52, 0x45, 0x5f, 0x55, 0x53, 0x45, 0x52, 0x10, 0x0a, 0x2a, 0x23, 0x0a,
 	0x09, 0x4d, 0x55, 0x54, 0x45, 0x5f, 0x54, 0x59, 0x50, 0x45, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x4c,
 	0x4f, 0x53, 0x45, 0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x4f, 0x50, 0x45, 0x4e, 0x45, 0x44,
-	0x10, 0x01, 0x42, 0x20, 0x5a, 0x1e, 0x6c, 0x61, 0x72, 0x6b, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x62, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x3b, 0x70, 0x62, 0x5f,
-	0x65, 0x6e, 0x75, 0x6d, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x10, 0x01, 0x2a, 0x43, 0x0a, 0x0b, 0x49, 0x4e, 0x56, 0x49, 0x54, 0x45, 0x5f, 0x52, 0x4f, 0x4c,
+	0x45, 0x12, 0x17, 0x0a, 0x13, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x5f, 0x49, 0x4e, 0x56,
+	0x49, 0x54, 0x45, 0x5f, 0x52, 0x4f, 0x4c, 0x45, 0x10, 0x00, 0x12, 0x0d, 0x0a, 0x09, 0x49, 0x4e,
+	0x49, 0x54, 0x49, 0x41, 0x54, 0x4f, 0x52, 0x10, 0x01, 0x12, 0x0c, 0x0a, 0x08, 0x41, 0x50, 0x50,
+	0x52, 0x4f, 0x56, 0x45, 0x52, 0x10, 0x02, 0x2a, 0x50, 0x0a, 0x14, 0x49, 0x4e, 0x56, 0x49, 0x54,
+	0x45, 0x5f, 0x48, 0x41, 0x4e, 0x44, 0x4c, 0x45, 0x5f, 0x52, 0x45, 0x53, 0x55, 0x4c, 0x54, 0x12,
+	0x20, 0x0a, 0x1c, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e, 0x5f, 0x49, 0x4e, 0x56, 0x49, 0x54,
+	0x45, 0x5f, 0x48, 0x41, 0x4e, 0x44, 0x4c, 0x45, 0x5f, 0x52, 0x45, 0x53, 0x55, 0x4c, 0x54, 0x10,
+	0x00, 0x12, 0x0a, 0x0a, 0x06, 0x41, 0x43, 0x43, 0x45, 0x50, 0x54, 0x10, 0x01, 0x12, 0x0a, 0x0a,
+	0x06, 0x52, 0x45, 0x46, 0x55, 0x53, 0x45, 0x10, 0x02, 0x42, 0x20, 0x5a, 0x1e, 0x6c, 0x61, 0x72,
+	0x6b, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x62, 0x5f, 0x65,
+	0x6e, 0x75, 0x6d, 0x3b, 0x70, 0x62, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -530,17 +638,19 @@ func file_pb_enum_enum_proto_rawDescGZIP() []byte {
 	return file_pb_enum_enum_proto_rawDescData
 }
 
-var file_pb_enum_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 9)
+var file_pb_enum_enum_proto_enumTypes = make([]protoimpl.EnumInfo, 11)
 var file_pb_enum_enum_proto_goTypes = []interface{}{
-	(ACCOUNT_TYPE)(0),  // 0: pb_enum.ACCOUNT_TYPE
-	(TOPIC)(0),         // 1: pb_enum.TOPIC
-	(SUB_TOPIC)(0),     // 2: pb_enum.SUB_TOPIC
-	(MESSAGE_TYPE)(0),  // 3: pb_enum.MESSAGE_TYPE
-	(CHAT_TYPE)(0),     // 4: pb_enum.CHAT_TYPE
-	(PLATFORM_TYPE)(0), // 5: pb_enum.PLATFORM_TYPE
-	(MSG_FROM)(0),      // 6: pb_enum.MSG_FROM
-	(MSG_TYPE)(0),      // 7: pb_enum.MSG_TYPE
-	(MUTE_TYPE)(0),     // 8: pb_enum.MUTE_TYPE
+	(ACCOUNT_TYPE)(0),         // 0: pb_enum.ACCOUNT_TYPE
+	(TOPIC)(0),                // 1: pb_enum.TOPIC
+	(SUB_TOPIC)(0),            // 2: pb_enum.SUB_TOPIC
+	(MESSAGE_TYPE)(0),         // 3: pb_enum.MESSAGE_TYPE
+	(CHAT_TYPE)(0),            // 4: pb_enum.CHAT_TYPE
+	(PLATFORM_TYPE)(0),        // 5: pb_enum.PLATFORM_TYPE
+	(MSG_FROM)(0),             // 6: pb_enum.MSG_FROM
+	(MSG_TYPE)(0),             // 7: pb_enum.MSG_TYPE
+	(MUTE_TYPE)(0),            // 8: pb_enum.MUTE_TYPE
+	(INVITE_ROLE)(0),          // 9: pb_enum.INVITE_ROLE
+	(INVITE_HANDLE_RESULT)(0), // 10: pb_enum.INVITE_HANDLE_RESULT
 }
 var file_pb_enum_enum_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -560,7 +670,7 @@ func file_pb_enum_enum_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_pb_enum_enum_proto_rawDesc,
-			NumEnums:      9,
+			NumEnums:      11,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
