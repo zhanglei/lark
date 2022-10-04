@@ -104,7 +104,6 @@ func (c *Client) readLoop() {
 			continue
 		}
 		if msgType == websocket.CloseMessage {
-			c.closeChan <- nil
 			return
 		}
 		if msgType != websocket.BinaryMessage {
