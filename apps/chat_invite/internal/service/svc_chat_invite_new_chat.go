@@ -24,8 +24,8 @@ func (s *chatInviteService) NewChatRequest(_ context.Context, req *pb_req.NewCha
 	request.RequestId = xsnowflake.NewSnowflakeID()
 	err = s.chatInviteRepo.RequestCreate(request)
 	if err != nil {
-		setNewChatRequestResp(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED)
-		xlog.Warn(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED, err)
+		setNewChatRequestResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
+		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
 		return
 	}
 	return

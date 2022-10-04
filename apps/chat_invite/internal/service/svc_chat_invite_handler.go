@@ -43,8 +43,8 @@ func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.Ch
 	tx = xmysql.GetTX()
 	err = s.chatInviteRepo.TxRequestUpdate(tx, u)
 	if err != nil {
-		setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_UPDATE_VALUE_FAILED, ERROR_REQUEST_UPDATE_VALUE_FAILED)
-		xlog.Warn(resp, ERROR_CODE_REQUEST_UPDATE_VALUE_FAILED, ERROR_REQUEST_UPDATE_VALUE_FAILED, err)
+		setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED)
+		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED, err)
 		return
 	}
 	if req.HandleResult == pb_req.REQUEST_HANDLE_RESULT_ACCEPT {
@@ -52,8 +52,8 @@ func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.Ch
 		w.Args = append(w.Args, req.RequestId)
 		request, err = s.chatInviteRepo.TxRequest(tx, w)
 		if err != nil {
-			setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED)
-			xlog.Warn(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED, err)
+			setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+			xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
 			return
 		}
 		switch pb_enum.CHAT_TYPE(request.ChatType) {
@@ -76,8 +76,8 @@ func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.Ch
 			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
 		}
 		if err != nil {
-			setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED)
-			xlog.Warn(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED, err)
+			setChatRequestHandlerResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
+			xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
 			return
 		}
 		// TODO: 申请成功推送

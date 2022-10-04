@@ -38,8 +38,8 @@ func (s *chatInviteService) ChatRequestList(_ context.Context, req *pb_req.ChatR
 	}
 	list, err = s.chatInviteRepo.RequestList(w)
 	if err != nil {
-		setChatRequestListResp(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED)
-		xlog.Warn(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED, err)
+		setChatRequestListResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
 		return
 	}
 	copier.Copy(resp.List, list)
