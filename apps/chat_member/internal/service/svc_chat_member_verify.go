@@ -25,12 +25,9 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 		return
 	}
 	var (
-		w        = entity.NewMysqlWhere()
-		list     []*po.ChatMember
-		members  []*pb_chat_member.ChatMemberInfo
-		member   *po.ChatMember
-		pbMember *pb_chat_member.ChatMemberInfo
-		err      error
+		w    = entity.NewMysqlWhere()
+		list []*po.ChatMember
+		err  error
 	)
 	w.Query += " AND chat_id = ?"
 	w.Args = append(w.Args, req.ChatId)
@@ -46,39 +43,32 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 	switch req.ChatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
 		if len(list) == 2 {
-			for _, member = range list {
-				pbMember = new(pb_chat_member.ChatMemberInfo)
-				copier.Copy(pbMember, member)
-				if pbMember.Uid == req.UidList[0] {
-					resp.MemberInfo = pbMember
-				}
-				members = append(members, pbMember)
-			}
+			resp.Ok = true
 		}
 	case pb_enum.CHAT_TYPE_GROUP:
 		if len(list) == 1 {
-			pbMember = new(pb_chat_member.ChatMemberInfo)
-			copier.Copy(pbMember, list[0])
-			resp.MemberInfo = pbMember
-			members = append(members, pbMember)
+			resp.Ok = true
 		}
 	}
 	xgopool.Go(func() {
-		s.CacheChatMemberInfo(req.ChatId, members)
+		s.CacheChatMemberInfo(req.ChatId, list)
 	})
 	return
 }
 
-func (s *chatMemberService) CacheChatMemberInfo(chatId int64, list []*pb_chat_member.ChatMemberInfo) {
+func (s *chatMemberService) CacheChatMemberInfo(chatId int64, list []*po.ChatMember) {
 	if len(list) == 0 {
 		return
 	}
 	var (
+		member   *po.ChatMember
 		pbMember *pb_chat_member.ChatMemberInfo
 		key      string
 		jsonStr  string
 	)
-	for _, pbMember = range list {
+	for _, member = range list {
+		pbMember = new(pb_chat_member.ChatMemberInfo)
+		copier.Copy(pbMember, member)
 		jsonStr, _ = utils.Marshal(pbMember)
 		if jsonStr == "" {
 			continue

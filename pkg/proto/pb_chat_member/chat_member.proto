@@ -80,7 +80,7 @@ message ChatMemberVerifyReq {
 message ChatMemberVerifyResp {
   int32 code = 1;
   string msg = 2;
-  ChatMemberInfo member_info = 3;
+  bool  ok = 3;
 }
 
 message ChatSetting {

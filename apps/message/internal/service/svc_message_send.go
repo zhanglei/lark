@@ -103,8 +103,8 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 	key = constant.RK_SYNC_CHAT_MEMBERS_INFO_HASH + utils.Int64ToStr(chatId)
 	switch chatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
-		list = xredis.HMGet(key, utils.Int64ToStr(receiverId))
-		if len(list) == 1 && list[0] != nil {
+		list = xredis.HMGet(key, utils.Int64ToStr(senderId), utils.Int64ToStr(receiverId))
+		if len(list) == 2 && list[0] != nil && list[1] != nil {
 			ok = true
 			return
 		}
@@ -129,9 +129,7 @@ func (s *messageService) verifySession(chatId int64, chatType pb_enum.CHAT_TYPE,
 		xlog.Warn(ERROR_CODE_MESSAGE_GRPC_SERVICE_FAILURE, ERROR_MESSAGE_GRPC_SERVICE_FAILURE)
 		return
 	}
-	if resp.MemberInfo != nil && resp.MemberInfo.Uid > 0 {
-		ok = true
-	}
+	ok = resp.Ok
 	return
 }
 
