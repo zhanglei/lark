@@ -26,6 +26,7 @@ type UserClient interface {
 	GetUserList(ctx context.Context, in *GetUserListReq, opts ...grpc.CallOption) (*GetUserListResp, error)
 	GetChatUserInfo(ctx context.Context, in *GetChatUserInfoReq, opts ...grpc.CallOption) (*GetChatUserInfoResp, error)
 	UserOnline(ctx context.Context, in *UserOnlineReq, opts ...grpc.CallOption) (*UserOnlineResp, error)
+	SetUserAvatar(ctx context.Context, in *SetUserAvatarReq, opts ...grpc.CallOption) (*SetUserAvatarResp, error)
 }
 
 type userClient struct {
@@ -72,6 +73,15 @@ func (c *userClient) UserOnline(ctx context.Context, in *UserOnlineReq, opts ...
 	return out, nil
 }
 
+func (c *userClient) SetUserAvatar(ctx context.Context, in *SetUserAvatarReq, opts ...grpc.CallOption) (*SetUserAvatarResp, error) {
+	out := new(SetUserAvatarResp)
+	err := c.cc.Invoke(ctx, "/pb_user.User/SetUserAvatar", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type UserServer interface {
 	GetUserList(context.Context, *GetUserListReq) (*GetUserListResp, error)
 	GetChatUserInfo(context.Context, *GetChatUserInfoReq) (*GetChatUserInfoResp, error)
 	UserOnline(context.Context, *UserOnlineReq) (*UserOnlineResp, error)
+	SetUserAvatar(context.Context, *SetUserAvatarReq) (*SetUserAvatarResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedUserServer) GetChatUserInfo(context.Context, *GetChatUserInfo
 }
 func (UnimplementedUserServer) UserOnline(context.Context, *UserOnlineReq) (*UserOnlineResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserOnline not implemented")
+}
+func (UnimplementedUserServer) SetUserAvatar(context.Context, *SetUserAvatarReq) (*SetUserAvatarResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetUserAvatar not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -184,6 +198,24 @@ func _User_UserOnline_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_SetUserAvatar_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetUserAvatarReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SetUserAvatar(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb_user.User/SetUserAvatar",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SetUserAvatar(ctx, req.(*SetUserAvatarReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserOnline",
 			Handler:    _User_UserOnline_Handler,
+		},
+		{
+			MethodName: "SetUserAvatar",
+			Handler:    _User_SetUserAvatar_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

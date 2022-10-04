@@ -31,10 +31,10 @@ message UserInfo {
 }
 
 message UserAvatar {
-  string avatar_small = 1;
-  string avatar_medium = 2;
-  string avatar_large = 3;
-  string avatar_origin = 4;
+  int64 uid = 1;
+  string avatar_small = 2;
+  string avatar_medium = 3;
+  string avatar_large = 4;
 }
 
 message GetUserListReq {
@@ -77,9 +77,23 @@ message UserOnlineResp {
   string msg = 2;
 }
 
+message SetUserAvatarReq {
+  int64 uid = 1;
+  string avatar_small = 2;
+  string avatar_medium = 3;
+  string avatar_large = 4;
+}
+
+message SetUserAvatarResp {
+  int32 code = 1;
+  string msg = 2;
+  UserAvatar avatar = 3; // 头像
+}
+
 service User {
   rpc GetUserInfo(UserInfoReq) returns(UserInfoResp);
   rpc GetUserList(GetUserListReq) returns(GetUserListResp);
   rpc GetChatUserInfo(GetChatUserInfoReq) returns(GetChatUserInfoResp);
   rpc UserOnline(UserOnlineReq) returns(UserOnlineResp);
+  rpc SetUserAvatar(SetUserAvatarReq) returns(SetUserAvatarResp);
 }

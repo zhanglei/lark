@@ -61,3 +61,7 @@ func NewMysqlUpdate() *MysqlUpdate {
 func (m *MysqlUpdate) Set(key string, value interface{}) {
 	m.Values[key] = value
 }
+
+func (m *MysqlUpdate) AppendArg(value interface{}) {
+	m.Args = append(m.Args, value)
+}

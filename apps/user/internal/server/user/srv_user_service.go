@@ -16,3 +16,7 @@ func (s *userServer) GetChatUserInfo(ctx context.Context, req *pb_user.GetChatUs
 func (s *userServer) UserOnline(ctx context.Context, req *pb_user.UserOnlineReq) (resp *pb_user.UserOnlineResp, err error) {
 	return s.userService.UserOnline(ctx, req)
 }
+
+func (s *userServer) SetUserAvatar(ctx context.Context, req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp, err error) {
+	return s.userService.SetUserAvatar(ctx, req)
+}

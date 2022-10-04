@@ -8,6 +8,7 @@ import (
 
 type UserAvatarRepository interface {
 	UserAvatar(w *entity.MysqlWhere) (avatar *po.UserAvatar, err error)
+	SaveAvatar(avatar *po.UserAvatar) (err error)
 }
 
 type userAvatarRepository struct {
@@ -21,5 +22,11 @@ func (r *userAvatarRepository) UserAvatar(w *entity.MysqlWhere) (avatar *po.User
 	avatar = new(po.UserAvatar)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(avatar).Error
+	return
+}
+
+func (r *userAvatarRepository) SaveAvatar(avatar *po.UserAvatar) (err error) {
+	db := xmysql.GetDB()
+	err = db.Save(avatar).Error
 	return
 }

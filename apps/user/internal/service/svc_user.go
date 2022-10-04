@@ -15,6 +15,7 @@ type UserService interface {
 	GetUserList(ctx context.Context, req *pb_user.GetUserListReq) (resp *pb_user.GetUserListResp, err error)
 	GetChatUserInfo(ctx context.Context, req *pb_user.GetChatUserInfoReq) (resp *pb_user.GetChatUserInfoResp, err error)
 	UserOnline(ctx context.Context, req *pb_user.UserOnlineReq) (resp *pb_user.UserOnlineResp, err error)
+	SetUserAvatar(ctx context.Context, req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp, err error)
 }
 
 type userService struct {

@@ -4,11 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"lark/apps/interfaces/internal/config"
 	"lark/apps/interfaces/internal/dto/dto_upload"
+	user_client "lark/apps/user/client"
 	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xminio"
 	"lark/pkg/common/xresize"
 	"lark/pkg/constant"
+	"lark/pkg/proto/pb_user"
 	"lark/pkg/utils"
 	"lark/pkg/xhttp"
 	"mime/multipart"
@@ -21,23 +23,26 @@ https://www.cnblogs.com/liuqingzheng/p/16124105.html
 https://www.lanol.cn/post/599.html
 */
 type UploadService interface {
-	UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhotoReq) (resp *xhttp.Resp)
+	UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhotoReq, uid int64) (resp *xhttp.Resp)
 	Presigned(ctx *gin.Context, req *dto_upload.PresignedReq) (resp *xhttp.Resp)
 }
 
 type uploadService struct {
-	cfg *config.Config
+	cfg        *config.Config
+	userClient user_client.UserClient
 }
 
-func NewUploadService(cfg *config.Config) UploadService {
-	return &uploadService{cfg: cfg}
+func NewUploadService(conf *config.Config) UploadService {
+	userClient := user_client.NewUserClient(conf.Etcd, conf.UserServer, conf.Jaeger, conf.Name)
+	return &uploadService{userClient: userClient, cfg: conf}
 }
 
-func (s *uploadService) UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhotoReq) (resp *xhttp.Resp) {
+func (s *uploadService) UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhotoReq, uid int64) (resp *xhttp.Resp) {
 	resp = new(xhttp.Resp)
 	var (
 		fileHeader *multipart.FileHeader
 		file       multipart.File
+		reply      *pb_user.SetUserAvatarResp
 		err        error
 	)
 	fileHeader, err = ctx.FormFile(constant.UPLOAD_PART_NAME_PHOTO)
@@ -62,42 +67,46 @@ func (s *uploadService) UploadPhoto(ctx *gin.Context, req *dto_upload.UploadPhot
 			photos     *xresize.Photos
 			resultList *xminio.PutResultList
 			pr         *xminio.PutResult
-			list       []*dto_upload.ObjectStorage
+			avatarReq  = &pb_user.SetUserAvatarReq{Uid: uid}
 		)
 		photos = xresize.CropAvatar(file, s.cfg.Minio.PhotoDirectory)
 		if photos.Error != nil {
+			resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_CROP_PHOTO_FAILED, xhttp.ERROR_HTTP_CROP_PHOTO_FAILED)
+			xlog.Warn(xhttp.ERROR_CODE_HTTP_CROP_PHOTO_FAILED, xhttp.ERROR_HTTP_CROP_PHOTO_FAILED, photos.Error.Error())
 			return
 		}
 		resultList = xminio.FPutPhotoListToMinio(photos)
 		if resultList.Err != nil {
+			resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_READ_UPLOAD_FILE_FAILED, xhttp.ERROR_HTTP_READ_UPLOAD_FILE_FAILED)
+			xlog.Warn(xhttp.ERROR_CODE_HTTP_READ_UPLOAD_FILE_FAILED, xhttp.ERROR_HTTP_READ_UPLOAD_FILE_FAILED, resultList.Err.Error())
 			return
 		}
-		list = make([]*dto_upload.ObjectStorage, 3)
 		for _, pr = range resultList.List {
-			os := &dto_upload.ObjectStorage{
-				Bucket:      pr.Info.Bucket,
-				Key:         pr.Info.Key,
-				ETag:        pr.Info.ETag,
-				Size:        pr.Info.Size,
-				ContentType: photos.ContentType,
-				FileName:    fileHeader.Filename,
-			}
-			os.Tag = photos.Maps[pr.Info.Key].Tag
-			switch os.Tag {
-			case "small":
-				list[0] = os
-			case "medium":
-				list[1] = os
-			case "large":
-				list[2] = os
+			switch photos.Maps[pr.Info.Key].Tag {
+			case xresize.PhotoTagSmall:
+				avatarReq.AvatarSmall = pr.Info.Key
+			case xresize.PhotoTagMedium:
+				avatarReq.AvatarMedium = pr.Info.Key
+			case xresize.PhotoTagLarge:
+				avatarReq.AvatarLarge = pr.Info.Key
 			}
 			path := photos.Maps[pr.Info.Key].Path
 			xgopool.Go(func() {
 				utils.Remove(path)
 			})
 		}
-		// TODO:入库
-		resp.Data = list
+		reply = s.userClient.SetUserAvatar(avatarReq)
+		if reply == nil {
+			resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_SERVICE_FAILURE, xhttp.ERROR_HTTP_SERVICE_FAILURE)
+			xlog.Warn(xhttp.ERROR_CODE_HTTP_SERVICE_FAILURE, xhttp.ERROR_HTTP_SERVICE_FAILURE)
+			return
+		}
+		if reply.Code > 0 {
+			resp.SetRespInfo(reply.Code, reply.Msg)
+			xlog.Warn(reply.Code, reply.Msg)
+			return
+		}
+		resp.Data = reply.Avatar
 	}
 	return
 }

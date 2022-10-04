@@ -8,6 +8,13 @@ import (
 	"sync"
 )
 
+const (
+	PhotoTagSmall  = "small"
+	PhotoTagMedium = "medium"
+	PhotoTagLarge  = "large"
+	PhotoTagOrigin = "origin"
+)
+
 type PhotoSize struct {
 	Tag string
 	W   int
@@ -31,9 +38,9 @@ type Photos struct {
 
 var (
 	sizeList = []*PhotoSize{
-		&PhotoSize{Tag: "small", W: 72, H: 72},
-		&PhotoSize{Tag: "medium", W: 240, H: 240},
-		&PhotoSize{Tag: "large", W: 640, H: 640}}
+		&PhotoSize{Tag: PhotoTagSmall, W: 72, H: 72},
+		&PhotoSize{Tag: PhotoTagMedium, W: 240, H: 240},
+		&PhotoSize{Tag: PhotoTagLarge, W: 640, H: 640}}
 )
 
 func CropAvatar(in io.Reader, path string) (photos *Photos) {
