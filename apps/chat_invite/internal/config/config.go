@@ -20,7 +20,7 @@ var (
 	config = new(Config)
 )
 
-var confFile = flag.String("cfg", "./configs/request.yaml", "config file")
+var confFile = flag.String("cfg", "./configs/chat_invite.yaml", "config file")
 
 func init() {
 	flag.Parse()

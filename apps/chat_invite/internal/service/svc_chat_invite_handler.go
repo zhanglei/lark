@@ -17,7 +17,7 @@ func setChatRequestHandlerResp(resp *pb_req.ChatRequestHandlerResp, code int32, 
 	resp.Msg = msg
 }
 
-func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatRequestHandlerReq) (resp *pb_req.ChatRequestHandlerResp, _ error) {
+func (s *chatInviteService) ChatRequestHandler(_ context.Context, req *pb_req.ChatRequestHandlerReq) (resp *pb_req.ChatRequestHandlerResp, _ error) {
 	var (
 		tx      *gorm.DB
 		u       = entity.NewMysqlUpdate()
@@ -41,7 +41,7 @@ func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatR
 	u.Set("handle_msg", req.HandleMsg)
 
 	tx = xmysql.GetTX()
-	err = s.requestRepo.TxRequestUpdate(tx, u)
+	err = s.chatInviteRepo.TxRequestUpdate(tx, u)
 	if err != nil {
 		setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_UPDATE_VALUE_FAILED, ERROR_REQUEST_UPDATE_VALUE_FAILED)
 		xlog.Warn(resp, ERROR_CODE_REQUEST_UPDATE_VALUE_FAILED, ERROR_REQUEST_UPDATE_VALUE_FAILED, err)
@@ -50,7 +50,7 @@ func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatR
 	if req.HandleResult == pb_req.REQUEST_HANDLE_RESULT_ACCEPT {
 		w.Query += " AND request_id=?"
 		w.Args = append(w.Args, req.RequestId)
-		request, err = s.requestRepo.TxRequest(tx, w)
+		request, err = s.chatInviteRepo.TxRequest(tx, w)
 		if err != nil {
 			setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED)
 			xlog.Warn(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED, err)
@@ -67,13 +67,13 @@ func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatR
 				ChatId: chatId,
 				Uid:    request.TargetId,
 			}
-			err = s.requestRepo.TxChatUsersCreate(tx, []*po.ChatUser{user1, user2})
+			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user1, user2})
 		case pb_enum.CHAT_TYPE_GROUP:
 			user := &po.ChatUser{
 				ChatId: request.TargetId,
 				Uid:    request.InitiatorUid,
 			}
-			err = s.requestRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
+			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
 		}
 		if err != nil {
 			setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED)

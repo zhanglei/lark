@@ -111,7 +111,7 @@ redis:
   address: ["lark-redis:63791"]
 ```
 
-### user服务
+### user
 ```
 name: lark_user_server
 grpc_server:
@@ -143,7 +143,7 @@ msg_hot: 85000~89999
 push: 90000~99999
 chat_member: 100000~109999
 chat_msg: 110000~119999
-request: 120000~129999
+chat_invite: 120000~129999
 link: 130000~139999
 ```
 

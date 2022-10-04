@@ -14,7 +14,7 @@ func setChatRequestListResp(resp *pb_req.ChatRequestListResp, code int32, msg st
 	resp.Msg = msg
 }
 
-func (s *requestService) ChatRequestList(_ context.Context, req *pb_req.ChatRequestListReq) (resp *pb_req.ChatRequestListResp, _ error) {
+func (s *chatInviteService) ChatRequestList(_ context.Context, req *pb_req.ChatRequestListReq) (resp *pb_req.ChatRequestListResp, _ error) {
 	resp = &pb_req.ChatRequestListResp{List: make([]*pb_req.ChatRequestInfo, 0)}
 	var (
 		w    = entity.NewMysqlWhere()
@@ -36,7 +36,7 @@ func (s *requestService) ChatRequestList(_ context.Context, req *pb_req.ChatRequ
 		w.Query = " AND target_id=?"
 		w.Args = append(w.Args, req.Uid)
 	}
-	list, err = s.requestRepo.RequestList(w)
+	list, err = s.chatInviteRepo.RequestList(w)
 	if err != nil {
 		setChatRequestListResp(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED)
 		xlog.Warn(resp, ERROR_CODE_REQUEST_QUERY_DB_FAILED, ERROR_REQUEST_QUERY_DB_FAILED, err)

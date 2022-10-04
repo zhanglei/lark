@@ -1,30 +1,30 @@
-package request
+package chat_invite
 
 import (
 	"google.golang.org/grpc"
 	"io"
-	"lark/apps/request/internal/config"
-	"lark/apps/request/internal/service"
+	"lark/apps/chat_invite/internal/config"
+	"lark/apps/chat_invite/internal/service"
 	"lark/pkg/common/xgrpc"
 	"lark/pkg/proto/pb_req"
 )
 
-type RequestServer interface {
+type ChatInviteServer interface {
 	Run()
 }
 
-type requestServer struct {
+type chatInviteServer struct {
 	pb_req.UnimplementedRequestServer
 	cfg            *config.Config
 	grpcServer     *xgrpc.GrpcServer
-	requestService service.RequestService
+	requestService service.ChatInviteService
 }
 
-func NewRequestServer(cfg *config.Config, requestService service.RequestService) RequestServer {
-	return &requestServer{cfg: cfg, requestService: requestService}
+func NewChatInviteServer(cfg *config.Config, requestService service.ChatInviteService) ChatInviteServer {
+	return &chatInviteServer{cfg: cfg, requestService: requestService}
 }
 
-func (s *requestServer) Run() {
+func (s *chatInviteServer) Run() {
 	var (
 		srv    *grpc.Server
 		closer io.Closer
