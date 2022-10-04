@@ -22,12 +22,13 @@ type userService struct {
 	cfg            *config.Config
 	userRepo       repo.UserRepository
 	userAvatarRepo repo.UserAvatarRepository
+	chatMemberRepo repo.ChatMemberRepository
 	consumerGroup  *xkafka.MConsumerGroup
 	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewUserService(cfg *config.Config, userRepo repo.UserRepository, userAvatarRepo repo.UserAvatarRepository) UserService {
-	svc := &userService{cfg: cfg, userRepo: userRepo, userAvatarRepo: userAvatarRepo, msgHandle: make(map[string]global.KafkaMessageHandler)}
+func NewUserService(cfg *config.Config, userRepo repo.UserRepository, userAvatarRepo repo.UserAvatarRepository, chatMemberRepo repo.ChatMemberRepository) UserService {
+	svc := &userService{cfg: cfg, userRepo: userRepo, userAvatarRepo: userAvatarRepo, chatMemberRepo: chatMemberRepo, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},
 		cfg.MsgConsumer.Topic,

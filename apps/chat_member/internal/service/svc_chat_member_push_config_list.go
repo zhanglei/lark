@@ -33,7 +33,7 @@ func (s *chatMemberService) GetChatMemberPushConfigList(ctx context.Context, req
 		w.Args = append(w.Args, req.ChatId)
 		w.Query += " AND uid > ?"
 		w.Args = append(w.Args, lastUid)
-		configList, err = s.chatMemberUserRepo.ChatMemberPushConfigList(w)
+		configList, err = s.chatMemberRepo.ChatMemberPushConfigList(w)
 		if err != nil {
 			setGetChatMemberPushConfigListResp(resp, ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED)
 			xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())

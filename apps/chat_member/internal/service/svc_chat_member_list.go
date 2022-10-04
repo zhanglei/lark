@@ -24,7 +24,7 @@ func (s *chatMemberService) GetChatMemberList(ctx context.Context, req *pb_chat_
 	w.AndQuery("uid>?")
 	w.AppendArg(req.LastUid)
 	w.SetLimit(req.Limit)
-	list, err = s.chatMemberUserRepo.ChatMemberBasicInfoList(w)
+	list, err = s.chatMemberRepo.ChatMemberBasicInfoList(w)
 	if err != nil {
 		setGetChatMemberListResp(resp, ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED)
 		xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())

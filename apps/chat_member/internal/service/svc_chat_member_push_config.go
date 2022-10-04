@@ -24,7 +24,7 @@ func (s *chatMemberService) GetChatMemberPushConfig(ctx context.Context, req *pb
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, req.Uid)
 
-	config, err = s.chatMemberUserRepo.ChatMemberPushConfig(w)
+	config, err = s.chatMemberRepo.ChatMemberPushConfig(w)
 	if err != nil {
 		setGetChatMemberPushConfigResp(resp, ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED)
 		xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())

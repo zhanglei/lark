@@ -25,7 +25,7 @@ func (s *chatMemberService) GetChatMemberInfo(ctx context.Context, req *pb_chat_
 	w.Args = append(w.Args, req.ChatId)
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, req.Uid)
-	member, err = s.chatMemberUserRepo.ChatMemberInfo(w)
+	member, err = s.chatMemberRepo.ChatMemberInfo(w)
 	if err != nil {
 		setGetChatMemberInfoResp(resp, ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED)
 		xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())

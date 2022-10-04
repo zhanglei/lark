@@ -23,16 +23,16 @@ type ChatMemberService interface {
 }
 
 type chatMemberService struct {
-	cfg                *config.Config
-	chatMemberUserRepo repo.ChatMemberRepository
-	userClient         user_client.UserClient
-	consumerGroup      *xkafka.MConsumerGroup
-	msgHandle          map[string]global.KafkaMessageHandler
+	cfg            *config.Config
+	chatMemberRepo repo.ChatMemberRepository
+	userClient     user_client.UserClient
+	consumerGroup  *xkafka.MConsumerGroup
+	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewChatMemberService(cfg *config.Config, chatMemberUserRepo repo.ChatMemberRepository) ChatMemberService {
+func NewChatMemberService(cfg *config.Config, chatMemberRepo repo.ChatMemberRepository) ChatMemberService {
 	userClient := user_client.NewUserClient(cfg.Etcd, cfg.UserServer, cfg.GrpcServer.Jaeger, cfg.Name)
-	svc := &chatMemberService{cfg: cfg, chatMemberUserRepo: chatMemberUserRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
+	svc := &chatMemberService{cfg: cfg, chatMemberRepo: chatMemberRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},
 		cfg.MsgConsumer.Topic,

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/entity"
@@ -15,6 +16,7 @@ type ChatMemberRepository interface {
 	ChatMemberPushConfig(w *entity.MysqlWhere) (conf *pb_chat_member.ChatMemberPushConfig, err error)
 	ChatMemberInfo(w *entity.MysqlWhere) (member *po.ChatMember, err error)
 	UpdateChatMember(u *entity.MysqlUpdate) (err error)
+	TxUpdateChatMember(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 	ChatMemberBasicInfoList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberBasicInfo, err error)
 }
 
@@ -71,6 +73,11 @@ func (r *chatMemberRepository) ChatMemberInfo(w *entity.MysqlWhere) (member *po.
 func (r *chatMemberRepository) UpdateChatMember(u *entity.MysqlUpdate) (err error) {
 	db := xmysql.GetDB()
 	err = db.Model(po.ChatMember{}).Where(u.Query, u.Args...).Updates(u.Values).Error
+	return
+}
+
+func (r *chatMemberRepository) TxUpdateChatMember(tx *gorm.DB, u *entity.MysqlUpdate) (err error) {
+	err = tx.Model(po.ChatMember{}).Where(u.Query, u.Args...).Updates(u.Values).Error
 	return
 }
 

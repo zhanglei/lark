@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/entity"
@@ -8,7 +9,7 @@ import (
 
 type UserAvatarRepository interface {
 	UserAvatar(w *entity.MysqlWhere) (avatar *po.UserAvatar, err error)
-	SaveAvatar(avatar *po.UserAvatar) (err error)
+	TxSaveAvatar(tx *gorm.DB, avatar *po.UserAvatar) (err error)
 }
 
 type userAvatarRepository struct {
@@ -25,8 +26,7 @@ func (r *userAvatarRepository) UserAvatar(w *entity.MysqlWhere) (avatar *po.User
 	return
 }
 
-func (r *userAvatarRepository) SaveAvatar(avatar *po.UserAvatar) (err error) {
-	db := xmysql.GetDB()
-	err = db.Save(avatar).Error
+func (r *userAvatarRepository) TxSaveAvatar(tx *gorm.DB, avatar *po.UserAvatar) (err error) {
+	err = tx.Save(avatar).Error
 	return
 }

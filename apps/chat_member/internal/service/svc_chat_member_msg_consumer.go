@@ -23,14 +23,14 @@ func (s *chatMemberService) MessageHandler(msg []byte, msgKey string) (err error
 
 	u.Set("server_id", online.ServerId)
 	u.Set("platform", online.Platform)
-	err = s.chatMemberUserRepo.UpdateChatMember(u)
+	err = s.chatMemberRepo.UpdateChatMember(u)
 	if err != nil {
 		return
 	}
 
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, online.Uid)
-	list, err = s.chatMemberUserRepo.ChatMemberPushConfigList(w)
+	list, err = s.chatMemberRepo.ChatMemberPushConfigList(w)
 	if err != nil {
 		return
 	}

@@ -42,7 +42,7 @@ func (s *chatMemberService) GetChatMemberUidList(ctx context.Context, req *pb_ch
 			w.Query += " AND uid > ?"
 			w.Args = append(w.Args, lastUid)
 
-			uidList, err = s.chatMemberUserRepo.ChatMemberUidList(w)
+			uidList, err = s.chatMemberRepo.ChatMemberUidList(w)
 			if err != nil {
 				setGetChatMemberUidListResp(resp, ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED)
 				xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())
