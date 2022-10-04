@@ -1,15 +1,15 @@
-package repos
+package repo
 
 import (
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/common/xsnowflake"
 	"lark/pkg/entity"
 )
 
 type AuthRepository interface {
-	Create(user *pos.User) (err error)
-	VerifyUserIdentity(w *entity.MysqlWhere) (user *pos.User, err error)
+	Create(user *po.User) (err error)
+	VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error)
 }
 
 type authRepository struct {
@@ -25,7 +25,7 @@ func NewAuthRepository() AuthRepository {
 需要不为nil
 */
 
-func (r *authRepository) Create(user *pos.User) (err error) {
+func (r *authRepository) Create(user *po.User) (err error) {
 	user.Uid = xsnowflake.NewSnowflakeID()
 	if user.LarkId == "" {
 		user.LarkId = xsnowflake.DefaultLarkId()
@@ -35,8 +35,8 @@ func (r *authRepository) Create(user *pos.User) (err error) {
 	return
 }
 
-func (r *authRepository) VerifyUserIdentity(w *entity.MysqlWhere) (user *pos.User, err error) {
-	user = new(pos.User)
+func (r *authRepository) VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error) {
+	user = new(po.User)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(user).Error
 	return

@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/proto"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/proto/pb_mq"
 	"lark/pkg/utils"
@@ -12,7 +12,7 @@ import (
 func (s *messageHotService) MessageHandler(msg []byte, msgKey string) (err error) {
 	var (
 		req     = new(pb_mq.InboxMessage)
-		message = new(pos.Message)
+		message = new(po.Message)
 	)
 	if err = proto.Unmarshal(msg, req); err != nil {
 		xlog.Warn(ERROR_CODE_MSG_HOT_PROTOCOL_UNMARSHAL_ERR, ERROR_MSG_HOT_PROTOCOL_UNMARSHAL_ERR, err.Error())

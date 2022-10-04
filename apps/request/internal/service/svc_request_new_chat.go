@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xsnowflake"
 	"lark/pkg/proto/pb_req"
@@ -17,7 +17,7 @@ func setNewChatRequestResp(resp *pb_req.NewChatRequestResp, code int32, msg stri
 func (s *requestService) NewChatRequest(_ context.Context, req *pb_req.NewChatRequestReq) (resp *pb_req.NewChatRequestResp, _ error) {
 	resp = new(pb_req.NewChatRequestResp)
 	var (
-		request = new(pos.ChatRequest)
+		request = new(po.ChatRequest)
 		err     error
 	)
 	copier.Copy(request, req)

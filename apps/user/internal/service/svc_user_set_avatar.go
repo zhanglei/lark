@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/proto/pb_user"
 )
@@ -16,7 +16,7 @@ func setUserAvatarResp(resp *pb_user.SetUserAvatarResp, code int32, msg string) 
 func (s *userService) SetUserAvatar(ctx context.Context, req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp, _ error) {
 	resp = &pb_user.SetUserAvatarResp{Avatar: &pb_user.UserAvatar{}}
 	var (
-		avatar = new(pos.UserAvatar)
+		avatar = new(po.UserAvatar)
 		err    error
 	)
 	copier.Copy(avatar, req)

@@ -6,7 +6,7 @@ import (
 	"lark/apps/chat_msg/internal/server"
 	"lark/apps/chat_msg/internal/server/chat_msg"
 	"lark/apps/chat_msg/internal/service"
-	"lark/domain/repos"
+	"lark/domain/repo"
 )
 
 var container = dig.New()
@@ -16,7 +16,7 @@ func init() {
 	container.Provide(server.NewServer)
 	container.Provide(chat_msg.NewChatMessageServer)
 	container.Provide(service.NewChatMessageService)
-	container.Provide(repos.NewChatMessageRepository)
+	container.Provide(repo.NewChatMessageRepository)
 }
 
 func Invoke(i interface{}) error {

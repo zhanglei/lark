@@ -6,7 +6,7 @@ import (
 	"lark/apps/request/internal/server"
 	"lark/apps/request/internal/server/request"
 	"lark/apps/request/internal/service"
-	"lark/domain/repos"
+	"lark/domain/repo"
 )
 
 var container = dig.New()
@@ -16,7 +16,7 @@ func init() {
 	container.Provide(server.NewServer)
 	container.Provide(request.NewRequestServer)
 	container.Provide(service.NewRequestService)
-	container.Provide(repos.NewRequestRepository)
+	container.Provide(repo.NewRequestRepository)
 }
 
 func Invoke(i interface{}) error {

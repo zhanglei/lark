@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_user"
@@ -18,7 +18,7 @@ func (s *userService) GetUserList(ctx context.Context, req *pb_user.GetUserListR
 	resp = &pb_user.GetUserListResp{List: make([]*pb_user.UserInfo, 0)}
 	var (
 		w    = entity.NewMysqlWhere()
-		list []pos.User
+		list []po.User
 		err  error
 	)
 	w.Query += " AND uid IN(?)"

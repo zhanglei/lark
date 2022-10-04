@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_req"
@@ -18,7 +18,7 @@ func (s *requestService) ChatRequestList(_ context.Context, req *pb_req.ChatRequ
 	resp = &pb_req.ChatRequestListResp{List: make([]*pb_req.ChatRequestInfo, 0)}
 	var (
 		w    = entity.NewMysqlWhere()
-		list []pos.ChatRequest
+		list []po.ChatRequest
 		err  error
 	)
 	w.Limit = int(req.PageSize)

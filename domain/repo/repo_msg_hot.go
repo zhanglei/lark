@@ -1,15 +1,15 @@
-package repos
+package repo
 
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
 )
 
 type MessageHotRepository interface {
-	Create(message *pos.Message) (err error)
+	Create(message *po.Message) (err error)
 }
 
 type messageHotRepository struct {
@@ -19,13 +19,13 @@ func NewMessageHotRepository() MessageHotRepository {
 	return &messageHotRepository{}
 }
 
-func (r *messageHotRepository) Create(message *pos.Message) (err error) {
+func (r *messageHotRepository) Create(message *po.Message) (err error) {
 	var (
 		coll   *mongo.Collection
 		ctx    context.Context
 		cancel context.CancelFunc
 	)
-	ctx, cancel, coll = entity.Collection(pos.MongoCollectionMessages)
+	ctx, cancel, coll = entity.Collection(po.MongoCollectionMessages)
 	defer cancel()
 	if coll == nil {
 		return
@@ -37,15 +37,15 @@ func (r *messageHotRepository) Create(message *pos.Message) (err error) {
 	return
 }
 
-func (r *messageHotRepository) Messages(w *entity.MongoWhere) (messages []*pos.Message, err error) {
-	messages = make([]*pos.Message, 0)
+func (r *messageHotRepository) Messages(w *entity.MongoWhere) (messages []*po.Message, err error) {
+	messages = make([]*po.Message, 0)
 	var (
 		coll   *mongo.Collection
 		ctx    context.Context
 		cancel context.CancelFunc
 		cur    *mongo.Cursor
 	)
-	ctx, cancel, coll = entity.Collection(pos.MongoCollectionMessages)
+	ctx, cancel, coll = entity.Collection(po.MongoCollectionMessages)
 	defer cancel()
 	if coll == nil {
 		return

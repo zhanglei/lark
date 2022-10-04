@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xjwt"
 	"lark/pkg/common/xlog"
 	"lark/pkg/proto/pb_auth"
@@ -18,7 +18,7 @@ func setRegisterResp(resp *pb_auth.RegisterResp, code int32, msg string) {
 func (s *authService) Register(_ context.Context, req *pb_auth.RegisterReq) (resp *pb_auth.RegisterResp, _ error) {
 	resp = &pb_auth.RegisterResp{UserInfo: new(pb_user.UserInfo), Token: new(pb_auth.Token)}
 	var (
-		user = new(pos.User)
+		user = new(po.User)
 		err  error
 	)
 	copier.Copy(user, req)

@@ -1,17 +1,17 @@
-package repos
+package repo
 
 import (
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/common/xsnowflake"
 	"lark/pkg/entity"
 )
 
 type UserRepository interface {
-	Create(user *pos.User) (err error)
-	VerifyUserIdentity(w *entity.MysqlWhere) (user *pos.User, err error)
-	UserInfo(w *entity.MysqlWhere) (user *pos.User, err error)
-	UserList(w *entity.MysqlWhere) (list []pos.User, err error)
+	Create(user *po.User) (err error)
+	VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error)
+	UserInfo(w *entity.MysqlWhere) (user *po.User, err error)
+	UserList(w *entity.MysqlWhere) (list []po.User, err error)
 	UpdateUser(u *entity.MysqlUpdate) (err error)
 }
 
@@ -28,7 +28,7 @@ func NewUserRepository() UserRepository {
 需要不为nil
 */
 
-func (r *userRepository) Create(user *pos.User) (err error) {
+func (r *userRepository) Create(user *po.User) (err error) {
 	user.Uid = xsnowflake.NewSnowflakeID()
 	if user.LarkId == "" {
 		user.LarkId = xsnowflake.DefaultLarkId()
@@ -38,22 +38,22 @@ func (r *userRepository) Create(user *pos.User) (err error) {
 	return
 }
 
-func (r *userRepository) VerifyUserIdentity(w *entity.MysqlWhere) (user *pos.User, err error) {
-	user = new(pos.User)
+func (r *userRepository) VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error) {
+	user = new(po.User)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(user).Error
 	return
 }
 
-func (r *userRepository) UserList(w *entity.MysqlWhere) (list []pos.User, err error) {
-	list = make([]pos.User, 0)
+func (r *userRepository) UserList(w *entity.MysqlWhere) (list []po.User, err error) {
+	list = make([]po.User, 0)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(&list).Error
 	return
 }
 
-func (r *userRepository) UserInfo(w *entity.MysqlWhere) (user *pos.User, err error) {
-	user = new(pos.User)
+func (r *userRepository) UserInfo(w *entity.MysqlWhere) (user *po.User, err error) {
+	user = new(po.User)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(&user).Error
 	return
@@ -61,6 +61,6 @@ func (r *userRepository) UserInfo(w *entity.MysqlWhere) (user *pos.User, err err
 
 func (r *userRepository) UpdateUser(u *entity.MysqlUpdate) (err error) {
 	db := xmysql.GetDB()
-	err = db.Model(pos.User{}).Where(u.Query, u.Args...).Updates(u.Values).Error
+	err = db.Model(po.User{}).Where(u.Query, u.Args...).Updates(u.Values).Error
 	return
 }

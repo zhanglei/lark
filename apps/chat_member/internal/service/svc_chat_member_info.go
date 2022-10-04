@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_member"
@@ -18,7 +18,7 @@ func (s *chatMemberService) GetChatMemberInfo(ctx context.Context, req *pb_chat_
 	resp = &pb_chat_member.GetChatMemberInfoResp{Info: new(pb_chat_member.ChatMemberInfo)}
 	var (
 		w      = entity.NewMysqlWhere()
-		member *pos.ChatMember
+		member *po.ChatMember
 		err    error
 	)
 	w.Query += " AND chat_id = ?"

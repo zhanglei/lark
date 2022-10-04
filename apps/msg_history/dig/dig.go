@@ -6,7 +6,7 @@ import (
 	"lark/apps/msg_history/internal/server"
 	"lark/apps/msg_history/internal/server/msg_history"
 	"lark/apps/msg_history/internal/service"
-	"lark/domain/repos"
+	"lark/domain/repo"
 )
 
 var container = dig.New()
@@ -14,7 +14,7 @@ var container = dig.New()
 func init() {
 	container.Provide(config.NewConfig)
 	container.Provide(server.NewServer)
-	container.Provide(repos.NewMessageHistoryRepository)
+	container.Provide(repo.NewMessageHistoryRepository)
 	container.Provide(msg_history.NewMessageHistoryServer)
 	container.Provide(service.NewMessageHistoryService)
 }

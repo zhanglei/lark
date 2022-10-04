@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"lark/apps/auth/internal/config"
-	"lark/domain/repos"
+	"lark/domain/repo"
 	"lark/pkg/proto/pb_auth"
 )
 
@@ -14,9 +14,9 @@ type AuthService interface {
 
 type authService struct {
 	cfg      *config.Config
-	authRepo repos.AuthRepository
+	authRepo repo.AuthRepository
 }
 
-func NewAuthService(cfg *config.Config, authRepo repos.AuthRepository) AuthService {
+func NewAuthService(cfg *config.Config, authRepo repo.AuthRepository) AuthService {
 	return &authService{cfg: cfg, authRepo: authRepo}
 }

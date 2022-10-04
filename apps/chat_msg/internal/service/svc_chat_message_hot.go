@@ -2,12 +2,12 @@ package service
 
 import (
 	"go.mongodb.org/mongo-driver/bson"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_msg"
 )
 
-func (s *chatMessageService) GetHotMessages(req *pb_chat_msg.GetChatMessagesReq, maxSeqId int64) (list []*pos.Message, next bool, err error) {
+func (s *chatMessageService) GetHotMessages(req *pb_chat_msg.GetChatMessagesReq, maxSeqId int64) (list []*po.Message, next bool, err error) {
 	// 从mongo中获取消息
 	var (
 		w        = entity.NewMongoWhere()

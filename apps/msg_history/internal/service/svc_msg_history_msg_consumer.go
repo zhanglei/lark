@@ -4,7 +4,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/proto"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -15,7 +15,7 @@ import (
 func (s *messageHistoryService) MessageHandler(msg []byte, msgKey string) (err error) {
 	var (
 		req     = new(pb_mq.InboxMessage)
-		message = new(pos.Message)
+		message = new(po.Message)
 		jsonStr string
 		key     string
 	)

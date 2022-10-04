@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
@@ -26,9 +26,9 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 	}
 	var (
 		w        = entity.NewMysqlWhere()
-		list     []*pos.ChatMember
+		list     []*po.ChatMember
 		members  []*pb_chat_member.ChatMemberInfo
-		member   *pos.ChatMember
+		member   *po.ChatMember
 		pbMember *pb_chat_member.ChatMemberInfo
 		err      error
 	)

@@ -1,12 +1,12 @@
 package service
 
 import (
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_msg"
 )
 
-func (s *chatMessageService) GetHistoryMessages(req *pb_chat_msg.GetChatMessagesReq) (list []*pos.Message, err error) {
+func (s *chatMessageService) GetHistoryMessages(req *pb_chat_msg.GetChatMessagesReq) (list []*po.Message, err error) {
 	// 从mysql中获取消息
 	var (
 		w = entity.NewMysqlWhere()

@@ -1,13 +1,13 @@
-package repos
+package repo
 
 import (
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/entity"
 )
 
 type ChatMessageRepository interface {
-	HistoryMessages(w *entity.MysqlWhere) (list []*pos.Message, err error)
-	HotMessages(w *entity.MongoWhere) (list []*pos.Message, err error)
+	HistoryMessages(w *entity.MysqlWhere) (list []*po.Message, err error)
+	HotMessages(w *entity.MongoWhere) (list []*po.Message, err error)
 }
 
 type chatMessageRepository struct {

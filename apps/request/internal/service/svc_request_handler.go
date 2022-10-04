@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"gorm.io/gorm"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/common/xsnowflake"
@@ -22,7 +22,7 @@ func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatR
 		tx      *gorm.DB
 		u       = entity.NewMysqlUpdate()
 		w       = entity.NewMysqlWhere()
-		request *pos.ChatRequest
+		request *po.ChatRequest
 		chatId  int64
 		err     error
 	)
@@ -59,21 +59,21 @@ func (s *requestService) ChatRequestHandler(_ context.Context, req *pb_req.ChatR
 		switch pb_enum.CHAT_TYPE(request.ChatType) {
 		case pb_enum.CHAT_TYPE_PRIVATE:
 			chatId = xsnowflake.NewSnowflakeID()
-			user1 := &pos.ChatUser{
+			user1 := &po.ChatUser{
 				ChatId: chatId,
 				Uid:    request.InitiatorUid,
 			}
-			user2 := &pos.ChatUser{
+			user2 := &po.ChatUser{
 				ChatId: chatId,
 				Uid:    request.TargetId,
 			}
-			err = s.requestRepo.TxChatUsersCreate(tx, []*pos.ChatUser{user1, user2})
+			err = s.requestRepo.TxChatUsersCreate(tx, []*po.ChatUser{user1, user2})
 		case pb_enum.CHAT_TYPE_GROUP:
-			user := &pos.ChatUser{
+			user := &po.ChatUser{
 				ChatId: request.TargetId,
 				Uid:    request.InitiatorUid,
 			}
-			err = s.requestRepo.TxChatUsersCreate(tx, []*pos.ChatUser{user})
+			err = s.requestRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
 		}
 		if err != nil {
 			setChatRequestHandlerResp(resp, ERROR_CODE_REQUEST_INSERT_VALUE_FAILED, ERROR_REQUEST_INSERT_VALUE_FAILED)

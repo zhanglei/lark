@@ -1,22 +1,22 @@
-package repos
+package repo
 
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
-	"lark/domain/pos"
+	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/entity"
 )
 
-func (r *chatMessageRepository) HotMessages(w *entity.MongoWhere) (list []*pos.Message, err error) {
-	list = make([]*pos.Message, 0)
+func (r *chatMessageRepository) HotMessages(w *entity.MongoWhere) (list []*po.Message, err error) {
+	list = make([]*po.Message, 0)
 	var (
 		coll   *mongo.Collection
 		ctx    context.Context
 		cancel context.CancelFunc
 		cur    *mongo.Cursor
 	)
-	ctx, cancel, coll = entity.Collection(pos.MongoCollectionMessages)
+	ctx, cancel, coll = entity.Collection(po.MongoCollectionMessages)
 	defer cancel()
 	if coll == nil {
 		return
