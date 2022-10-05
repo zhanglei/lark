@@ -16,7 +16,7 @@ type Resp struct {
 }
 
 func Success(ctx *gin.Context, data ...interface{}) {
-	if len(data) == 0 {
+	if len(data) == 0 || data[0] == nil {
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": 0,
 			"msg":  "success",

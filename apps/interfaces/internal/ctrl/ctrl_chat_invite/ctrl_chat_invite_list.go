@@ -16,6 +16,7 @@ func (ctrl *ChatInviteCtrl) ChatInviteList(ctx *gin.Context) {
 	)
 	if err = xgin.ShouldBindQuery(ctx, params); err != nil {
 		xlog.Warn(xhttp.ERROR_CODE_HTTP_REQ_PARAM_ERR, xhttp.ERROR_HTTP_REQ_PARAM_ERR, err.Error())
+		return
 	}
 	resp = ctrl.chatInviteService.ChatInviteList(params)
 	if resp.Code > 0 {

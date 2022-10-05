@@ -12,7 +12,7 @@ type ChatInviteRepository interface {
 	TxUpdateChatInvite(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 	TxChatInvite(tx *gorm.DB, w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
 	ChatInviteList(w *entity.MysqlWhere) (list []*po.ChatInvite, err error)
-	TxChatUsersCreate(tx *gorm.DB, users []*po.ChatUser) (err error)
+	TxChatUsersCreate(tx *gorm.DB, users []*po.ChatMember) (err error)
 }
 
 type chatInviteRepository struct {
@@ -29,7 +29,7 @@ func (r *chatInviteRepository) NewChatInvite(req *po.ChatInvite) (err error) {
 }
 
 func (r *chatInviteRepository) TxUpdateChatInvite(tx *gorm.DB, u *entity.MysqlUpdate) (err error) {
-	err = tx.Model(po.ChatRequest{}).Where(u.Query, u.Args...).Updates(u.Values).Error
+	err = tx.Model(po.ChatInvite{}).Where(u.Query, u.Args...).Updates(u.Values).Error
 	return
 }
 
@@ -46,7 +46,7 @@ func (r *chatInviteRepository) ChatInviteList(w *entity.MysqlWhere) (list []*po.
 	return
 }
 
-func (r *chatInviteRepository) TxChatUsersCreate(tx *gorm.DB, users []*po.ChatUser) (err error) {
+func (r *chatInviteRepository) TxChatUsersCreate(tx *gorm.DB, users []*po.ChatMember) (err error) {
 	err = tx.Create(users).Error
 	return
 }

@@ -18,6 +18,7 @@ func setChatInviteHandleResp(resp *pb_invite.ChatInviteHandleResp, code int32, m
 }
 
 func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite.ChatInviteHandleReq) (resp *pb_invite.ChatInviteHandleResp, _ error) {
+	resp = new(pb_invite.ChatInviteHandleResp)
 	var (
 		tx     *gorm.DB
 		u      = entity.NewMysqlUpdate()
@@ -59,21 +60,21 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		switch pb_enum.CHAT_TYPE(invite.ChatType) {
 		case pb_enum.CHAT_TYPE_PRIVATE:
 			chatId = xsnowflake.NewSnowflakeID()
-			user1 := &po.ChatUser{
+			member1 := &po.ChatMember{
 				ChatId: chatId,
 				Uid:    invite.InitiatorUid,
 			}
-			user2 := &po.ChatUser{
+			member2 := &po.ChatMember{
 				ChatId: chatId,
-				Uid:    invite.InviteeId,
+				Uid:    invite.InviteeUid,
 			}
-			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user1, user2})
+			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatMember{member1, member2})
 		case pb_enum.CHAT_TYPE_GROUP:
-			user := &po.ChatUser{
-				ChatId: invite.InviteeId,
+			member := &po.ChatMember{
+				ChatId: invite.InviteeUid,
 				Uid:    invite.InitiatorUid,
 			}
-			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatUser{user})
+			err = s.chatInviteRepo.TxChatUsersCreate(tx, []*po.ChatMember{member})
 		}
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)

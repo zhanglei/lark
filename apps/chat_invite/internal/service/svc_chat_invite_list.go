@@ -23,7 +23,7 @@ func (s *chatInviteService) ChatInviteList(_ context.Context, req *pb_invite.Cha
 		err  error
 	)
 	w.Limit = int(req.Limit)
-	w.And("request_id>?", req.MaxInviteId)
+	w.And("invite_id>?", req.MaxInviteId)
 
 	if req.HandleResult > 0 {
 		w.And("handle_result=?", req.HandleResult)
@@ -40,6 +40,6 @@ func (s *chatInviteService) ChatInviteList(_ context.Context, req *pb_invite.Cha
 		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
 		return
 	}
-	copier.Copy(resp.List, list)
+	copier.Copy(&resp.List, list)
 	return
 }

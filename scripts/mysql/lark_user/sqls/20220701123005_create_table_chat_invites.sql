@@ -17,5 +17,5 @@ CREATE TABLE `chat_invites` (
   PRIMARY KEY (`invite_id`),
   UNIQUE KEY `invite_id` (`invite_id`),
   KEY `id_chatType_initiatorUid_handleResult` (`chat_type`,`initiator_uid`,`handle_result`),
-  KEY `id_chatType_inviteeId_handleResult` (`chat_type`,`invitee_id`,`handle_result`)
+  KEY `id_chatType_inviteeUid_handleResult` (`chat_type`,`invitee_uid`,`handle_result`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
