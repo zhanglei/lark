@@ -37,7 +37,7 @@ func (s *chatInviteService) ChatInviteList(_ context.Context, req *pb_invite.Cha
 	list, err = s.chatInviteRepo.ChatInviteList(w)
 	if err != nil {
 		setChatInviteListResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-		xlog.Warn(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
 		return
 	}
 	copier.Copy(&resp.List, list)
