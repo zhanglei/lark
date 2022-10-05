@@ -14,8 +14,19 @@ type ChatInviteService interface {
 
 type chatInviteService struct {
 	chatInviteRepo repo.ChatInviteRepository
+	userRepo       repo.UserRepository
+	userAvatarRepo repo.UserAvatarRepository
+	chatMemberRepo repo.ChatMemberRepository
 }
 
-func NewChatInviteService(chatInviteRepo repo.ChatInviteRepository) ChatInviteService {
-	return &chatInviteService{chatInviteRepo: chatInviteRepo}
+func NewChatInviteService(
+	chatInviteRepo repo.ChatInviteRepository,
+	userRepo repo.UserRepository,
+	userAvatarRepo repo.UserAvatarRepository,
+	chatMemberRepo repo.ChatMemberRepository) ChatInviteService {
+	return &chatInviteService{
+		chatInviteRepo: chatInviteRepo,
+		userRepo:       userRepo,
+		userAvatarRepo: userAvatarRepo,
+		chatMemberRepo: chatMemberRepo}
 }

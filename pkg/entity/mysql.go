@@ -61,6 +61,11 @@ func (m *MysqlWhere) SetLimit(limit int32) {
 	m.Limit = int(limit)
 }
 
+func (m *MysqlWhere) Reset() {
+	m.Query = "1=1"
+	m.Args = make([]interface{}, 0)
+}
+
 type MysqlUpdate struct {
 	Query  string
 	Args   []interface{}

@@ -5,6 +5,7 @@ import "lark/pkg/entity"
 type ChatMember struct {
 	entity.GormEntityTs
 	ChatId      int64  `gorm:"column:chat_id;primary_key" json:"chat_id"`            // chat ID
+	ChatHash    string `gorm:"column:chat_hash" json:"chat_hash"`                    // chat hash值
 	ChatType    int    `gorm:"column:chat_type;default:0;NOT NULL" json:"chat_type"` // chat type
 	Uid         int64  `gorm:"column:uid;NOT NULL" json:"uid"`                       // 用户ID
 	Mute        int    `gorm:"column:mute;default:0;NOT NULL" json:"mute"`           // 是否开启免打扰

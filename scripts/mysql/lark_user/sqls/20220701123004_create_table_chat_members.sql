@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS `chat_members`;
 CREATE TABLE `chat_members` (
   `chat_id` bigint NOT NULL COMMENT 'chat ID',
+  `chat_hash` CHAR(32) COMMENT 'chat hash值',
   `chat_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'chat type',
   `uid` bigint NOT NULL COMMENT '用户ID',
   `mute` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启免打扰',

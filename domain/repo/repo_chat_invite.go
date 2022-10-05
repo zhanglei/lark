@@ -11,6 +11,7 @@ type ChatInviteRepository interface {
 	NewChatInvite(req *po.ChatInvite) (err error)
 	TxUpdateChatInvite(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 	TxChatInvite(tx *gorm.DB, w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
+	ChatInvite(w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
 	ChatInviteList(w *entity.MysqlWhere) (list []*po.ChatInvite, err error)
 	TxChatUsersCreate(tx *gorm.DB, users []*po.ChatMember) (err error)
 }
@@ -36,6 +37,13 @@ func (r *chatInviteRepository) TxUpdateChatInvite(tx *gorm.DB, u *entity.MysqlUp
 func (r *chatInviteRepository) TxChatInvite(tx *gorm.DB, w *entity.MysqlWhere) (invite *po.ChatInvite, err error) {
 	invite = new(po.ChatInvite)
 	err = tx.Where(w.Query, w.Args...).Find(invite).Error
+	return
+}
+
+func (r *chatInviteRepository) ChatInvite(w *entity.MysqlWhere) (invite *po.ChatInvite, err error) {
+	invite = new(po.ChatInvite)
+	db := xmysql.GetDB()
+	err = db.Where(w.Query, w.Args...).Find(invite).Error
 	return
 }
 

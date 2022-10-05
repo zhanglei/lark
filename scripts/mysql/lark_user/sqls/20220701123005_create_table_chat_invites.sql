@@ -5,7 +5,7 @@ CREATE TABLE `chat_invites` (
   `chat_id` bigint DEFAULT '0' COMMENT 'Chat ID',
   `chat_type` tinyint(1) DEFAULT '0' COMMENT '1:私聊/2:群聊',
   `initiator_uid` bigint NOT NULL DEFAULT '0' COMMENT '发起人 UID',
-  `invitee_uid` bigint NOT NULL DEFAULT '0'  COMMENT '被邀请人UID/群ID',
+  `invitee_uid` bigint NOT NULL DEFAULT '0'  COMMENT '被邀请人 UID',
   `invitation_msg` varchar(255) NOT NULL DEFAULT '' COMMENT '邀请消息',
   `handler_uid` bigint DEFAULT '0' COMMENT '处理人 UID',
   `handle_result` tinyint(1) DEFAULT '0' COMMENT '结果',

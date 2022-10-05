@@ -14,7 +14,7 @@ type ChatMemberRepository interface {
 	ChatMemberSetting(w *entity.MysqlWhere) (member *po.ChatMember, err error)
 	ChatMemberPushConfigList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberPushConfig, err error)
 	ChatMemberPushConfig(w *entity.MysqlWhere) (conf *pb_chat_member.ChatMemberPushConfig, err error)
-	ChatMemberInfo(w *entity.MysqlWhere) (member *po.ChatMember, err error)
+	ChatMember(w *entity.MysqlWhere) (member *po.ChatMember, err error)
 	UpdateChatMember(u *entity.MysqlUpdate) (err error)
 	TxUpdateChatMember(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 	ChatMemberBasicInfoList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberBasicInfo, err error)
@@ -63,7 +63,7 @@ func (r *chatMemberRepository) ChatMemberPushConfig(w *entity.MysqlWhere) (conf 
 	return
 }
 
-func (r *chatMemberRepository) ChatMemberInfo(w *entity.MysqlWhere) (member *po.ChatMember, err error) {
+func (r *chatMemberRepository) ChatMember(w *entity.MysqlWhere) (member *po.ChatMember, err error) {
 	member = new(po.ChatMember)
 	db := xmysql.GetDB()
 	err = db.Model(po.ChatMember{}).Where(w.Query, w.Args...).Find(&member).Error

@@ -11,7 +11,7 @@ type UserRepository interface {
 	Create(user *po.User) (err error)
 	VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error)
 	UserInfo(w *entity.MysqlWhere) (user *po.User, err error)
-	UserList(w *entity.MysqlWhere) (list []po.User, err error)
+	UserList(w *entity.MysqlWhere) (list []*po.User, err error)
 	UpdateUser(u *entity.MysqlUpdate) (err error)
 }
 
@@ -45,8 +45,8 @@ func (r *userRepository) VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User
 	return
 }
 
-func (r *userRepository) UserList(w *entity.MysqlWhere) (list []po.User, err error) {
-	list = make([]po.User, 0)
+func (r *userRepository) UserList(w *entity.MysqlWhere) (list []*po.User, err error) {
+	list = make([]*po.User, 0)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Find(&list).Error
 	return
