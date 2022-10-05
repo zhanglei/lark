@@ -18,7 +18,7 @@ func (s *userService) GetUserList(ctx context.Context, req *pb_user.GetUserListR
 	resp = &pb_user.GetUserListResp{List: make([]*pb_user.UserInfo, 0)}
 	var (
 		w    = entity.NewMysqlWhere()
-		list []po.User
+		list []*po.User
 		err  error
 	)
 	w.Query += " AND uid IN(?)"
