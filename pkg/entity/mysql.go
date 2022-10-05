@@ -39,7 +39,7 @@ type MysqlWhere struct {
 
 func NewMysqlWhere() *MysqlWhere {
 	return &MysqlWhere{
-		Query: "1=1",
+		Query: "deleted_ts=0",
 		Args:  make([]interface{}, 0),
 	}
 }
@@ -62,7 +62,7 @@ func (m *MysqlWhere) SetLimit(limit int32) {
 }
 
 func (m *MysqlWhere) Reset() {
-	m.Query = "1=1"
+	m.Query = "deleted_ts=0"
 	m.Args = make([]interface{}, 0)
 }
 
@@ -74,7 +74,7 @@ type MysqlUpdate struct {
 
 func NewMysqlUpdate() *MysqlUpdate {
 	return &MysqlUpdate{
-		Query:  "1=1",
+		Query:  "deleted_ts=0",
 		Args:   make([]interface{}, 0),
 		Values: make(map[string]interface{}),
 	}

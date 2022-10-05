@@ -17,9 +17,11 @@ CREATE TABLE `chat_members` (
   `deleted_ts` bigint DEFAULT '0',
   PRIMARY KEY (`chat_id`,`uid`),
   UNIQUE KEY `chatId_uid` (`chat_id`,`uid`),
+  KEY `idx_deletedTs` (`deleted_ts`),
+  KEY `idx_chatHash` (`chat_hash`),
+  KEY `idx_chatType` (`chat_type`),
   KEY `idx_uid_sync` (`uid`,`sync`),
-  KEY `idx_status` (`status`),
-  KEY `idx_deletedTs` (`deleted_ts`)
+  KEY `idx_status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 /*

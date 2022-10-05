@@ -44,7 +44,8 @@ CREATE TABLE `messages` (
   PRIMARY KEY (`srv_msg_id`),
   UNIQUE KEY `srv_msg_id` (`srv_msg_id`),
   UNIQUE KEY `chatId_seqId` (`chat_id`,`seq_id`),
-  KEY `idx_chatId_seqId_deletedTs` (`chat_id`,`seq_id`,`deleted_ts`)
+  KEY `idx_deletedTs` (`deleted_ts`),
+  KEY `idx_chatId_seqId` (`chat_id`,`seq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -25,7 +25,6 @@ CREATE TABLE `users` (
   KEY `idx_deletedTs` (`deleted_ts`),
   KEY `idx_larkId` (`lark_id`),
   KEY `idx_status` (`status`),
-  KEY `idx_udid` (`udid`),
   KEY `idx_mobile` (`mobile`),
   KEY `idx_platform` (`platform`),
   KEY `idx_gender` (`gender`),
