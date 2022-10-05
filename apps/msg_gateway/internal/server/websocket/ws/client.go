@@ -190,11 +190,11 @@ func (c *Client) writeLoop() {
 			if err = c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
-		case _, ok = <-c.closeChan:
+		case message, ok = <-c.closeChan:
 			if ok == false {
 				return
 			}
-			c.conn.WriteMessage(websocket.CloseMessage, WS_MSG_BUF_CLOSE)
+			c.conn.WriteMessage(websocket.CloseMessage, message)
 			return
 		}
 	}
@@ -227,5 +227,5 @@ func (c *Client) Close() {
 	if c.closed == true {
 		return
 	}
-	c.closeChan <- nil
+	c.closeChan <- WS_MSG_BUF_CLOSE
 }
