@@ -24,4 +24,5 @@ func registerPrivateRouter(group *gin.RouterGroup) {
 	registerChatRouter(group)
 	registerUploadRouter(group)
 	registerChatMemberRouter(group)
+	registerChatInviteRouter(group)
 }
