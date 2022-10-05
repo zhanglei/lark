@@ -22,7 +22,7 @@ func (s *chatInviteService) ChatInviteList(_ context.Context, req *pb_invite.Cha
 		list []*po.ChatInvite
 		err  error
 	)
-	w.Limit = int(req.PageSize)
+	w.Limit = int(req.Limit)
 	w.And("request_id>?", req.MaxInviteId)
 
 	if req.HandleResult > 0 {

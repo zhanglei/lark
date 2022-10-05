@@ -21,6 +21,23 @@ redis:
   address: ["lark-redis:63791"]
 ```
 
+### chat_invite
+```
+name: lark_chat_invite_server
+grpc_server:
+  name: lark_chat_invite_server
+  port: 37000
+
+mysql:
+  address: "lark-mysql-user:13306"
+  username: root
+  password: lark2022
+  db: lark_user
+  
+redis:
+  address: ["lark-redis:63791"]
+```
+
 ### chat_member
 ```
 name: lark_chat_member_server

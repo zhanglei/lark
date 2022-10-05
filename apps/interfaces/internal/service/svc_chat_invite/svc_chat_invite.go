@@ -19,6 +19,6 @@ type chatInviteService struct {
 
 func NewChatInviteService() ChatInviteService {
 	conf := config.GetConfig()
-	chatInviteClient := chat_invite_client.NewChatInviteClient(conf.Etcd, conf.UserServer, conf.Jaeger, conf.Name)
+	chatInviteClient := chat_invite_client.NewChatInviteClient(conf.Etcd, conf.ChatInviteServer, conf.Jaeger, conf.Name)
 	return &chatInviteService{chatInviteClient: chatInviteClient}
 }
