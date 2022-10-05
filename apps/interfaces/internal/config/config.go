@@ -18,6 +18,7 @@ type Config struct {
 	LinkServer       *conf.GrpcServer    `yaml:"link_server"`
 	ChatMemberServer *conf.GrpcServer    `yaml:"chat_member_server"`
 	ChatInviteServer *conf.GrpcServer    `yaml:"chat_invite_server"`
+	AvatarServer     *conf.GrpcServer    `yaml:"avatar_server"`
 	MsgProducer      *conf.KafkaProducer `yaml:"msg_producer"`
 	Minio            *conf.Minio         `yaml:"minio"`
 	Jaeger           *conf.Jaeger        `yaml:"jaeger"`

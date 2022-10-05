@@ -20,31 +20,33 @@ func setNewChatInviteResp(resp *pb_invite.NewChatInviteResp, code int32, msg str
 func (s *chatInviteService) NewChatInvite(_ context.Context, req *pb_invite.NewChatInviteReq) (resp *pb_invite.NewChatInviteResp, _ error) {
 	resp = new(pb_invite.NewChatInviteResp)
 	var (
-		invite  = new(po.ChatInvite)
-		w       = entity.NewMysqlWhere()
-		uidList []int64
-		member  *po.ChatMember
-		err     error
+		invite = new(po.ChatInvite)
+		w      = entity.NewMysqlWhere()
+		chat   *po.Chat
+		member *po.ChatMember
+		err    error
 	)
 
 	if req.ChatType == pb_enum.CHAT_TYPE_PRIVATE {
-		req.ChatId = xsnowflake.NewSnowflakeID()
-
 		if req.InitiatorUid == req.InviteeUid {
 			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_INITIATOR_INVITEE_SAME, ERROR_CHAT_INVITE_INITIATOR_INVITEE_SAME)
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_INITIATOR_INVITEE_SAME, ERROR_CHAT_INVITE_INITIATOR_INVITEE_SAME)
 			return
 		}
-
-		w.SetFilter("uid IN(?)", []int64{req.InitiatorUid, req.InviteeUid})
 		w.SetFilter("chat_type=?", int32(pb_enum.CHAT_TYPE_PRIVATE))
 		w.SetFilter("chat_hash=?", utils.MemberHash(req.InitiatorUid, req.InviteeUid))
-		uidList, _ = s.chatMemberRepo.ChatMemberUidList(w)
-		if len(uidList) == 2 {
+		chat, err = s.chatRepo.Chat(w)
+		if err != nil {
+			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err.Error())
+			return
+		}
+		if chat.ChatId > 0 {
 			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_HAS_JOINED_CHAT, ERROR_CHAT_INVITE_HAS_JOINED_CHAT)
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_HAS_JOINED_CHAT, ERROR_CHAT_INVITE_HAS_JOINED_CHAT, req.String())
 			return
 		}
+		req.ChatId = xsnowflake.NewSnowflakeID()
 	} else {
 		if req.ChatId <= 0 {
 			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_PARAM_ERR, ERROR_CHAT_INVITE_PARAM_ERR)
@@ -53,7 +55,12 @@ func (s *chatInviteService) NewChatInvite(_ context.Context, req *pb_invite.NewC
 		}
 		w.SetFilter("chat_id=?", req.ChatId)
 		w.SetFilter("uid=?", req.InviteeUid)
-		member, _ = s.chatMemberRepo.ChatMember(w)
+		member, err = s.chatMemberRepo.ChatMember(w)
+		if err != nil {
+			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err.Error())
+			return
+		}
 		if member.Uid > 0 {
 			setNewChatInviteResp(resp, ERROR_CODE_CHAT_INVITE_HAS_JOINED_CHAT, ERROR_CHAT_INVITE_HAS_JOINED_CHAT)
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_HAS_JOINED_CHAT, ERROR_CHAT_INVITE_HAS_JOINED_CHAT, req.String())

@@ -43,6 +43,12 @@ chat_invite_server:
     cert_file: ./configs/tls/grpc/server.pem
     enabled: true
     server_name_override: lark.com
+avatar_server:
+  name: lark_avatar_server
+  cert:
+    cert_file: ./configs/tls/grpc/server.pem
+    enabled: true
+    server_name_override: lark.com
 msg_producer:
   address: ["lark-kafka:9092"]
   topic: "online_broadcast"

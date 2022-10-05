@@ -81,11 +81,11 @@ func (s *userService) queryUserInfo(uid int64, resp *pb_user.UserInfoResp) (err 
 func (s *userService) queryUserAvatar(uid int64, resp *pb_user.UserInfoResp) (err error) {
 	var (
 		w      = entity.NewMysqlWhere()
-		avatar *po.UserAvatar
+		avatar *po.Avatar
 	)
 	w.Query += " AND uid = ?"
 	w.Args = append(w.Args, uid)
-	avatar, err = s.userAvatarRepo.UserAvatar(w)
+	avatar, err = s.avatarRepo.Avatar(w)
 	if err != nil {
 		setUserInfoResp(resp, ERROR_CODE_USER_QUERY_DB_FAILED, ERROR_USER_QUERY_DB_FAILED)
 		xlog.Warn(ERROR_CODE_USER_QUERY_DB_FAILED, ERROR_USER_QUERY_DB_FAILED, err.Error())

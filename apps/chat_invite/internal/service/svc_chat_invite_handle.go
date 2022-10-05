@@ -66,29 +66,46 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		return
 	}
 
-	// 2 同意邀请
+	// 3 同意邀请
 	if req.HandleResult == pb_enum.INVITE_HANDLE_RESULT_ACCEPT {
 		var (
+			chat        *po.Chat
 			members     []*po.ChatMember
 			member      *po.ChatMember
 			mumberCount int
 			list        []*po.User
 			user        *po.User
-			avatars     []*po.UserAvatar
-			avatar      *po.UserAvatar
+			avatars     []*po.Avatar
+			avatar      *po.Avatar
 			avatarMaps  = map[int64]string{}
 			index       int
-			chatHash    string
+			uidList     []int64
 		)
+		if pb_enum.CHAT_TYPE(invite.ChatType) == pb_enum.CHAT_TYPE_PRIVATE {
+			// 4 创建Chat
+			chat = &po.Chat{
+				ChatId:   invite.ChatId,
+				ChatHash: utils.MemberHash(invite.InitiatorUid, invite.InviteeUid),
+				ChatType: int(pb_enum.CHAT_TYPE_PRIVATE),
+			}
+			err = s.chatRepo.TxCreate(tx, chat)
+			if err != nil {
+				setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
+				xlog.Warn(ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err.Error())
+				return
+			}
+		}
+
 		w.Reset()
 		switch pb_enum.CHAT_TYPE(invite.ChatType) {
 		case pb_enum.CHAT_TYPE_PRIVATE:
 			mumberCount = 2
-			chatHash = utils.MemberHash(invite.InitiatorUid, invite.InviteeUid)
-			w.SetFilter("uid IN(?)", []int64{invite.InitiatorUid, invite.InviteeUid})
+			uidList = []int64{invite.InitiatorUid, invite.InviteeUid}
+			w.SetFilter("uid IN(?)", uidList)
 		case pb_enum.CHAT_TYPE_GROUP:
 			mumberCount = 1
-			w.SetFilter("uid IN(?)", []int64{invite.InviteeUid})
+			uidList = []int64{invite.InviteeUid}
+			w.SetFilter("uid IN(?)", uidList)
 		}
 		list, err = s.userRepo.UserList(w)
 		if err != nil {
@@ -102,8 +119,10 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
 			return
 		}
-
-		avatars, err = s.userAvatarRepo.UserAvatarList(w)
+		w.Reset()
+		w.SetFilter("owner_id IN(?)", uidList)
+		w.SetFilter("owner_type=?", int32(pb_enum.AVATAR_OWNER_USER_AVATAR))
+		avatars, err = s.avatarRepo.AvatarList(w)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
@@ -117,13 +136,12 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		}
 
 		for _, avatar = range avatars {
-			avatarMaps[avatar.Uid] = avatar.AvatarMedium
+			avatarMaps[avatar.OwnerId] = avatar.AvatarMedium
 		}
 		members = make([]*po.ChatMember, mumberCount)
 		for index, user = range list {
 			member = &po.ChatMember{
 				ChatId:      invite.ChatId,
-				ChatHash:    chatHash,
 				ChatType:    invite.ChatType,
 				Uid:         user.Uid,
 				DisplayName: user.Nickname,
@@ -131,7 +149,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 				Platform:    user.Platform,
 				ServerId:    user.ServerId,
 			}
-			member.AvatarKey = avatarMaps[member.Uid]
+			member.MemberAvatarKey = avatarMaps[member.Uid]
 			members[index] = member
 		}
 		err = s.chatInviteRepo.TxChatUsersCreate(tx, members)

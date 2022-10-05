@@ -7,17 +7,17 @@ import (
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/entity"
+	"lark/pkg/proto/pb_avatar"
 	"lark/pkg/proto/pb_enum"
-	"lark/pkg/proto/pb_user"
 )
 
-func setAvatarResp(resp *pb_user.SetAvatarResp, code int32, msg string) {
+func setAvatarResp(resp *pb_avatar.SetAvatarResp, code int32, msg string) {
 	resp.Code = code
 	resp.Msg = msg
 }
 
-func (s *userService) SetAvatar(ctx context.Context, req *pb_user.SetAvatarReq) (resp *pb_user.SetAvatarResp, _ error) {
-	resp = &pb_user.SetAvatarResp{Avatar: &pb_user.UserAvatar{}}
+func (s *avatarService) SetAvatar(ctx context.Context, req *pb_avatar.SetAvatarReq) (resp *pb_avatar.SetAvatarResp, _ error) {
+	resp = &pb_avatar.SetAvatarResp{Avatar: &pb_avatar.AvatarInfo{}}
 	var (
 		avatar = new(po.Avatar)
 		u      = entity.NewMysqlUpdate()
@@ -35,8 +35,8 @@ func (s *userService) SetAvatar(ctx context.Context, req *pb_user.SetAvatarReq) 
 	}()
 	err = s.avatarRepo.TxSaveAvatar(tx, avatar)
 	if err != nil {
-		setAvatarResp(resp, ERROR_CODE_USER_SET_AVATAR_FAILED, ERROR_USER_SET_AVATAR_FAILED)
-		xlog.Warn(ERROR_CODE_USER_SET_AVATAR_FAILED, ERROR_USER_SET_AVATAR_FAILED, err.Error())
+		setAvatarResp(resp, ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED)
+		xlog.Warn(ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED, err.Error())
 		return
 	}
 
@@ -52,8 +52,8 @@ func (s *userService) SetAvatar(ctx context.Context, req *pb_user.SetAvatarReq) 
 
 	err = s.chatMemberRepo.TxUpdateChatMember(tx, u)
 	if err != nil {
-		setAvatarResp(resp, ERROR_CODE_USER_SET_AVATAR_FAILED, ERROR_USER_SET_AVATAR_FAILED)
-		xlog.Warn(ERROR_CODE_USER_SET_AVATAR_FAILED, ERROR_USER_SET_AVATAR_FAILED, err.Error())
+		setAvatarResp(resp, ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED)
+		xlog.Warn(ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED, err.Error())
 		return
 	}
 	copier.Copy(resp.Avatar, avatar)

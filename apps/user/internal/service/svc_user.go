@@ -15,20 +15,19 @@ type UserService interface {
 	GetUserList(ctx context.Context, req *pb_user.GetUserListReq) (resp *pb_user.GetUserListResp, err error)
 	GetChatUserInfo(ctx context.Context, req *pb_user.GetChatUserInfoReq) (resp *pb_user.GetChatUserInfoResp, err error)
 	UserOnline(ctx context.Context, req *pb_user.UserOnlineReq) (resp *pb_user.UserOnlineResp, err error)
-	SetUserAvatar(ctx context.Context, req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp, err error)
 }
 
 type userService struct {
 	cfg            *config.Config
 	userRepo       repo.UserRepository
-	userAvatarRepo repo.UserAvatarRepository
+	avatarRepo     repo.AvatarRepository
 	chatMemberRepo repo.ChatMemberRepository
 	consumerGroup  *xkafka.MConsumerGroup
 	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewUserService(cfg *config.Config, userRepo repo.UserRepository, userAvatarRepo repo.UserAvatarRepository, chatMemberRepo repo.ChatMemberRepository) UserService {
-	svc := &userService{cfg: cfg, userRepo: userRepo, userAvatarRepo: userAvatarRepo, chatMemberRepo: chatMemberRepo, msgHandle: make(map[string]global.KafkaMessageHandler)}
+func NewUserService(cfg *config.Config, userRepo repo.UserRepository, avatarRepo repo.AvatarRepository, chatMemberRepo repo.ChatMemberRepository) UserService {
+	svc := &userService{cfg: cfg, userRepo: userRepo, avatarRepo: avatarRepo, chatMemberRepo: chatMemberRepo, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},
 		cfg.MsgConsumer.Topic,

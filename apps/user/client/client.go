@@ -13,7 +13,6 @@ type UserClient interface {
 	GetChatUserInfo(req *pb_user.GetChatUserInfoReq) (resp *pb_user.GetChatUserInfoResp)
 	GetUserInfo(req *pb_user.UserInfoReq) (resp *pb_user.UserInfoResp)
 	UserOnline(req *pb_user.UserOnlineReq) (resp *pb_user.UserOnlineResp)
-	SetUserAvatar(req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp)
 }
 
 type userClient struct {
@@ -66,15 +65,5 @@ func (c *userClient) UserOnline(req *pb_user.UserOnlineReq) (resp *pb_user.UserO
 	}
 	client := pb_user.NewUserClient(conn)
 	resp, _ = client.UserOnline(context.Background(), req)
-	return
-}
-
-func (c *userClient) SetUserAvatar(req *pb_user.SetUserAvatarReq) (resp *pb_user.SetUserAvatarResp) {
-	conn := c.GetClientConn()
-	if conn == nil {
-		return
-	}
-	client := pb_user.NewUserClient(conn)
-	resp, _ = client.SetUserAvatar(context.Background(), req)
 	return
 }

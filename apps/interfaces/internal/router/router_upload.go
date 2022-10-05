@@ -14,6 +14,6 @@ func registerUploadRouter(group *gin.RouterGroup) {
 	})
 	ctrl := ctrl_upload.NewUploadCtrl(svc)
 	router := group.Group("upload")
-	router.POST("photo", ctrl.UploadPhoto)
+	router.POST("avatar", ctrl.UploadAvatar)
 	router.GET("presigned", ctrl.Presigned)
 }

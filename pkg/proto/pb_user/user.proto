@@ -1,5 +1,6 @@
 syntax ="proto3";
 import "pb_enum/enum.proto";
+import "pb_avatar/avatar.proto";
 package pb_user;
 option go_package = "lark/pkg/proto/pb_user;pb_user";
 
@@ -27,14 +28,7 @@ message UserInfo {
   int64 city_id = 11; // 城市ID
   pb_enum.PLATFORM_TYPE platform = 12;// 最后登录的平台
   int32 server_id = 13;//分配的ws服务器
-  UserAvatar avatar = 14; // 头像
-}
-
-message UserAvatar {
-  int64 uid = 1;
-  string avatar_small = 2;
-  string avatar_medium = 3;
-  string avatar_large = 4;
+  pb_avatar.AvatarInfo avatar = 14; // 头像
 }
 
 message GetUserListReq {
@@ -77,23 +71,24 @@ message UserOnlineResp {
   string msg = 2;
 }
 
-message SetUserAvatarReq {
-  int64 uid = 1;
-  string avatar_small = 2;
-  string avatar_medium = 3;
-  string avatar_large = 4;
-}
-
-message SetUserAvatarResp {
-  int32 code = 1;
-  string msg = 2;
-  UserAvatar avatar = 3; // 头像
-}
+//message SetAvatarReq {
+//  int64 owner_id = 1;
+//  pb_enum.AVATAR_OWNER owner_type = 2;
+//  string avatar_small = 3;
+//  string avatar_medium = 4;
+//  string avatar_large = 5;
+//}
+//
+//message SetAvatarResp {
+//  int32 code = 1;
+//  string msg = 2;
+//  UserAvatar avatar = 3; // 头像
+//}
 
 service User {
   rpc GetUserInfo(UserInfoReq) returns(UserInfoResp);
   rpc GetUserList(GetUserListReq) returns(GetUserListResp);
   rpc GetChatUserInfo(GetChatUserInfoReq) returns(GetChatUserInfoResp);
   rpc UserOnline(UserOnlineReq) returns(UserOnlineResp);
-  rpc SetUserAvatar(SetUserAvatarReq) returns(SetUserAvatarResp);
+  //rpc SetAvatar(SetAvatarReq) returns(SetAvatarResp);
 }

@@ -15,18 +15,21 @@ type ChatInviteService interface {
 type chatInviteService struct {
 	chatInviteRepo repo.ChatInviteRepository
 	userRepo       repo.UserRepository
-	userAvatarRepo repo.UserAvatarRepository
+	avatarRepo     repo.AvatarRepository
 	chatMemberRepo repo.ChatMemberRepository
+	chatRepo       repo.ChatRepository
 }
 
 func NewChatInviteService(
 	chatInviteRepo repo.ChatInviteRepository,
 	userRepo repo.UserRepository,
-	userAvatarRepo repo.UserAvatarRepository,
-	chatMemberRepo repo.ChatMemberRepository) ChatInviteService {
+	avatarRepo repo.AvatarRepository,
+	chatMemberRepo repo.ChatMemberRepository,
+	chatRepo repo.ChatRepository) ChatInviteService {
 	return &chatInviteService{
 		chatInviteRepo: chatInviteRepo,
 		userRepo:       userRepo,
-		userAvatarRepo: userAvatarRepo,
-		chatMemberRepo: chatMemberRepo}
+		avatarRepo:     avatarRepo,
+		chatMemberRepo: chatMemberRepo,
+		chatRepo:       chatRepo}
 }

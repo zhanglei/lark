@@ -2,10 +2,10 @@ package dig
 
 import (
 	"go.uber.org/dig"
-	"lark/apps/user/internal/config"
-	"lark/apps/user/internal/server"
-	"lark/apps/user/internal/server/user"
-	"lark/apps/user/internal/service"
+	"lark/apps/avatar/internal/config"
+	"lark/apps/avatar/internal/server"
+	"lark/apps/avatar/internal/server/avatar"
+	"lark/apps/avatar/internal/service"
 	"lark/domain/repo"
 )
 
@@ -14,9 +14,8 @@ var container = dig.New()
 func init() {
 	container.Provide(config.NewConfig)
 	container.Provide(server.NewServer)
-	container.Provide(user.NewUserServer)
-	container.Provide(service.NewUserService)
-	container.Provide(repo.NewUserRepository)
+	container.Provide(avatar.NewAvatarServer)
+	container.Provide(service.NewAvatarService)
 	container.Provide(repo.NewAvatarRepository)
 	container.Provide(repo.NewChatMemberRepository)
 }

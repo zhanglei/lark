@@ -82,3 +82,10 @@ enum INVITE_HANDLE_RESULT
   ACCEPT = 1; // 同意
   REFUSE = 2; // 拒绝
 }
+
+enum AVATAR_OWNER
+{
+    UNKNOWN_AVATAR_OWNER = 0;
+    USER_AVATAR = 1; // 用户头像
+    CHAT_AVATAR = 2; // 群头像
+}

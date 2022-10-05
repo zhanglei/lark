@@ -21,6 +21,23 @@ redis:
   address: ["lark-redis:63791"]
 ```
 
+### avatar
+```
+name: lark_avatar_server
+grpc_server:
+  name: lark_avatar_server
+  port: 38000
+  
+mysql:
+  address: "lark-mysql-user:13306"
+  username: root
+  password: lark2022
+  db: lark_user
+  
+redis:
+  address: ["lark-redis:63791"]
+```
+
 ### chat_invite
 ```
 name: lark_chat_invite_server
@@ -162,6 +179,7 @@ chat_member: 100000~109999
 chat_msg: 110000~119999
 chat_invite: 120000~129999
 link: 130000~139999
+avatar: 140000~149999
 ```
 
 ### minio

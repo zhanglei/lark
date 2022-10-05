@@ -1,12 +1,12 @@
 DROP TABLE IF EXISTS `chat_members`;
 CREATE TABLE `chat_members` (
   `chat_id` bigint NOT NULL COMMENT 'chat ID',
-  `chat_hash` CHAR(32) COMMENT 'chat hash值',
-  `chat_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'chat type',
+  `chat_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'chat type 1:私聊/2:群聊',
   `uid` bigint NOT NULL COMMENT '用户ID',
   `mute` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否开启免打扰',
   `display_name` VARCHAR(64) NOT NULL COMMENT '显示名称',
-  `avatar_key` varchar(50) NOT NULL DEFAULT '' COMMENT '头像 72*72',
+  `member_avatar_key` varchar(50) NOT NULL DEFAULT '' COMMENT 'member头像 72*72',
+  `chat_avatar_key` varchar(50) NOT NULL DEFAULT '' COMMENT 'chat头像 72*72',
   `sync` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否同步用户信息',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'chat状态',
   `platform` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1:iOS 2:安卓',
@@ -18,7 +18,6 @@ CREATE TABLE `chat_members` (
   PRIMARY KEY (`chat_id`,`uid`),
   UNIQUE KEY `chatId_uid` (`chat_id`,`uid`),
   KEY `idx_deletedTs` (`deleted_ts`),
-  KEY `idx_chatHash` (`chat_hash`),
   KEY `idx_chatType` (`chat_type`),
   KEY `idx_uid_sync` (`uid`,`sync`),
   KEY `idx_status` (`status`)

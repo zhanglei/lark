@@ -1,0 +1,8 @@
+syntax ="proto3";
+import "pb_enum/enum.proto";
+package pb_chat;
+option go_package = "./pb_chat;pb_chat";
+
+message NewChatReq {
+  pb_enum.AVATAR_OWNER owner_type = 1;
+}
