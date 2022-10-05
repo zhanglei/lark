@@ -34,9 +34,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			tx.Rollback()
 		}
 	}()
-
-	u.AndQuery("invite_id=?")
-	u.AppendArg(req.InviteId)
+	u.SetFilter("invite_id=?", req.InviteId)
 
 	u.Set("handler_uid", req.HandlerUid)
 	u.Set("handle_result", req.HandleResult)
@@ -50,7 +48,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		return
 	}
 	if req.HandleResult == pb_enum.INVITE_HANDLE_RESULT_ACCEPT {
-		w.And("invite_id=?", req.InviteId)
+		w.SetFilter("invite_id=?", req.InviteId)
 		invite, err = s.chatInviteRepo.TxChatInvite(tx, w)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)

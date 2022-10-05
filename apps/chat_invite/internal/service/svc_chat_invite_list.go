@@ -23,16 +23,16 @@ func (s *chatInviteService) ChatInviteList(_ context.Context, req *pb_invite.Cha
 		err  error
 	)
 	w.Limit = int(req.Limit)
-	w.And("invite_id>?", req.MaxInviteId)
+	w.SetFilter("invite_id>?", req.MaxInviteId)
 
 	if req.HandleResult > 0 {
-		w.And("handle_result=?", req.HandleResult)
+		w.SetFilter("handle_result=?", req.HandleResult)
 	}
 	switch req.Role {
 	case pb_enum.INVITE_ROLE_INITIATOR: // 发起者
-		w.And("initiator_uid=?", req.Uid)
+		w.SetFilter("initiator_uid=?", req.Uid)
 	case pb_enum.INVITE_ROLE_APPROVER: // 审批人
-		w.And("invitee_uid=?", req.Uid)
+		w.SetFilter("invitee_uid=?", req.Uid)
 	}
 	list, err = s.chatInviteRepo.ChatInviteList(w)
 	if err != nil {
