@@ -6,6 +6,7 @@ import (
 	"lark/domain/po"
 	"lark/pkg/common/xjwt"
 	"lark/pkg/common/xlog"
+	"lark/pkg/constant"
 	"lark/pkg/proto/pb_auth"
 	"lark/pkg/proto/pb_user"
 )
@@ -22,6 +23,7 @@ func (s *authService) Register(_ context.Context, req *pb_auth.RegisterReq) (res
 		err  error
 	)
 	copier.Copy(user, req)
+	user.AvatarKey = constant.CONST_AVATAR_KEY_SMALL
 	err = s.authRepo.Create(user)
 	if err != nil {
 		setRegisterResp(resp, ERROR_CODE_AUTH_REGISTER_ERR, ERROR_AUTH_REGISTER_TYPE_ERR)

@@ -7,6 +7,7 @@ import (
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/common/xsnowflake"
+	"lark/pkg/constant"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat"
 	"lark/pkg/proto/pb_enum"
@@ -47,7 +48,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 	chat = &po.Chat{
 		CreatorUid: req.CreatorUid,
 		ChatType:   int(pb_enum.CHAT_TYPE_GROUP),
-		AvatarKey:  creator.AvatarKey,
+		AvatarKey:  constant.CONST_AVATAR_KEY_SMALL,
 		Title:      req.Title,
 		About:      req.About,
 	}
