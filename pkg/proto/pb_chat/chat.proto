@@ -4,5 +4,14 @@ package pb_chat;
 option go_package = "./pb_chat;pb_chat";
 
 message NewChatReq {
-  pb_enum.AVATAR_OWNER owner_type = 1;
+  string title = 1;
+}
+
+message NewChatResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
+service Chat {
+  rpc NewChat(NewChatReq) returns(NewChatResp);
 }
