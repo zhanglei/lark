@@ -1,6 +1,8 @@
 package chat
 
 import (
+	"google.golang.org/grpc"
+	"io"
 	"lark/apps/chat/internal/config"
 	"lark/apps/chat/internal/service"
 	"lark/pkg/common/xgrpc"
@@ -23,5 +25,18 @@ func NewChatServer(cfg *config.Config, ChatService service.ChatService) ChatServ
 }
 
 func (s *chatServer) Run() {
+	var (
+		srv    *grpc.Server
+		closer io.Closer
+	)
+	srv, closer = xgrpc.NewServer(s.cfg.GrpcServer)
+	defer func() {
+		if closer != nil {
+			closer.Close()
+		}
+	}()
 
+	pb_chat.RegisterChatServer(srv, s)
+	s.grpcServer = xgrpc.NewGrpcServer(s.cfg.GrpcServer, s.cfg.Etcd)
+	s.grpcServer.RunServer(srv)
 }

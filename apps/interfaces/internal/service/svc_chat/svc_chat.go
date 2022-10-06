@@ -8,7 +8,7 @@ import (
 )
 
 type ChatService interface {
-	NewGroupChat(params *dto_chat.NewGroupChatReq) (resp *xhttp.Resp)
+	NewGroupChat(params *dto_chat.NewGroupChatReq, uid int64) (resp *xhttp.Resp)
 	SetGroupChat(params *dto_chat.SetGroupChatReq) (resp *xhttp.Resp)
 }
 

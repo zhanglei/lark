@@ -75,9 +75,6 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			mumberCount int
 			list        []*po.User
 			user        *po.User
-			avatars     []*po.Avatar
-			avatar      *po.Avatar
-			avatarMaps  = map[int64]string{}
 			index       int
 			uidList     []int64
 		)
@@ -128,37 +125,18 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
 			return
 		}
-		w.Reset()
-		w.SetFilter("owner_id IN(?)", uidList)
-		w.SetFilter("owner_type=?", int32(pb_enum.AVATAR_OWNER_USER_AVATAR))
-		avatars, err = s.avatarRepo.AvatarList(w)
-		if err != nil {
-			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
-			return
-		}
-		if len(avatars) != mumberCount {
-			err = ERR_CHAT_INVITE_QUERY_DB_FAILED
-			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-			return
-		}
-
-		for _, avatar = range avatars {
-			avatarMaps[avatar.OwnerId] = avatar.AvatarSmall
-		}
 		members = make([]*po.ChatMember, mumberCount)
 		for index, user = range list {
 			member = &po.ChatMember{
-				ChatId:      invite.ChatId,
-				ChatType:    invite.ChatType,
-				Uid:         user.Uid,
-				DisplayName: user.Nickname,
-				Sync:        1,
-				Platform:    user.Platform,
-				ServerId:    user.ServerId,
+				ChatId:          invite.ChatId,
+				ChatType:        invite.ChatType,
+				Uid:             user.Uid,
+				DisplayName:     user.Nickname,
+				MemberAvatarKey: user.AvatarKey,
+				Sync:            1,
+				Platform:        user.Platform,
+				ServerId:        user.ServerId,
 			}
-			member.MemberAvatarKey = avatarMaps[member.Uid]
 			members[index] = member
 			if pb_enum.CHAT_TYPE(invite.ChatType) == pb_enum.CHAT_TYPE_GROUP {
 				member.ChatAvatarKey = chat.AvatarKey

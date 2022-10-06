@@ -8,13 +8,14 @@ import (
 	"lark/pkg/xhttp"
 )
 
-func (s *chatService) NewGroupChat(params *dto_chat.NewGroupChatReq) (resp *xhttp.Resp) {
+func (s *chatService) NewGroupChat(params *dto_chat.NewGroupChatReq, uid int64) (resp *xhttp.Resp) {
 	resp = new(xhttp.Resp)
 	var (
 		reqArgs = new(pb_chat.NewGroupChatReq)
 		reply   *pb_chat.NewGroupChatResp
 	)
 	copier.Copy(reqArgs, params)
+	reqArgs.CreatorUid = uid
 	reply = s.chatClient.NewGroupChat(reqArgs)
 	if reply == nil {
 		resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_SERVICE_FAILURE, xhttp.ERROR_HTTP_SERVICE_FAILURE)

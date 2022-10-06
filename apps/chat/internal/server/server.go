@@ -1,21 +1,25 @@
 package server
 
-import "lark/pkg/commands"
+import (
+	"lark/apps/chat/internal/server/chat"
+	"lark/pkg/commands"
+)
 
 type server struct {
-	srv interface{}
+	chatServer chat.ChatServer
 }
 
-func NewServer(srv interface{}) commands.MainInstance {
-	return &server{srv: srv}
+func NewServer(chatServer chat.ChatServer) commands.MainInstance {
+	return &server{chatServer: chatServer}
 }
 
 func (s *server) Initialize() (err error) {
+
 	return
 }
 
 func (s *server) RunLoop() {
-
+	s.chatServer.Run()
 }
 
 func (s *server) Destroy() {

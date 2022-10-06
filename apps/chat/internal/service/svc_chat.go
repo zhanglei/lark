@@ -13,13 +13,22 @@ type ChatService interface {
 }
 
 type chatService struct {
-	cfg        *config.Config
-	chatRepo   repo.ChatRepository
-	chatInvite repo.ChatInviteRepository
-	userRepo   repo.UserRepository
+	cfg            *config.Config
+	chatRepo       repo.ChatRepository
+	chatInviteRepo repo.ChatInviteRepository
+	chatMemberRepo repo.ChatMemberRepository
+	userRepo       repo.UserRepository
 }
 
-func NewChatService(cfg *config.Config, chatRepo repo.ChatRepository, chatInvite repo.ChatInviteRepository, userRepo repo.UserRepository) ChatService {
-	svc := &chatService{cfg: cfg, chatRepo: chatRepo, chatInvite: chatInvite, userRepo: userRepo}
+func NewChatService(cfg *config.Config,
+	chatRepo repo.ChatRepository,
+	chatInviteRepo repo.ChatInviteRepository,
+	chatMemberRepo repo.ChatMemberRepository,
+	userRepo repo.UserRepository) ChatService {
+	svc := &chatService{cfg: cfg,
+		chatRepo:       chatRepo,
+		chatInviteRepo: chatInviteRepo,
+		chatMemberRepo: chatMemberRepo,
+		userRepo:       userRepo}
 	return svc
 }

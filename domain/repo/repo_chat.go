@@ -32,6 +32,7 @@ func (r *chatRepository) Create(chat *po.Chat) (err error) {
 }
 
 func (r *chatRepository) TxCreate(tx *gorm.DB, chat *po.Chat) (err error) {
+	chat.ChatId = xsnowflake.NewSnowflakeID()
 	err = tx.Create(chat).Error
 	return
 }

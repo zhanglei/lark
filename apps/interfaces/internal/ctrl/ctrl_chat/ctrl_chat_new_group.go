@@ -12,13 +12,18 @@ func (ctrl *ChatCtrl) NewGroupChat(ctx *gin.Context) {
 	var (
 		params = new(dto_chat.NewGroupChatReq)
 		resp   *xhttp.Resp
+		uid    int64
 		err    error
 	)
 	if err = xgin.BindJSON(ctx, params); err != nil {
 		xlog.Warn(xhttp.ERROR_CODE_HTTP_REQ_PARAM_ERR, xhttp.ERROR_HTTP_REQ_PARAM_ERR, err.Error())
 		return
 	}
-	resp = ctrl.chatService.NewGroupChat(params)
+	uid = xgin.GetUid(ctx)
+	if uid == 0 {
+		return
+	}
+	resp = ctrl.chatService.NewGroupChat(params, uid)
 	if resp.Code > 0 {
 		xhttp.Error(ctx, resp.Code, resp.Msg)
 		return
