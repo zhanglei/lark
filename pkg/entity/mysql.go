@@ -96,3 +96,9 @@ func (m *MysqlUpdate) AndQuery(query string) {
 func (m *MysqlUpdate) AppendArg(value interface{}) {
 	m.Args = append(m.Args, value)
 }
+
+func (m *MysqlUpdate) Reset() {
+	m.Query = "deleted_ts=0"
+	m.Args = make([]interface{}, 0)
+	m.Values = make(map[string]interface{})
+}

@@ -15,9 +15,15 @@ type avatarService struct {
 	cfg            *config.Config
 	avatarRepo     repo.AvatarRepository
 	chatMemberRepo repo.ChatMemberRepository
+	chatRepo       repo.ChatRepository
 }
 
-func NewAvatarService(cfg *config.Config, avatarRepo repo.AvatarRepository, chatMemberRepo repo.ChatMemberRepository) AvatarService {
-	svc := &avatarService{cfg: cfg, avatarRepo: avatarRepo, chatMemberRepo: chatMemberRepo}
+func NewAvatarService(cfg *config.Config, avatarRepo repo.AvatarRepository,
+	chatMemberRepo repo.ChatMemberRepository,
+	chatRepo repo.ChatRepository) AvatarService {
+	svc := &avatarService{cfg: cfg,
+		avatarRepo:     avatarRepo,
+		chatMemberRepo: chatMemberRepo,
+		chatRepo:       chatRepo}
 	return svc
 }

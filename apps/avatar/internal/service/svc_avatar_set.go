@@ -47,6 +47,16 @@ func (s *avatarService) SetAvatar(ctx context.Context, req *pb_avatar.SetAvatarR
 		u.Set("member_avatar_key", avatar.AvatarSmall)
 	case pb_enum.AVATAR_OWNER_CHAT_AVATAR:
 		u.SetFilter("chat_id=?", req.OwnerId)
+		u.Set("avatar_key", avatar.AvatarSmall)
+		err = s.chatRepo.TxUpdateChat(tx, u)
+		if err != nil {
+			setAvatarResp(resp, ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED)
+			xlog.Warn(ERROR_CODE_AVATAR_SET_AVATAR_FAILED, ERROR_AVATAR_SET_AVATAR_FAILED, err.Error())
+			return
+		}
+
+		u.Reset()
+		u.SetFilter("chat_id=?", req.OwnerId)
 		u.Set("chat_avatar_key", avatar.AvatarSmall)
 	}
 

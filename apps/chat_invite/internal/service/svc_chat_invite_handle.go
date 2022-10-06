@@ -81,7 +81,9 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			index       int
 			uidList     []int64
 		)
-		if pb_enum.CHAT_TYPE(invite.ChatType) == pb_enum.CHAT_TYPE_PRIVATE {
+
+		switch pb_enum.CHAT_TYPE(invite.ChatType) {
+		case pb_enum.CHAT_TYPE_PRIVATE:
 			// 4 创建Chat
 			chat = &po.Chat{
 				ChatId:   invite.ChatId,
@@ -94,17 +96,24 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 				xlog.Warn(ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err.Error())
 				return
 			}
-		}
 
-		w.Reset()
-		switch pb_enum.CHAT_TYPE(invite.ChatType) {
-		case pb_enum.CHAT_TYPE_PRIVATE:
-			mumberCount = 2
 			uidList = []int64{invite.InitiatorUid, invite.InviteeUid}
+			mumberCount = len(uidList)
+			w.Reset()
 			w.SetFilter("uid IN(?)", uidList)
 		case pb_enum.CHAT_TYPE_GROUP:
-			mumberCount = 1
+			w.Reset()
+			w.SetFilter("chat_id=?", invite.ChatId)
+			chat, err = s.chatRepo.TxChat(tx, w)
+			if err != nil {
+				setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
+				xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+				return
+			}
+
 			uidList = []int64{invite.InviteeUid}
+			mumberCount = len(uidList)
+			w.Reset()
 			w.SetFilter("uid IN(?)", uidList)
 		}
 		list, err = s.userRepo.UserList(w)
@@ -136,7 +145,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		}
 
 		for _, avatar = range avatars {
-			avatarMaps[avatar.OwnerId] = avatar.AvatarMedium
+			avatarMaps[avatar.OwnerId] = avatar.AvatarSmall
 		}
 		members = make([]*po.ChatMember, mumberCount)
 		for index, user = range list {
@@ -151,6 +160,9 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			}
 			member.MemberAvatarKey = avatarMaps[member.Uid]
 			members[index] = member
+			if pb_enum.CHAT_TYPE(invite.ChatType) == pb_enum.CHAT_TYPE_GROUP {
+				member.ChatAvatarKey = chat.AvatarKey
+			}
 		}
 		err = s.chatInviteRepo.TxChatUsersCreate(tx, members)
 		if err != nil {

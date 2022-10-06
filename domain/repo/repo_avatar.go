@@ -4,7 +4,6 @@ import (
 	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xmysql"
-	"lark/pkg/common/xsnowflake"
 	"lark/pkg/entity"
 )
 
@@ -36,7 +35,6 @@ func (r *avatarRepository) AvatarList(w *entity.MysqlWhere) (avatars []*po.Avata
 }
 
 func (r *avatarRepository) TxSaveAvatar(tx *gorm.DB, avatar *po.Avatar) (err error) {
-	avatar.AvatarId = xsnowflake.NewSnowflakeID()
 	err = tx.Save(avatar).Error
 	return
 }
