@@ -22,7 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatClient interface {
-	NewChat(ctx context.Context, in *NewChatReq, opts ...grpc.CallOption) (*NewChatResp, error)
+	NewGroupChat(ctx context.Context, in *NewGroupChatReq, opts ...grpc.CallOption) (*NewGroupChatResp, error)
+	SetGroupChat(ctx context.Context, in *SetGroupChatReq, opts ...grpc.CallOption) (*SetGroupChatResp, error)
 }
 
 type chatClient struct {
@@ -33,9 +34,18 @@ func NewChatClient(cc grpc.ClientConnInterface) ChatClient {
 	return &chatClient{cc}
 }
 
-func (c *chatClient) NewChat(ctx context.Context, in *NewChatReq, opts ...grpc.CallOption) (*NewChatResp, error) {
-	out := new(NewChatResp)
-	err := c.cc.Invoke(ctx, "/pb_chat.Chat/NewChat", in, out, opts...)
+func (c *chatClient) NewGroupChat(ctx context.Context, in *NewGroupChatReq, opts ...grpc.CallOption) (*NewGroupChatResp, error) {
+	out := new(NewGroupChatResp)
+	err := c.cc.Invoke(ctx, "/pb_chat.Chat/NewGroupChat", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chatClient) SetGroupChat(ctx context.Context, in *SetGroupChatReq, opts ...grpc.CallOption) (*SetGroupChatResp, error) {
+	out := new(SetGroupChatResp)
+	err := c.cc.Invoke(ctx, "/pb_chat.Chat/SetGroupChat", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +56,8 @@ func (c *chatClient) NewChat(ctx context.Context, in *NewChatReq, opts ...grpc.C
 // All implementations must embed UnimplementedChatServer
 // for forward compatibility
 type ChatServer interface {
-	NewChat(context.Context, *NewChatReq) (*NewChatResp, error)
+	NewGroupChat(context.Context, *NewGroupChatReq) (*NewGroupChatResp, error)
+	SetGroupChat(context.Context, *SetGroupChatReq) (*SetGroupChatResp, error)
 	mustEmbedUnimplementedChatServer()
 }
 
@@ -54,8 +65,11 @@ type ChatServer interface {
 type UnimplementedChatServer struct {
 }
 
-func (UnimplementedChatServer) NewChat(context.Context, *NewChatReq) (*NewChatResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method NewChat not implemented")
+func (UnimplementedChatServer) NewGroupChat(context.Context, *NewGroupChatReq) (*NewGroupChatResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewGroupChat not implemented")
+}
+func (UnimplementedChatServer) SetGroupChat(context.Context, *SetGroupChatReq) (*SetGroupChatResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetGroupChat not implemented")
 }
 func (UnimplementedChatServer) mustEmbedUnimplementedChatServer() {}
 
@@ -70,20 +84,38 @@ func RegisterChatServer(s grpc.ServiceRegistrar, srv ChatServer) {
 	s.RegisterService(&Chat_ServiceDesc, srv)
 }
 
-func _Chat_NewChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(NewChatReq)
+func _Chat_NewGroupChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewGroupChatReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).NewChat(ctx, in)
+		return srv.(ChatServer).NewGroupChat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb_chat.Chat/NewChat",
+		FullMethod: "/pb_chat.Chat/NewGroupChat",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).NewChat(ctx, req.(*NewChatReq))
+		return srv.(ChatServer).NewGroupChat(ctx, req.(*NewGroupChatReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chat_SetGroupChat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetGroupChatReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServer).SetGroupChat(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb_chat.Chat/SetGroupChat",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServer).SetGroupChat(ctx, req.(*SetGroupChatReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -96,8 +128,12 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ChatServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "NewChat",
-			Handler:    _Chat_NewChat_Handler,
+			MethodName: "NewGroupChat",
+			Handler:    _Chat_NewGroupChat_Handler,
+		},
+		{
+			MethodName: "SetGroupChat",
+			Handler:    _Chat_SetGroupChat_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

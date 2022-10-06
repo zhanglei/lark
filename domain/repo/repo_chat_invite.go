@@ -9,6 +9,7 @@ import (
 
 type ChatInviteRepository interface {
 	NewChatInvite(req *po.ChatInvite) (err error)
+	TxNewChatInviteList(tx *gorm.DB, list []*po.ChatInvite) (err error)
 	TxUpdateChatInvite(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 	TxChatInvite(tx *gorm.DB, w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
 	ChatInvite(w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
@@ -26,6 +27,11 @@ func NewChatInviteRepository() ChatInviteRepository {
 func (r *chatInviteRepository) NewChatInvite(req *po.ChatInvite) (err error) {
 	db := xmysql.GetDB()
 	err = db.Create(req).Error
+	return
+}
+
+func (r *chatInviteRepository) TxNewChatInviteList(tx *gorm.DB, list []*po.ChatInvite) (err error) {
+	err = tx.Create(list).Error
 	return
 }
 

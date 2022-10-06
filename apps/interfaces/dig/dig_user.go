@@ -5,6 +5,5 @@ import (
 )
 
 func provideUser() {
-	//container.Provide(ctrl_user.NewUserCtrl)
 	container.Provide(svc_user.NewUserService)
 }

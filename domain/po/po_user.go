@@ -20,4 +20,5 @@ type User struct {
 	Platform    int    `gorm:"column:platform;default:0;NOT NULL" json:"platform"`         // 最后登录的平台
 	ServerId    int    `gorm:"column:server_id;default:0;NOT NULL" json:"server_id"`       // 分配的ws服务器
 	CityId      int    `gorm:"column:city_id;default:0;NOT NULL" json:"city_id"`           // 城市ID
+	AvatarKey   string `gorm:"column:avatar_key" json:"avatar_key"`                        // 小图 72*62
 }

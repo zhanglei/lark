@@ -8,15 +8,18 @@ import (
 )
 
 type ChatService interface {
-	NewChat(ctx context.Context, req *pb_chat.NewChatReq) (resp *pb_chat.NewChatResp, err error)
+	NewGroupChat(ctx context.Context, req *pb_chat.NewGroupChatReq) (resp *pb_chat.NewGroupChatResp, err error)
+	SetGroupChat(ctx context.Context, req *pb_chat.SetGroupChatReq) (resp *pb_chat.SetGroupChatResp, err error)
 }
 
 type chatService struct {
-	cfg      *config.Config
-	chatRepo repo.ChatRepository
+	cfg        *config.Config
+	chatRepo   repo.ChatRepository
+	chatInvite repo.ChatInviteRepository
+	userRepo   repo.UserRepository
 }
 
-func NewChatService(cfg *config.Config, chatRepo repo.ChatRepository) ChatService {
-	svc := &chatService{cfg: cfg, chatRepo: chatRepo}
+func NewChatService(cfg *config.Config, chatRepo repo.ChatRepository, chatInvite repo.ChatInviteRepository, userRepo repo.UserRepository) ChatService {
+	svc := &chatService{cfg: cfg, chatRepo: chatRepo, chatInvite: chatInvite, userRepo: userRepo}
 	return svc
 }

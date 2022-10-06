@@ -5,6 +5,5 @@ import (
 )
 
 func provideChatMember() {
-	//container.Provide(ctrl_chat_member.NewChatMemberCtrl)
 	container.Provide(svc_chat_member.NewChatMemberService)
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 MYSQL_USERNAME="root"
 MYSQL_PASSWORD="lark2022"
-MYSQL_HOST="127.0.0.1"
+MYSQL_HOST="lark.com"
 MYSQL_PORT=13306
 MYSQL_DB="lark_user"
 
@@ -13,14 +13,14 @@ do
 done
 
 # 测试数据
-for i in {1..10000};
+for i in {1..10};
 do
   INSERT="INSERT INTO users ( uid, lark_id ) VALUES ( ${i}, ${i} );"
   mysql -h${MYSQL_HOST} -P${MYSQL_PORT} -u${MYSQL_USERNAME} -p${MYSQL_PASSWORD} -D${MYSQL_DB} -e "$INSERT"
 done
 
 # 测试数据
-for i in {1..10000};
+for i in {1..10};
 do
   INSERT="INSERT INTO chat_members
           ( chat_id, uid, display_name, avatar_key, mute, platform,server_id, settings )

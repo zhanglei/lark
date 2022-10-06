@@ -7,7 +7,7 @@ import (
 	"lark/apps/interfaces/internal/service/svc_chat_msg"
 )
 
-func registerChatRouter(group *gin.RouterGroup) {
+func registerChatMessageRouter(group *gin.RouterGroup) {
 	var svc svc_chat_msg.ChatMessageService
 	dig.Invoke(func(s svc_chat_msg.ChatMessageService) {
 		svc = s

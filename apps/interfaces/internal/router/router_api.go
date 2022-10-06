@@ -21,8 +21,9 @@ func registerPublicRoutes(group *gin.RouterGroup) {
 func registerPrivateRouter(group *gin.RouterGroup) {
 	group.Use(middleware.JwtAuth())
 	registerUserRouter(group)
-	registerChatRouter(group)
+	registerChatMessageRouter(group)
 	registerUploadRouter(group)
 	registerChatMemberRouter(group)
 	registerChatInviteRouter(group)
+	registerChatRouter(group)
 }

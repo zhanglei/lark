@@ -1,17 +1,42 @@
 syntax ="proto3";
 import "pb_enum/enum.proto";
+import "pb_kv/kv.proto";
 package pb_chat;
 option go_package = "./pb_chat;pb_chat";
 
-message NewChatReq {
-  string title = 1;
+message NewGroupChatReq {
+  string title = 1; // 标题
+  string about = 2; // About
+  int64 creator_uid = 3; // 群创建者uid
+  repeated int64 uid_list = 4; // 邀请人员uid列表
 }
 
-message NewChatResp {
+message NewGroupChatResp {
   int32 code = 1;
   string msg = 2;
+  ChatInfo chat = 3;
+}
+
+message ChatInfo {
+  int64 chat_id = 1;
+  pb_enum.CHAT_TYPE chat_type = 2;
+  string avatar_key = 3;
+  string title = 4;
+  string about = 5;
+}
+
+message SetGroupChatReq {
+  int64 chat_id = 1;
+  pb_kv.KeyValues kvs = 2;
+}
+
+message SetGroupChatResp {
+  int32 code = 1;
+  string msg = 2;
+  ChatInfo chat = 3;
 }
 
 service Chat {
-  rpc NewChat(NewChatReq) returns(NewChatResp);
+  rpc NewGroupChat(NewGroupChatReq) returns(NewGroupChatResp);
+  rpc SetGroupChat(SetGroupChatReq) returns(SetGroupChatResp);
 }
