@@ -1,7 +1,6 @@
 package dto_auth
 
 import (
-	"lark/apps/interfaces/internal/dto/dto_user"
 	"lark/pkg/proto/pb_enum"
 )
 
@@ -24,9 +23,4 @@ type RegisterReq struct {
 	AvatarKey   string                `json:"avatar_key" validate:"omitempty"`              // 头像
 	CityId      int64                 `json:"city_id" validate:"omitempty,gte=0"`           // 城市ID
 	Code        string                `json:"code" validate:"omitempty,min=4,max=6"`        // 城市ID
-}
-
-type RegisterResp struct {
-	Token    *TokenInfo         `json:"token"`
-	UserInfo *dto_user.UserInfo `json:"user_info"`
 }

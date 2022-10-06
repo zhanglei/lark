@@ -15,7 +15,7 @@ func (s *authService) Login(params *dto_auth.LoginReq) (resp *xhttp.Resp) {
 	var (
 		req       = new(pb_auth.LoginReq)
 		reply     *pb_auth.LoginResp
-		loginResp = new(dto_auth.LoginResp)
+		loginResp = new(dto_auth.AuthResp)
 		ok        bool
 	)
 	copier.Copy(req, params)

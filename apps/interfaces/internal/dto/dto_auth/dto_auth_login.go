@@ -14,7 +14,7 @@ type LoginReq struct {
 	Password         string                `json:"password" validate:"required,min=8,max=20"` // 密码
 }
 
-type LoginResp struct {
+type AuthResp struct {
 	Token    *TokenInfo         `json:"token"`
 	UserInfo *dto_user.UserInfo `json:"user_info"`
 	Server   *ServerInfo        `json:"server"`

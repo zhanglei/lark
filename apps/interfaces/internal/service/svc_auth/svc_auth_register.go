@@ -13,7 +13,7 @@ func (s *authService) Register(params *dto_auth.RegisterReq) (resp *xhttp.Resp) 
 	var (
 		req          = new(pb_auth.RegisterReq)
 		reply        *pb_auth.RegisterResp
-		registerResp = new(dto_auth.RegisterResp)
+		registerResp = new(dto_auth.AuthResp)
 	)
 	copier.Copy(req, params)
 	reply = s.authClient.Register(req)
@@ -28,6 +28,12 @@ func (s *authService) Register(params *dto_auth.RegisterReq) (resp *xhttp.Resp) 
 		return
 	}
 	copier.Copy(registerResp, reply)
+	//TODO:获取服务器ID 测试数据 ServerId: 1
+	wsServer := &dto_auth.ServerInfo{
+		ServerId: 1,
+		Address:  "lark-ws-server.com:32001",
+	}
+	registerResp.Server = wsServer
 	resp.Data = registerResp
 	return
 }
