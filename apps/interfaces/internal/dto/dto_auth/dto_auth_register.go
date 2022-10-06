@@ -1,6 +1,9 @@
 package dto_auth
 
-import "lark/pkg/proto/pb_enum"
+import (
+	"lark/apps/interfaces/internal/dto/dto_user"
+	"lark/pkg/proto/pb_enum"
+)
 
 /*
 http://t.zoukankan.com/MyUniverse-p-15227003.html
@@ -24,6 +27,6 @@ type RegisterReq struct {
 }
 
 type RegisterResp struct {
-	Token    *TokenInfo `json:"token"`
-	UserInfo *UserInfo  `json:"user_info"`
+	Token    *TokenInfo         `json:"token"`
+	UserInfo *dto_user.UserInfo `json:"user_info"`
 }

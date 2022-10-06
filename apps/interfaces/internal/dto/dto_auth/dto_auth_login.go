@@ -1,6 +1,9 @@
 package dto_auth
 
-import "lark/pkg/proto/pb_enum"
+import (
+	"lark/apps/interfaces/internal/dto/dto_user"
+	"lark/pkg/proto/pb_enum"
+)
 
 type LoginReq struct {
 	AccountType      int32                 `json:"account_type" validate:"gte=1,lte=2"`       // 登录类型 1:手机号 2:lark账户
@@ -12,29 +15,14 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	Token    *TokenInfo  `json:"token"`
-	UserInfo *UserInfo   `json:"user_info"`
-	Server   *ServerInfo `json:"server"`
+	Token    *TokenInfo         `json:"token"`
+	UserInfo *dto_user.UserInfo `json:"user_info"`
+	Server   *ServerInfo        `json:"server"`
 }
 
 type TokenInfo struct {
 	Token  string `json:"token"`  // 用户token
 	Expire int64  `json:"expire"` // token过期时间戳（秒）
-}
-
-type UserInfo struct {
-	Uid       int64  `json:"uid"`        // uid
-	LarkId    string `json:"lark_id"`    // 账户ID
-	Status    int32  `json:"status"`     // 用户状态
-	Nickname  string `json:"nickname"`   // 昵称
-	Firstname string `json:"firstname"`  // firstname
-	Lastname  string `json:"lastname"`   // lastname
-	Gender    int32  `json:"gender"`     // 性别
-	BirthTs   int64  `json:"birth_ts"`   // 生日
-	Email     string `json:"email"`      // Email
-	Mobile    string `json:"mobile"`     // 手机号
-	AvatarKey string `json:"avatar_key"` // 头像
-	CityId    int64  `json:"city_id"`    // 城市ID
 }
 
 type ServerInfo struct {

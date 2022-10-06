@@ -37,6 +37,7 @@ func (s *authService) Login(params *dto_auth.LoginReq) (resp *xhttp.Resp) {
 		ServerId: 1,
 		Address:  "lark-ws-server.com:32001",
 	}
+	loginResp.Server = wsServer
 	//更新 wsServer 和 登录平台
 	onlineMsg := &pb_mq.UserOnline{
 		Uid:      reply.UserInfo.Uid,

@@ -1,4 +1,5 @@
 syntax ="proto3";
+package pb_avatar;
 import "pb_enum/enum.proto";
 option go_package = "lark/pkg/proto/pb_avatar;pb_avatar";
 

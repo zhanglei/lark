@@ -27,10 +27,10 @@ type NewGroupChatReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Title      string  `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	About      string  `protobuf:"bytes,2,opt,name=about,proto3" json:"about,omitempty"`
-	CreatorUid int64   `protobuf:"varint,3,opt,name=creator_uid,json=creatorUid,proto3" json:"creator_uid,omitempty"`
-	UidList    []int64 `protobuf:"varint,4,rep,packed,name=uid_list,json=uidList,proto3" json:"uid_list,omitempty"`
+	Title      string  `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`                              // 标题
+	About      string  `protobuf:"bytes,2,opt,name=about,proto3" json:"about,omitempty"`                              // About
+	CreatorUid int64   `protobuf:"varint,3,opt,name=creator_uid,json=creatorUid,proto3" json:"creator_uid,omitempty"` // 群创建者uid
+	UidList    []int64 `protobuf:"varint,4,rep,packed,name=uid_list,json=uidList,proto3" json:"uid_list,omitempty"`   // 邀请人员uid列表
 }
 
 func (x *NewGroupChatReq) Reset() {

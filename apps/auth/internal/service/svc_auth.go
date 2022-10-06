@@ -13,10 +13,11 @@ type AuthService interface {
 }
 
 type authService struct {
-	cfg      *config.Config
-	authRepo repo.AuthRepository
+	cfg        *config.Config
+	authRepo   repo.AuthRepository
+	avatarRepo repo.AvatarRepository
 }
 
-func NewAuthService(cfg *config.Config, authRepo repo.AuthRepository) AuthService {
-	return &authService{cfg: cfg, authRepo: authRepo}
+func NewAuthService(cfg *config.Config, authRepo repo.AuthRepository, avatarRepo repo.AvatarRepository) AuthService {
+	return &authService{cfg: cfg, authRepo: authRepo, avatarRepo: avatarRepo}
 }

@@ -35,7 +35,7 @@ func NewAvatarClient(cc grpc.ClientConnInterface) AvatarClient {
 
 func (c *avatarClient) SetAvatar(ctx context.Context, in *SetAvatarReq, opts ...grpc.CallOption) (*SetAvatarResp, error) {
 	out := new(SetAvatarResp)
-	err := c.cc.Invoke(ctx, "/Avatar/SetAvatar", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb_avatar.Avatar/SetAvatar", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _Avatar_SetAvatar_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Avatar/SetAvatar",
+		FullMethod: "/pb_avatar.Avatar/SetAvatar",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AvatarServer).SetAvatar(ctx, req.(*SetAvatarReq))
@@ -92,7 +92,7 @@ func _Avatar_SetAvatar_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Avatar_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Avatar",
+	ServiceName: "pb_avatar.Avatar",
 	HandlerType: (*AvatarServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/common/xsnowflake"
@@ -9,6 +10,7 @@ import (
 
 type AuthRepository interface {
 	Create(user *po.User) (err error)
+	TxCreate(tx *gorm.DB, user *po.User) (err error)
 	VerifyUserIdentity(w *entity.MysqlWhere) (user *po.User, err error)
 }
 
@@ -32,6 +34,15 @@ func (r *authRepository) Create(user *po.User) (err error) {
 	}
 	db := xmysql.GetDB()
 	err = db.Create(user).Error
+	return
+}
+
+func (r *authRepository) TxCreate(tx *gorm.DB, user *po.User) (err error) {
+	user.Uid = xsnowflake.NewSnowflakeID()
+	if user.LarkId == "" {
+		user.LarkId = xsnowflake.DefaultLarkId()
+	}
+	err = tx.Create(user).Error
 	return
 }
 

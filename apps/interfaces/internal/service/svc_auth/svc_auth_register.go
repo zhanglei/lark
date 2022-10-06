@@ -9,11 +9,13 @@ import (
 )
 
 func (s *authService) Register(params *dto_auth.RegisterReq) (resp *xhttp.Resp) {
+	resp = new(xhttp.Resp)
 	var (
 		req          = new(pb_auth.RegisterReq)
 		reply        *pb_auth.RegisterResp
 		registerResp = new(dto_auth.RegisterResp)
 	)
+	copier.Copy(req, params)
 	reply = s.authClient.Register(req)
 	if reply == nil {
 		resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_SERVICE_FAILURE, xhttp.ERROR_HTTP_SERVICE_FAILURE)
