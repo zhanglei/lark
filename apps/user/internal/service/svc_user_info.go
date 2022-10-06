@@ -8,6 +8,7 @@ import (
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
 	"lark/pkg/entity"
+	"lark/pkg/proto/pb_avatar"
 	"lark/pkg/proto/pb_user"
 	"lark/pkg/utils"
 )
@@ -18,7 +19,7 @@ func setUserInfoResp(resp *pb_user.UserInfoResp, code int32, msg string) {
 }
 
 func (s *userService) GetUserInfo(ctx context.Context, req *pb_user.UserInfoReq) (resp *pb_user.UserInfoResp, _ error) {
-	resp = &pb_user.UserInfoResp{UserInfo: &pb_user.UserInfo{Avatar: &pb_user.UserAvatar{}}}
+	resp = &pb_user.UserInfoResp{UserInfo: &pb_user.UserInfo{Avatar: &pb_avatar.AvatarInfo{}}}
 	var (
 		key     string
 		jsonStr string
