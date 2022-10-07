@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	token, _ := xjwt.CreateToken(1, 1)
+	token, _ := xjwt.CreateToken(1578215274794979328, 1)
 	fmt.Println(token)
 }

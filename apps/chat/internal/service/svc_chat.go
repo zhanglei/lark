@@ -18,17 +18,20 @@ type chatService struct {
 	chatInviteRepo repo.ChatInviteRepository
 	chatMemberRepo repo.ChatMemberRepository
 	userRepo       repo.UserRepository
+	avatarRepo     repo.AvatarRepository
 }
 
 func NewChatService(cfg *config.Config,
 	chatRepo repo.ChatRepository,
 	chatInviteRepo repo.ChatInviteRepository,
 	chatMemberRepo repo.ChatMemberRepository,
-	userRepo repo.UserRepository) ChatService {
+	userRepo repo.UserRepository,
+	avatarRepo repo.AvatarRepository) ChatService {
 	svc := &chatService{cfg: cfg,
 		chatRepo:       chatRepo,
 		chatInviteRepo: chatInviteRepo,
 		chatMemberRepo: chatMemberRepo,
-		userRepo:       userRepo}
+		userRepo:       userRepo,
+		avatarRepo:     avatarRepo}
 	return svc
 }

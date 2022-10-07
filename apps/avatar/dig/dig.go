@@ -19,6 +19,7 @@ func init() {
 	container.Provide(repo.NewAvatarRepository)
 	container.Provide(repo.NewChatMemberRepository)
 	container.Provide(repo.NewChatRepository)
+	container.Provide(repo.NewUserRepository)
 }
 
 func Invoke(i interface{}) error {

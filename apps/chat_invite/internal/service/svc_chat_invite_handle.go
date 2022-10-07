@@ -49,6 +49,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 	u.Set("handler_uid", req.HandlerUid)
 	u.Set("handle_result", req.HandleResult)
 	u.Set("handle_msg", req.HandleMsg)
+	u.Set("handled_ts", utils.NowMilli())
 
 	tx = xmysql.GetTX()
 	defer func() {

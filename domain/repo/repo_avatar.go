@@ -10,7 +10,8 @@ import (
 type AvatarRepository interface {
 	Avatar(w *entity.MysqlWhere) (avatar *po.Avatar, err error)
 	AvatarList(w *entity.MysqlWhere) (avatars []*po.Avatar, err error)
-	TxSaveAvatar(tx *gorm.DB, avatar *po.Avatar) (err error)
+	TxCreate(tx *gorm.DB, avatar *po.Avatar) (err error)
+	TxUpdateAvatar(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
 }
 
 type avatarRepository struct {
@@ -34,7 +35,12 @@ func (r *avatarRepository) AvatarList(w *entity.MysqlWhere) (avatars []*po.Avata
 	return
 }
 
-func (r *avatarRepository) TxSaveAvatar(tx *gorm.DB, avatar *po.Avatar) (err error) {
-	err = tx.Save(avatar).Error
+func (r *avatarRepository) TxUpdateAvatar(tx *gorm.DB, u *entity.MysqlUpdate) (err error) {
+	err = tx.Model(po.Avatar{}).Where(u.Query, u.Args...).Updates(u.Values).Error
+	return
+}
+
+func (r *avatarRepository) TxCreate(tx *gorm.DB, avatar *po.Avatar) (err error) {
+	err = tx.Create(avatar).Error
 	return
 }

@@ -48,6 +48,11 @@ func (s *authService) Login(ctx context.Context, req *pb_auth.LoginReq) (resp *p
 		xlog.Warn(ERROR_CODE_AUTH_ACCOUNT_OR_PASSWORD_ERR, ERROR_AUTH_ACCOUNT_OR_PASSWORD_ERR, err.Error())
 		return
 	}
+	if user.Uid == 0 {
+		setLoginResp(resp, ERROR_CODE_AUTH_USER_DOES_NOT_EXIST, ERROR_AUTH_USER_DOES_NOT_EXIST)
+		xlog.Warn(ERROR_CODE_AUTH_USER_DOES_NOT_EXIST, ERROR_AUTH_USER_DOES_NOT_EXIST, req.String())
+		return
+	}
 
 	w.Reset()
 	w.SetFilter("owner_id=?", user.Uid)

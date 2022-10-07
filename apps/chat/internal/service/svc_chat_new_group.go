@@ -28,6 +28,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		err     error
 	)
 	var (
+		avatar        *po.Avatar
 		member        *po.ChatMember
 		invitationMsg string
 		uid           int64
@@ -88,8 +89,23 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		return
 	}
 
-	// 4 构建邀请信息
-	invitationMsg = creator.Nickname + "邀请你加入" + chat.Title
+	// 5 设置群头像
+	avatar = &po.Avatar{
+		OwnerId:      chat.ChatId,
+		OwnerType:    int(pb_enum.AVATAR_OWNER_CHAT_AVATAR),
+		AvatarSmall:  constant.CONST_AVATAR_KEY_SMALL,
+		AvatarMedium: constant.CONST_AVATAR_KEY_MEDIUM,
+		AvatarLarge:  constant.CONST_AVATAR_KEY_LARGE,
+	}
+	err = s.avatarRepo.TxCreate(tx, avatar)
+	if err != nil {
+		setNewGroupChatResp(resp, ERROR_CODE_CHAT_INSERT_VALUE_FAILED, ERROR_CHAT_INSERT_VALUE_FAILED)
+		xlog.Warn(ERROR_CODE_CHAT_INSERT_VALUE_FAILED, ERROR_CHAT_INSERT_VALUE_FAILED, err.Error())
+		return
+	}
+
+	// 6 构建邀请信息
+	invitationMsg = creator.Nickname + CONST_CHAT_INVITE_TITLE_CONJUNCTION + chat.Title
 	for _, uid = range req.UidList {
 		if uid == req.CreatorUid {
 			continue
@@ -107,6 +123,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 	if len(inviteList) == 0 {
 		return
 	}
+
 	// 7 邀请信息入库
 	err = s.chatInviteRepo.TxNewChatInviteList(tx, inviteList)
 	if err != nil {

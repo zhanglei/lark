@@ -54,7 +54,7 @@ func (s *authService) Register(_ context.Context, req *pb_auth.RegisterReq) (res
 		AvatarMedium: constant.CONST_AVATAR_KEY_MEDIUM,
 		AvatarLarge:  constant.CONST_AVATAR_KEY_LARGE,
 	}
-	err = s.avatarRepo.TxSaveAvatar(tx, avatar)
+	err = s.avatarRepo.TxCreate(tx, avatar)
 	if err != nil {
 		setRegisterResp(resp, ERROR_CODE_AUTH_INSERT_VALUE_FAILED, ERROR_AUTH_INSERT_VALUE_FAILED)
 		xlog.Warn(ERROR_CODE_AUTH_INSERT_VALUE_FAILED, ERROR_AUTH_INSERT_VALUE_FAILED, err.Error())
