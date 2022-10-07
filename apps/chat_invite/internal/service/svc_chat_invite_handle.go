@@ -40,10 +40,15 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		return
 	}
 	if invite.HandleResult != 0 {
-		// 不再支持操作
+		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_HAS_HANDLED, ERROR_CHAT_INVITE_HAS_HANDLED)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_HAS_HANDLED, ERROR_CHAT_INVITE_HAS_HANDLED)
 		return
 	}
-
+	if req.HandlerUid != invite.InviteeUid {
+		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_BAD_HANDLER, ERROR_CHAT_INVITE_BAD_HANDLER)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_BAD_HANDLER, ERROR_CHAT_INVITE_BAD_HANDLER)
+		return
+	}
 	// 2 更新邀请
 	u.SetFilter("invite_id=?", req.InviteId)
 	u.Set("handler_uid", req.HandlerUid)
