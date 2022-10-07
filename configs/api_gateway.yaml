@@ -7,6 +7,11 @@ etcd:
   read_timeout: 5000
   write_timeout: 5000
   dial_timeout: 5000
+redis:
+  address: ["lark-redis:63791"]
+  db: 0
+  password: lark2022
+  prefix: "LK:"
 auth_server:
   name: lark_auth_server
   cert:

@@ -4,7 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/golang-jwt/jwt/v4/request"
+	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
+	"lark/pkg/utils"
 	"time"
 )
 
@@ -12,6 +14,8 @@ func CreateToken(uid int64, platform int32) (tokenString string, expireIn int64)
 	var (
 		token  *jwt.Token
 		claims jwt.MapClaims
+		now    = time.Now()
+		uuid   = utils.NewUUID()
 		err    error
 	)
 	token = jwt.New(jwt.SigningMethodHS256)
@@ -19,16 +23,19 @@ func CreateToken(uid int64, platform int32) (tokenString string, expireIn int64)
 
 	expireIn = constant.JWT_TOKEN_EXPIRE_IN
 	claims["iss"] = constant.JWT_ISSUER
-	claims["exp"] = time.Now().Add(time.Duration(expireIn) * time.Second).Unix()
-	claims["orig_iat"] = time.Now().Unix()
-	claims[constant.USER_UID] = uid
+	claims["exp"] = now.Add(constant.JWT_TOKEN_EXP).Unix()
+	claims["iat"] = now.Unix()
+	claims["uuid"] = uuid
+	claims[constant.USER_UID] = utils.Int64ToStr(uid)
 	claims[constant.USER_PLATFORM] = platform
+
 	tokenString, err = token.SignedString([]byte(constant.JWT_TOKEN_KEY))
 	if err != nil {
 		expireIn = -1
 		return
 	}
 	tokenString = constant.JWT_FIELD + tokenString
+	xredis.Set(constant.RK_SYNC_JWT+utils.Int64ToStr(uid)+":"+utils.Int32ToStr(platform), uuid, constant.JWT_TOKEN_EXP)
 	return
 }
 

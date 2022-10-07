@@ -73,6 +73,46 @@ func ToInt(value interface{}) (int, error) {
 	return 0, errors.New("value error")
 }
 
+func ToInt64(value interface{}) (int64, error) {
+	switch value.(type) {
+	case int:
+		return int64(value.(int)), nil
+	case int32:
+		return int64(value.(int32)), nil
+	case int64:
+		return value.(int64), nil
+	case float64:
+		return int64(value.(float64)), nil
+	case float32:
+		return int64(value.(float32)), nil
+	case string:
+		return StrToInt64(value.(string)), nil
+	}
+	return 0, errors.New("value error")
+}
+
+func ToInt32(value interface{}) (int32, error) {
+	switch value.(type) {
+	case int:
+		return int32(value.(int)), nil
+	case int32:
+		return value.(int32), nil
+	case int64:
+		return int32(value.(int64)), nil
+	case float64:
+		return int32(value.(float64)), nil
+	case float32:
+		return int32(value.(float32)), nil
+	case string:
+		val, err := strconv.ParseInt(value.(string), 10, 32)
+		if err != nil {
+			return 0, err
+		}
+		return int32(val), nil
+	}
+	return 0, errors.New("value error")
+}
+
 func ToFloat(value interface{}) (float64, error) {
 	switch value.(type) {
 	case float64:

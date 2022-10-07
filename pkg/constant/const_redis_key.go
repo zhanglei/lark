@@ -14,6 +14,7 @@ const (
 
 //有状态
 const (
+	RK_SYNC_JWT                         = "JWT:"
 	RK_SYNC_CHAT_MEMBERS_UID_LIST       = "CHAT:MEMBERS_UID_LIST:"       // 缓存群成员uid列表(表:chat_members.uid) + ChatId
 	RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH = "CHAT:MEMBERS_PUSH_CONF_HASH:" // 缓存chat成员推送配置(表:chat_members) + ChatId + UID
 	RK_SYNC_CHAT_MEMBERS_SETTINGS_HASH  = "CHAT:MEMBERS_SETTINGS_HASH:"

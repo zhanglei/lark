@@ -12,6 +12,7 @@ type Config struct {
 	Port             int                 `yaml:"port"`
 	Log              string              `yaml:"log"`
 	Etcd             *conf.Etcd          `yaml:"etcd"`
+	Redis            *conf.Redis         `yaml:"redis"`
 	AuthServer       *conf.GrpcServer    `yaml:"auth_server"`
 	UserServer       *conf.GrpcServer    `yaml:"user_server"`
 	ChatMsgServer    *conf.GrpcServer    `yaml:"chat_msg_server"`
