@@ -1,14 +1,14 @@
 DROP TABLE IF EXISTS `chat_invites`;
 CREATE TABLE `chat_invites` (
-  `invite_id` bigint NOT NULL COMMENT 'invite ID',
+  `invite_id` bigint unsigned NOT NULL COMMENT 'invite ID',
   `invited_ts` bigint NOT NULL COMMENT '邀请时间',
-  `chat_id` bigint NOT NULL COMMENT 'Chat ID',
-  `chat_type` tinyint(1) NOT NULL COMMENT '1:私聊/2:群聊',
-  `initiator_uid` bigint NOT NULL COMMENT '发起人 UID',
-  `invitee_uid` bigint NOT NULL COMMENT '被邀请人 UID',
+  `chat_id` bigint unsigned NOT NULL COMMENT 'Chat ID',
+  `chat_type` tinyint(1) unsigned NOT NULL COMMENT '1:私聊/2:群聊',
+  `initiator_uid` bigint unsigned NOT NULL COMMENT '发起人 UID',
+  `invitee_uid` bigint unsigned NOT NULL COMMENT '被邀请人 UID',
   `invitation_msg` varchar(255) NOT NULL DEFAULT '' COMMENT '邀请消息',
-  `handler_uid` bigint NOT NULL DEFAULT '0'  COMMENT '处理人 UID',
-  `handle_result` tinyint(1) NOT NULL DEFAULT '0' COMMENT '结果',
+  `handler_uid` bigint unsigned NOT NULL DEFAULT '0'  COMMENT '处理人 UID',
+  `handle_result` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '结果',
   `handle_msg` varchar(255) DEFAULT '' COMMENT '处理消息',
   `handled_ts` bigint NOT NULL DEFAULT '0' COMMENT '处理时间',
   `created_ts` bigint DEFAULT '0',
@@ -17,6 +17,9 @@ CREATE TABLE `chat_invites` (
   PRIMARY KEY (`invite_id`),
   UNIQUE KEY `invite_id` (`invite_id`),
   KEY `idx_deletedTs` (`deleted_ts`),
-  KEY `id_chatType_initiatorUid_handleResult` (`chat_type`,`initiator_uid`,`handle_result`),
-  KEY `id_chatType_inviteeUid_handleResult` (`chat_type`,`invitee_uid`,`handle_result`)
+  KEY `id_chatId` (`chat_id`),
+  KEY `id_chatType` (`chat_type`),
+  KEY `id_initiatorUid` (`initiator_uid`),
+  KEY `id_inviteeUid` (`invitee_uid`),
+  KEY `id_handleResult` (`handle_result`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
