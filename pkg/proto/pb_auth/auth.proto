@@ -26,7 +26,6 @@ message RegisterResp {
   Token token = 4;
 }
 
-
 message LoginReq {
   pb_enum.ACCOUNT_TYPE account_type = 1; // 账户类型 1:手机号 2:lark账户
   pb_enum.PLATFORM_TYPE platform = 2; // 平台

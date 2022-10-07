@@ -44,7 +44,3 @@ redis:
   db: 0
   password: lark2022
   prefix: "LK:"
-msg_consumer:
-  address: ["lark-kafka:9092"]
-  topic: ["online_broadcast"]
-  group_id: "user_online"

@@ -8,13 +8,12 @@ import (
 )
 
 type Config struct {
-	Name        string              `yaml:"name"`
-	Log         string              `yaml:"log"`
-	GrpcServer  *conf.Grpc          `yaml:"grpc_server"`
-	Etcd        *conf.Etcd          `yaml:"etcd"`
-	Mysql       *conf.Mysql         `yaml:"mysql"`
-	Redis       *conf.Redis         `yaml:"redis"`
-	MsgConsumer *conf.KafkaConsumer `yaml:"msg_consumer"`
+	Name       string      `yaml:"name"`
+	Log        string      `yaml:"log"`
+	GrpcServer *conf.Grpc  `yaml:"grpc_server"`
+	Etcd       *conf.Etcd  `yaml:"etcd"`
+	Mysql      *conf.Mysql `yaml:"mysql"`
+	Redis      *conf.Redis `yaml:"redis"`
 }
 
 var (

@@ -5,7 +5,6 @@ import (
 	"lark/apps/interfaces/internal/dto/dto_auth"
 	"lark/pkg/common/xlog"
 	"lark/pkg/proto/pb_auth"
-	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_mq"
 	"lark/pkg/xhttp"
 )
@@ -30,24 +29,25 @@ func (s *authService) Login(params *dto_auth.LoginReq) (resp *xhttp.Resp) {
 		xlog.Warn(reply.Code, reply.Msg)
 		return
 	}
-	copier.Copy(loginResp, reply)
 
 	//TODO:获取服务器ID 测试数据 ServerId: 1
 	wsServer := &dto_auth.ServerInfo{
 		ServerId: 1,
 		Address:  "lark-ws-server.com:32001",
 	}
-	loginResp.Server = wsServer
 	//更新 wsServer 和 登录平台
 	onlineMsg := &pb_mq.UserOnline{
 		Uid:      reply.UserInfo.Uid,
-		Platform: pb_enum.PLATFORM_TYPE(params.Platform),
+		Platform: params.Platform,
 		ServerId: wsServer.ServerId,
 	}
 	ok = s.UserOnline(onlineMsg, resp)
 	if ok == false {
 		return
 	}
+
+	copier.Copy(loginResp, reply)
+	loginResp.Server = wsServer
 	resp.Data = loginResp
 	return
 }
