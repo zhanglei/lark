@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"runtime"
 	"runtime/debug"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -170,7 +171,7 @@ func (h *Hub) wsHandler(c *gin.Context) {
 		httpError(c, ERROR_CODE_HTTP_PLATFORM_DOESNOT_EXIST, ERROR_HTTP_PLATFORM_DOESNOT_EXIST)
 		return
 	}
-	uid = int64(uidVal.(float64))
+	uid, _ = strconv.ParseInt(uidVal.(string), 10, 64)
 	if uid == 0 {
 		httpError(c, ERROR_CODE_HTTP_UID_DOESNOT_EXIST, ERROR_HTTP_UID_DOESNOT_EXIST)
 		return
