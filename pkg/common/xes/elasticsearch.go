@@ -39,20 +39,20 @@ func (c *EsClient) connectEs() (esClient *elasticsearch.Client) {
 	if c.cfg.TlsEnabled == true {
 		certBuf, err = ioutil.ReadFile(c.cfg.CACert)
 		if err != nil {
-			xlog.Error(err)
+			xlog.Error(err.Error())
 			return
 		}
 		esCfg.CACert = certBuf
 	}
 	esClient, err = elasticsearch.NewClient(esCfg)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	cli.esClient = esClient
 	resp, err = esClient.Info()
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {

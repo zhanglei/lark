@@ -51,13 +51,13 @@ func connectDB(cfg *conf.Mongo) (db *mongo.Database, err error) {
 	// Connect to MongoDB
 	client, err = mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	// Check the connection
 	err = client.Ping(context.TODO(), nil)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	db = client.Database(cfg.Db)

@@ -34,7 +34,7 @@ func NewServer(c *conf.Grpc) (srv *grpc.Server, closer io.Closer) {
 		// TLS认证
 		creds, err = credentials.NewServerTLSFromFile(c.Credential.CertFile, c.Credential.KeyFile)
 		if err != nil {
-			xlog.Error(err)
+			xlog.Error(err.Error())
 		} else {
 			opts = append(opts, grpc.Creds(creds))
 		}
@@ -43,7 +43,7 @@ func NewServer(c *conf.Grpc) (srv *grpc.Server, closer io.Closer) {
 		// 链路追踪
 		tracer, closer, err = xtracer.NewTracer(c.Name, c.Jaeger)
 		if err != nil {
-			xlog.Error(err)
+			xlog.Error(err.Error())
 		} else {
 			opts = append(opts, grpc.UnaryInterceptor(otgrpc.OpenTracingServerInterceptor(tracer)))
 		}

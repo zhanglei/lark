@@ -73,14 +73,14 @@ func connectDB(cfg *conf.Mysql) (db *gorm.DB, err error) {
 
 	db, err = gorm.Open(mysql.Open(args), opts)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	db = db.Debug()
 
 	sqlDB, err = db.DB()
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	//设置最大空闲连接

@@ -23,7 +23,7 @@ func (r *chatMessageRepository) HotMessages(w *entity.MongoWhere) (list []*po.Me
 	}
 	cur, err = coll.Find(ctx, w.Filter, w.FindOptions)
 	if err != nil {
-		xlog.Error(err.Error())
+		xlog.Warn(err.Error())
 		return
 	}
 	defer cur.Close(ctx)

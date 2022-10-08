@@ -33,7 +33,7 @@ func (s *GrpcServer) RunServer(server *grpc.Server) {
 	address = "0.0.0.0:" + strconv.Itoa(s.grpc.Port)
 	listener, err = net.Listen("tcp", address)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	if s.grpc.ConnectionLimit > 0 {
@@ -41,12 +41,12 @@ func (s *GrpcServer) RunServer(server *grpc.Server) {
 	}
 	err = xetcd.RegisterEtcd(s.etcd.Schema, s.etcd.Endpoints, utils.GetServerIP(), s.grpc.Port, s.grpc.Name, 10)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 	err = server.Serve(listener)
 	if err != nil {
-		xlog.Error(err)
+		xlog.Error(err.Error())
 		return
 	}
 }

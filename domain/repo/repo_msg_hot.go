@@ -31,7 +31,7 @@ func (r *messageHotRepository) Create(message *po.Message) (err error) {
 		return
 	}
 	if _, err = coll.InsertOne(ctx, message); err != nil {
-		xlog.Error(err.Error())
+		xlog.Warn(err.Error())
 		return
 	}
 	return
@@ -52,7 +52,7 @@ func (r *messageHotRepository) Messages(w *entity.MongoWhere) (messages []*po.Me
 	}
 	cur, err = coll.Find(ctx, w.Filter, w.FindOptions)
 	if err != nil {
-		xlog.Error(err.Error())
+		xlog.Warn(err.Error())
 		return
 	}
 	defer cur.Close(ctx)

@@ -2,9 +2,11 @@ package service
 
 import (
 	"github.com/jinzhu/copier"
+	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/protobuf/proto"
 	"lark/domain/po"
 	"lark/pkg/common/xlog"
+	"lark/pkg/constant"
 	"lark/pkg/proto/pb_mq"
 	"lark/pkg/utils"
 )
@@ -23,11 +25,10 @@ func (s *messageHotService) MessageHandler(msg []byte, msgKey string) (err error
 	message.Body = utils.MsgBodyToStr(req.Msg.MsgType, req.Msg.Body)
 	message.UpdatedTs = utils.NowMilli()
 	if err = s.messageHotRepo.Create(message); err != nil {
-		xlog.Error(err)
-		//xlog.Warn(ERROR_CODE_MSG_HOT_INSERT_MESSAGE_FAILED, ERROR_MSG_HOT_INSERT_MESSAGE_FAILED, err.Error())
-		//if err.(*mysql.MySQLError).Number == constant.ERROR_CODE_MYSQL_DUPLICATE_ENTRY {
-		//	err = nil
-		//}
+		xlog.Warn(err.Error())
+		if err.(*mongo.WriteError).Code == constant.ERROR_CODE_MONGOL_DUPLICATE_ENTRY {
+			err = nil
+		}
 		return
 	}
 	return

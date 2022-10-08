@@ -49,6 +49,15 @@ mysql:
   max_idle_conn: 10
   conn_lifetime: 120000
   charset: utf8
+mongo:
+  address: "lark-mongo-msg:27017"
+  username: admin
+  password: lark2022
+  db: lark
+  direct: false
+  timeout: 5000
+  max_pool_size: 20
+  retain_chat_records: 3650
 redis:
   address: ["lark-redis:63791"]
   db: 0

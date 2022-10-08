@@ -68,7 +68,7 @@ func NewResolver(opt *conf.GrpcDialOption) (r *Resolver, err error) {
 		var creds credentials.TransportCredentials
 		creds, err = credentials.NewClientTLSFromFile(opt.Cert.CertFile, opt.Cert.ServerNameOverride)
 		if err != nil {
-			xlog.Error(err)
+			xlog.Error(err.Error())
 		} else {
 			opts = append(opts, grpc.WithTransportCredentials(creds))
 		}
