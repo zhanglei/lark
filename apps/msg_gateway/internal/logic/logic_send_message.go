@@ -45,6 +45,9 @@ func (logic *SendMessageLogic) push(members []*pb_chat_member.PushMember, msgBuf
 		if member.Mute == pb_enum.MUTE_TYPE_OPENED {
 			continue
 		}
+		if member.Uid == logic.req.Msg.SenderId {
+			continue
+		}
 		if result > 0 {
 			ofpsMember := &pb_ofps.OfflinePushMember{
 				Uid:      member.Uid,
