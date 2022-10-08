@@ -8,11 +8,27 @@ import (
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
+	"lark/pkg/entity"
+	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_mq"
+	"lark/pkg/proto/pb_msg"
 	"lark/pkg/utils"
 )
 
 func (s *messageHistoryService) MessageHandler(msg []byte, msgKey string) (err error) {
+	switch msgKey {
+	case constant.CONST_MSG_KEY_NEW:
+		err = s.SaveMessage(msg)
+		return
+	case constant.CONST_MSG_KEY_RECALL:
+		err = s.MessageRecall(msg)
+		return
+	default:
+		return
+	}
+}
+
+func (s *messageHistoryService) SaveMessage(msg []byte) (err error) {
 	var (
 		req     = new(pb_mq.InboxMessage)
 		message = new(po.Message)
@@ -42,5 +58,26 @@ func (s *messageHistoryService) MessageHandler(msg []byte, msgKey string) (err e
 		err = nil
 		return
 	}
+	return
+}
+
+func (s *messageHistoryService) MessageRecall(msg []byte) (err error) {
+	var (
+		req = new(pb_msg.MessageOperationReq)
+		u   = entity.NewMysqlUpdate()
+	)
+	if err = proto.Unmarshal(msg, req); err != nil {
+		xlog.Warn(ERROR_CODE_MSG_HISTORY_PROTOCOL_UNMARSHAL_ERR, ERROR_MSG_HISTORY_PROTOCOL_UNMARSHAL_ERR, err.Error())
+		return
+	}
+	u.SetFilter("srv_msg_id=?", req.SrvMsgId)
+	u.SetFilter("sender_id=?", req.SenderId)
+	u.Set("status", pb_enum.MSG_OPERATION_RECALL)
+	err = s.chatMessageRepo.UpdateMessage(u)
+	if err != nil {
+		xlog.Warn(ERROR_CODE_MSG_HISTORY_UPDATE_VALUE_FAILED, ERROR_MSG_HISTORY_UPDATE_VALUE_FAILED, err.Error())
+	}
+	// TODO:缓存更新
+
 	return
 }

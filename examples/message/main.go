@@ -10,6 +10,7 @@ import (
 	"lark/pkg/common/xmongo"
 	"lark/pkg/common/xredis"
 	"lark/pkg/entity"
+	"lark/pkg/proto/pb_enum"
 )
 
 func init() {
@@ -75,6 +76,7 @@ func main() {
 	u.SetFilter("chat_id", 1)
 	u.SetFilter("srv_msg_id", 1)
 	u.Set("root_id", 10)
+	u.Set("status", pb_enum.MSG_OPERATION_RECALL)
 	if err = messageHotRepo.Update(u); err != nil {
 		xlog.Warn(err.Error())
 	}

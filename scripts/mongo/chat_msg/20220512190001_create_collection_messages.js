@@ -22,3 +22,4 @@ db.getCollection("messages").drop();
 db.createCollection("messages");
 // 复合索引支持唯一性约束
 db.messages.createIndex({chat_type:1,chat_id:1,seq_id:-1},{unique:true})
+db.messages.createIndex({srv_msg_id:1,sender_id:1,seq_id:-1})

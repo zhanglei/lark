@@ -83,7 +83,7 @@ func (s *messageService) SendChatMessage(ctx context.Context, req *pb_msg.SendCh
 	}
 
 	// 5、将消息推送到kafka消息队列
-	_, _, err = s.producer.EnQueue(inbox, utils.Int64ToStr(inbox.Msg.ChatId))
+	_, _, err = s.producer.EnQueue(inbox, constant.CONST_MSG_KEY_NEW)
 	if err != nil {
 		setSendChatMessageResp(resp, ERROR_CODE_MESSAGE_ENQUEUE_FAILED, ERROR_MESSAGE_ENQUEUE_FAILED)
 		xlog.Warn(ERROR_CODE_MESSAGE_ENQUEUE_FAILED, ERROR_MESSAGE_ENQUEUE_FAILED, err.Error())
