@@ -44,7 +44,7 @@ func (s *chatMemberService) cacheMemberPushConfig(list []*pb_chat_member.ChatMem
 		return
 	}
 	var (
-		step          = 200
+		step          = 500
 		consumerCount = int(math.Ceil(float64(len(list)) / float64(step)))
 		errChan       = make(chan error, consumerCount)
 		i             int

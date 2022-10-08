@@ -26,7 +26,7 @@ func (s *chatMemberService) GetChatMemberPushConfigList(ctx context.Context, req
 	)
 
 	w.Sort = "uid ASC"
-	w.Limit = 10000
+	w.Limit = 5000
 	for {
 		w.Args = nil
 		w.Query = "chat_id = ?"

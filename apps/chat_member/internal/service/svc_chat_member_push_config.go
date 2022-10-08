@@ -19,10 +19,8 @@ func (s *chatMemberService) GetChatMemberPushConfig(ctx context.Context, req *pb
 		config *pb_chat_member.ChatMemberPushConfig
 		err    error
 	)
-	w.Query = "chat_id = ?"
-	w.Args = append(w.Args, req.ChatId)
-	w.Query += " AND uid = ?"
-	w.Args = append(w.Args, req.Uid)
+	w.SetFilter("chat_id = ?", req.ChatId)
+	w.SetFilter("uid = ?", req.Uid)
 
 	config, err = s.chatMemberRepo.ChatMemberPushConfig(w)
 	if err != nil {

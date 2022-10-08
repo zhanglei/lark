@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"lark/apps/push/internal/logic"
-	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -12,7 +11,6 @@ import (
 	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_gw"
 	"lark/pkg/proto/pb_mq"
-	"lark/pkg/proto/pb_push"
 	"lark/pkg/utils"
 	"strconv"
 )
@@ -32,39 +30,37 @@ func init() {
 }
 
 func (s *pushService) MessageHandler(msg []byte, msgKey string) (err error) {
+	switch msgKey {
+	case constant.CONST_MSG_KEY_NEW:
+		err = s.PushMessage(msg)
+		return
+	case constant.CONST_MSG_KEY_RECALL:
+		return
+	default:
+		return
+	}
+}
+
+func (s *pushService) PushMessage(buf []byte) (err error) {
 	var (
-		req     = new(pb_mq.InboxMessage)
-		pushReq *pb_push.PushMessageReq
+		inbox         = new(pb_mq.InboxMessage)
+		conf          *pb_chat_member.ChatMemberPushConfig
+		serverMembers map[int32][]*pb_gw.OnlinePushMember
 	)
-	if err = proto.Unmarshal(msg, req); err != nil {
+	if err = proto.Unmarshal(buf, inbox); err != nil {
 		xlog.Warn(ERROR_CODE_PUSH_PROTOCOL_UNMARSHAL_ERR, ERROR_PUSH_PROTOCOL_UNMARSHAL_ERR, err.Error())
 		return
 	}
-	// 消息推送
-	pushReq = &pb_push.PushMessageReq{
-		Topic:    req.Topic,
-		SubTopic: req.SubTopic,
-		Msg:      req.Msg,
-	}
-	xgopool.Go(func() {
-		s.PushMessage(pushReq)
-	})
-	return
-}
-
-func (s *pushService) PushMessage(req *pb_push.PushMessageReq) (err error) {
-	var (
-		conf *pb_chat_member.ChatMemberPushConfig
-	)
-	switch req.Msg.ChatType {
+	switch inbox.Msg.ChatType {
 	case pb_enum.CHAT_TYPE_PRIVATE:
-		conf = s.getChatMemberPushConfig(req.Msg.ChatId, req.Msg.ReceiverId)
+		conf = s.getChatMemberPushConfig(inbox.Msg.ChatId, inbox.Msg.ReceiverId)
 		if conf == nil {
 			return
 		}
-		logic.PushMessageToMembers(req, []*pb_chat_member.ChatMemberPushConfig{conf}, s.chatMessagePush)
+		serverMembers = logic.GetOnlinePushMembersFromList([]*pb_chat_member.ChatMemberPushConfig{conf})
+		s.onlinePushMessage(inbox, serverMembers)
 	case pb_enum.CHAT_TYPE_GROUP:
-		s.groupChatMessagePush(req)
+		s.groupChatMessagePush(inbox)
 	}
 	return
 }
@@ -89,7 +85,7 @@ func (s *pushService) getChatMemberPushConfig(chatId int64, uid int64) (conf *pb
 	)
 	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(chatId)
 	list = xredis.HMGet(key, utils.Int64ToStr(uid))
-	if len(list) > 0 && list[0] != nil {
+	if len(list) == 1 && list[0] != nil {
 		conf = new(pb_chat_member.ChatMemberPushConfig)
 		utils.Unmarshal(list[0].(string), conf)
 		return
@@ -108,28 +104,34 @@ func (s *pushService) getChatMemberPushConfig(chatId int64, uid int64) (conf *pb
 	return
 }
 
-func (s *pushService) groupChatMessagePush(req *pb_push.PushMessageReq) {
+func (s *pushService) groupChatMessagePush(inbox *pb_mq.InboxMessage) {
 	//TODO:测试
 	if isTest == true {
-		s.groupChatMessagePushTest(req)
+		s.groupChatMessagePushTest(inbox)
 		return
 	}
 
 	var (
-		key     string
-		hashmap map[string]string
+		key           string
+		hashmap       map[string]string
+		serverMembers map[int32][]*pb_gw.OnlinePushMember
 	)
-	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(req.Msg.ChatId)
+	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(inbox.Msg.ChatId)
 	hashmap = xredis.HGetAll(key)
 	if len(hashmap) > 1 {
-		logic.PushMessageToHashmapMembers(req, hashmap, s.chatMessagePush)
+		serverMembers = logic.GetOnlinePushMembersFromHash(hashmap)
 	} else {
-		logic.PushMessageToMembers(req, s.getChatMemberPushConfigList(req.Msg.ChatId), s.chatMessagePush)
+		serverMembers = logic.GetOnlinePushMembersFromList(s.getChatMemberPushConfigList(inbox.Msg.ChatId))
 	}
+	s.onlinePushMessage(inbox, serverMembers)
 }
 
-func (s *pushService) groupChatMessagePushTest(req *pb_push.PushMessageReq) {
-	logic.PushMessageToHashmapMembers(req, testHashmap, s.chatMessagePush)
+func (s *pushService) groupChatMessagePushTest(inbox *pb_mq.InboxMessage) {
+	var (
+		serverMembers map[int32][]*pb_gw.OnlinePushMember
+	)
+	serverMembers = logic.GetOnlinePushMembersFromHash(testHashmap)
+	s.onlinePushMessage(inbox, serverMembers)
 }
 
 func (s *pushService) getChatMemberPushConfigList(chatId int64) (settings []*pb_chat_member.ChatMemberPushConfig) {
@@ -149,15 +151,27 @@ func (s *pushService) getChatMemberPushConfigList(chatId int64) (settings []*pb_
 	return resp.List
 }
 
-func (s *pushService) chatMessagePush(req *pb_gw.OnlinePushMessageReq, serverId int32) {
+func (s *pushService) onlinePushMessage(inbox *pb_mq.InboxMessage, serverMembers map[int32][]*pb_gw.OnlinePushMember) {
+	if len(serverMembers) == 0 {
+		return
+	}
 	var (
+		serverId int32
+		req      *pb_gw.OnlinePushMessageReq
 		pushResp *pb_gw.OnlinePushMessageResp
 	)
 	//TODO:serverId分组推送
-	pushResp = s.messageGatewayClient.OnlinePushMessage(req)
-	if pushResp == nil {
-		xlog.Warn(ERROR_CODE_PUSH_GRPC_SERVICE_FAILURE, ERROR_PUSH_GRPC_SERVICE_FAILURE)
-		return
+	for serverId, _ = range serverMembers {
+		req = &pb_gw.OnlinePushMessageReq{
+			Topic:    inbox.Topic,
+			SubTopic: inbox.SubTopic,
+			Members:  serverMembers[serverId],
+			Msg:      inbox.Msg,
+		}
+		pushResp = s.messageGatewayClient.OnlinePushMessage(req)
+		if pushResp == nil {
+			xlog.Warn(ERROR_CODE_PUSH_GRPC_SERVICE_FAILURE, ERROR_PUSH_GRPC_SERVICE_FAILURE)
+		}
 	}
 	return
 }
