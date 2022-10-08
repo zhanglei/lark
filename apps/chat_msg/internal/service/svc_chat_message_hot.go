@@ -29,7 +29,7 @@ func (s *chatMessageService) GetHotMessages(req *pb_chat_msg.GetChatMessagesReq,
 			w.SetFilter("seq_id", bson.M{"$gte": req.SeqId - int64(req.Limit)})
 		}
 	}
-	list, err = s.chatMessageRepo.HotMessages(w)
+	list, err = s.messageHotRepo.Messages(w)
 	msgCount = len(list)
 	if msgCount == int(req.Limit) {
 		return

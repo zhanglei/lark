@@ -14,8 +14,9 @@ type ChatMessageService interface {
 type chatMessageService struct {
 	conf            *config.Config
 	chatMessageRepo repo.ChatMessageRepository
+	messageHotRepo  repo.MessageHotRepository
 }
 
-func NewChatMessageService(chatMessageRepo repo.ChatMessageRepository, conf *config.Config) ChatMessageService {
-	return &chatMessageService{chatMessageRepo: chatMessageRepo, conf: conf}
+func NewChatMessageService(conf *config.Config, chatMessageRepo repo.ChatMessageRepository, messageHotRepo repo.MessageHotRepository) ChatMessageService {
+	return &chatMessageService{conf: conf, chatMessageRepo: chatMessageRepo, messageHotRepo: messageHotRepo}
 }
