@@ -50,12 +50,13 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 			resp.Ok = true
 		}
 	}
-	err = s.cachePushMembers(list)
-	if err != nil {
-		setChatMemberVerifyResp(resp, ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED)
-		xlog.Warn(ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED, err.Error())
-		return
-	}
+	// 在push service 缓存
+	//err = s.cachePushMembers(list)
+	//if err != nil {
+	//	setChatMemberVerifyResp(resp, ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED)
+	//	xlog.Warn(ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED, err.Error())
+	//	return
+	//}
 	return
 }
 

@@ -117,7 +117,7 @@ func (s *pushService) groupChatMessagePush(inbox *pb_mq.InboxMessage) {
 	)
 	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(inbox.Msg.ChatId)
 	hashmap = xredis.HGetAll(key)
-	if len(hashmap) > 1 {
+	if len(hashmap) > 0 {
 		serverMembers = logic.GetOnlinePushMembersFromHash(hashmap)
 	} else {
 		serverMembers = logic.GetOnlinePushMembersFromList(s.GetPushMemberList(inbox.Msg.ChatId))
