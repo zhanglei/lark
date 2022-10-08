@@ -81,6 +81,18 @@ message SendChatMessageResp {
   string msg = 2;
 }
 
+message MessageOperationReq {
+  int64 sender_id = 1;
+  int64 srv_msg_id = 2;
+  pb_enum.MSG_OPERATION operation = 3;
+}
+
+message MessageOperationResp {
+  int32 code = 1;
+  string msg = 2;
+}
+
 service Message {
   rpc SendChatMessage(SendChatMessageReq) returns(SendChatMessageResp);
+  rpc MessageOperation(MessageOperationReq) returns(MessageOperationResp);
 }

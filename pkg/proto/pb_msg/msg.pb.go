@@ -810,6 +810,124 @@ func (x *SendChatMessageResp) GetMsg() string {
 	return ""
 }
 
+type MessageOperationReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SenderId  int64                 `protobuf:"varint,1,opt,name=sender_id,json=senderId,proto3" json:"sender_id,omitempty"`
+	SrvMsgId  int64                 `protobuf:"varint,2,opt,name=srv_msg_id,json=srvMsgId,proto3" json:"srv_msg_id,omitempty"`
+	Operation pb_enum.MSG_OPERATION `protobuf:"varint,3,opt,name=operation,proto3,enum=pb_enum.MSG_OPERATION" json:"operation,omitempty"`
+}
+
+func (x *MessageOperationReq) Reset() {
+	*x = MessageOperationReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb_msg_msg_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MessageOperationReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOperationReq) ProtoMessage() {}
+
+func (x *MessageOperationReq) ProtoReflect() protoreflect.Message {
+	mi := &file_pb_msg_msg_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageOperationReq.ProtoReflect.Descriptor instead.
+func (*MessageOperationReq) Descriptor() ([]byte, []int) {
+	return file_pb_msg_msg_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *MessageOperationReq) GetSenderId() int64 {
+	if x != nil {
+		return x.SenderId
+	}
+	return 0
+}
+
+func (x *MessageOperationReq) GetSrvMsgId() int64 {
+	if x != nil {
+		return x.SrvMsgId
+	}
+	return 0
+}
+
+func (x *MessageOperationReq) GetOperation() pb_enum.MSG_OPERATION {
+	if x != nil {
+		return x.Operation
+	}
+	return pb_enum.MSG_OPERATION(0)
+}
+
+type MessageOperationResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code int32  `protobuf:"varint,1,opt,name=code,proto3" json:"code,omitempty"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *MessageOperationResp) Reset() {
+	*x = MessageOperationResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pb_msg_msg_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MessageOperationResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOperationResp) ProtoMessage() {}
+
+func (x *MessageOperationResp) ProtoReflect() protoreflect.Message {
+	mi := &file_pb_msg_msg_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageOperationResp.ProtoReflect.Descriptor instead.
+func (*MessageOperationResp) Descriptor() ([]byte, []int) {
+	return file_pb_msg_msg_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *MessageOperationResp) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *MessageOperationResp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
 var File_pb_msg_msg_proto protoreflect.FileDescriptor
 
 var file_pb_msg_msg_proto_rawDesc = []byte{
@@ -916,15 +1034,32 @@ var file_pb_msg_msg_proto_rawDesc = []byte{
 	0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52,
 	0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x05, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x32, 0x55, 0x0a, 0x07, 0x4d, 0x65, 0x73,
-	0x73, 0x61, 0x67, 0x65, 0x12, 0x4a, 0x0a, 0x0f, 0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61, 0x74,
-	0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1a, 0x2e, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67,
-	0x2e, 0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
-	0x52, 0x65, 0x71, 0x1a, 0x1b, 0x2e, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67, 0x2e, 0x53, 0x65, 0x6e,
-	0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70,
-	0x42, 0x1e, 0x5a, 0x1c, 0x6c, 0x61, 0x72, 0x6b, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x2f, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67, 0x3b, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x86, 0x01, 0x0a, 0x13, 0x4d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65,
+	0x71, 0x12, 0x1b, 0x0a, 0x09, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x65, 0x72, 0x49, 0x64, 0x12, 0x1c,
+	0x0a, 0x0a, 0x73, 0x72, 0x76, 0x5f, 0x6d, 0x73, 0x67, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x08, 0x73, 0x72, 0x76, 0x4d, 0x73, 0x67, 0x49, 0x64, 0x12, 0x34, 0x0a, 0x09,
+	0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0e, 0x32,
+	0x16, 0x2e, 0x70, 0x62, 0x5f, 0x65, 0x6e, 0x75, 0x6d, 0x2e, 0x4d, 0x53, 0x47, 0x5f, 0x4f, 0x50,
+	0x45, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x52, 0x09, 0x6f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x22, 0x3c, 0x0a, 0x14, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x65,
+	0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10,
+	0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67,
+	0x32, 0xa4, 0x01, 0x0a, 0x07, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x4a, 0x0a, 0x0f,
+	0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12,
+	0x1a, 0x2e, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67, 0x2e, 0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61,
+	0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x1b, 0x2e, 0x70, 0x62,
+	0x5f, 0x6d, 0x73, 0x67, 0x2e, 0x53, 0x65, 0x6e, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x4d, 0x0a, 0x10, 0x4d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1b, 0x2e, 0x70,
+	0x62, 0x5f, 0x6d, 0x73, 0x67, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x65,
+	0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x1a, 0x1c, 0x2e, 0x70, 0x62, 0x5f, 0x6d,
+	0x73, 0x67, 0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x4f, 0x70, 0x65, 0x72, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x42, 0x1e, 0x5a, 0x1c, 0x6c, 0x61, 0x72, 0x6b, 0x2f,
+	0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67,
+	0x3b, 0x70, 0x62, 0x5f, 0x6d, 0x73, 0x67, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -939,48 +1074,54 @@ func file_pb_msg_msg_proto_rawDescGZIP() []byte {
 	return file_pb_msg_msg_proto_rawDescData
 }
 
-var file_pb_msg_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_pb_msg_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_pb_msg_msg_proto_goTypes = []interface{}{
-	(*Packet)(nil),              // 0: pb_msg.Packet
-	(*MessageResp)(nil),         // 1: pb_msg.MessageResp
-	(*CliChatMessage)(nil),      // 2: pb_msg.CliChatMessage
-	(*SrvChatMessage)(nil),      // 3: pb_msg.SrvChatMessage
-	(*Image)(nil),               // 4: pb_msg.Image
-	(*File)(nil),                // 5: pb_msg.File
-	(*Audio)(nil),               // 6: pb_msg.Audio
-	(*Media)(nil),               // 7: pb_msg.Media
-	(*Sticker)(nil),             // 8: pb_msg.Sticker
-	(*SendChatMessageReq)(nil),  // 9: pb_msg.SendChatMessageReq
-	(*SendChatMessageResp)(nil), // 10: pb_msg.SendChatMessageResp
-	(pb_enum.TOPIC)(0),          // 11: pb_enum.TOPIC
-	(pb_enum.SUB_TOPIC)(0),      // 12: pb_enum.SUB_TOPIC
-	(pb_enum.MESSAGE_TYPE)(0),   // 13: pb_enum.MESSAGE_TYPE
-	(pb_enum.PLATFORM_TYPE)(0),  // 14: pb_enum.PLATFORM_TYPE
-	(pb_enum.CHAT_TYPE)(0),      // 15: pb_enum.CHAT_TYPE
-	(pb_enum.MSG_TYPE)(0),       // 16: pb_enum.MSG_TYPE
-	(pb_enum.MSG_FROM)(0),       // 17: pb_enum.MSG_FROM
+	(*Packet)(nil),               // 0: pb_msg.Packet
+	(*MessageResp)(nil),          // 1: pb_msg.MessageResp
+	(*CliChatMessage)(nil),       // 2: pb_msg.CliChatMessage
+	(*SrvChatMessage)(nil),       // 3: pb_msg.SrvChatMessage
+	(*Image)(nil),                // 4: pb_msg.Image
+	(*File)(nil),                 // 5: pb_msg.File
+	(*Audio)(nil),                // 6: pb_msg.Audio
+	(*Media)(nil),                // 7: pb_msg.Media
+	(*Sticker)(nil),              // 8: pb_msg.Sticker
+	(*SendChatMessageReq)(nil),   // 9: pb_msg.SendChatMessageReq
+	(*SendChatMessageResp)(nil),  // 10: pb_msg.SendChatMessageResp
+	(*MessageOperationReq)(nil),  // 11: pb_msg.MessageOperationReq
+	(*MessageOperationResp)(nil), // 12: pb_msg.MessageOperationResp
+	(pb_enum.TOPIC)(0),           // 13: pb_enum.TOPIC
+	(pb_enum.SUB_TOPIC)(0),       // 14: pb_enum.SUB_TOPIC
+	(pb_enum.MESSAGE_TYPE)(0),    // 15: pb_enum.MESSAGE_TYPE
+	(pb_enum.PLATFORM_TYPE)(0),   // 16: pb_enum.PLATFORM_TYPE
+	(pb_enum.CHAT_TYPE)(0),       // 17: pb_enum.CHAT_TYPE
+	(pb_enum.MSG_TYPE)(0),        // 18: pb_enum.MSG_TYPE
+	(pb_enum.MSG_FROM)(0),        // 19: pb_enum.MSG_FROM
+	(pb_enum.MSG_OPERATION)(0),   // 20: pb_enum.MSG_OPERATION
 }
 var file_pb_msg_msg_proto_depIdxs = []int32{
-	11, // 0: pb_msg.Packet.topic:type_name -> pb_enum.TOPIC
-	12, // 1: pb_msg.Packet.sub_topic:type_name -> pb_enum.SUB_TOPIC
-	13, // 2: pb_msg.Packet.msg_type:type_name -> pb_enum.MESSAGE_TYPE
-	14, // 3: pb_msg.CliChatMessage.sender_platform:type_name -> pb_enum.PLATFORM_TYPE
-	15, // 4: pb_msg.CliChatMessage.chat_type:type_name -> pb_enum.CHAT_TYPE
-	16, // 5: pb_msg.CliChatMessage.msg_type:type_name -> pb_enum.MSG_TYPE
-	14, // 6: pb_msg.SrvChatMessage.sender_platform:type_name -> pb_enum.PLATFORM_TYPE
-	15, // 7: pb_msg.SrvChatMessage.chat_type:type_name -> pb_enum.CHAT_TYPE
-	17, // 8: pb_msg.SrvChatMessage.msg_from:type_name -> pb_enum.MSG_FROM
-	16, // 9: pb_msg.SrvChatMessage.msg_type:type_name -> pb_enum.MSG_TYPE
-	11, // 10: pb_msg.SendChatMessageReq.topic:type_name -> pb_enum.TOPIC
-	12, // 11: pb_msg.SendChatMessageReq.sub_topic:type_name -> pb_enum.SUB_TOPIC
+	13, // 0: pb_msg.Packet.topic:type_name -> pb_enum.TOPIC
+	14, // 1: pb_msg.Packet.sub_topic:type_name -> pb_enum.SUB_TOPIC
+	15, // 2: pb_msg.Packet.msg_type:type_name -> pb_enum.MESSAGE_TYPE
+	16, // 3: pb_msg.CliChatMessage.sender_platform:type_name -> pb_enum.PLATFORM_TYPE
+	17, // 4: pb_msg.CliChatMessage.chat_type:type_name -> pb_enum.CHAT_TYPE
+	18, // 5: pb_msg.CliChatMessage.msg_type:type_name -> pb_enum.MSG_TYPE
+	16, // 6: pb_msg.SrvChatMessage.sender_platform:type_name -> pb_enum.PLATFORM_TYPE
+	17, // 7: pb_msg.SrvChatMessage.chat_type:type_name -> pb_enum.CHAT_TYPE
+	19, // 8: pb_msg.SrvChatMessage.msg_from:type_name -> pb_enum.MSG_FROM
+	18, // 9: pb_msg.SrvChatMessage.msg_type:type_name -> pb_enum.MSG_TYPE
+	13, // 10: pb_msg.SendChatMessageReq.topic:type_name -> pb_enum.TOPIC
+	14, // 11: pb_msg.SendChatMessageReq.sub_topic:type_name -> pb_enum.SUB_TOPIC
 	2,  // 12: pb_msg.SendChatMessageReq.msg:type_name -> pb_msg.CliChatMessage
-	9,  // 13: pb_msg.Message.SendChatMessage:input_type -> pb_msg.SendChatMessageReq
-	10, // 14: pb_msg.Message.SendChatMessage:output_type -> pb_msg.SendChatMessageResp
-	14, // [14:15] is the sub-list for method output_type
-	13, // [13:14] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	20, // 13: pb_msg.MessageOperationReq.operation:type_name -> pb_enum.MSG_OPERATION
+	9,  // 14: pb_msg.Message.SendChatMessage:input_type -> pb_msg.SendChatMessageReq
+	11, // 15: pb_msg.Message.MessageOperation:input_type -> pb_msg.MessageOperationReq
+	10, // 16: pb_msg.Message.SendChatMessage:output_type -> pb_msg.SendChatMessageResp
+	12, // 17: pb_msg.Message.MessageOperation:output_type -> pb_msg.MessageOperationResp
+	16, // [16:18] is the sub-list for method output_type
+	14, // [14:16] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_pb_msg_msg_proto_init() }
@@ -1121,6 +1262,30 @@ func file_pb_msg_msg_proto_init() {
 				return nil
 			}
 		}
+		file_pb_msg_msg_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageOperationReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pb_msg_msg_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MessageOperationResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1128,7 +1293,7 @@ func file_pb_msg_msg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_pb_msg_msg_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

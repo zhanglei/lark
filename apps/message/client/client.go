@@ -10,6 +10,7 @@ import (
 
 type MsgClient interface {
 	SendChatMessage(req *pb_msg.SendChatMessageReq) (resp *pb_msg.SendChatMessageResp)
+	MessageOperation(req *pb_msg.MessageOperationReq) (resp *pb_msg.MessageOperationResp)
 }
 
 type msgClient struct {
@@ -32,5 +33,15 @@ func (c *msgClient) SendChatMessage(req *pb_msg.SendChatMessageReq) (resp *pb_ms
 	}
 	client := pb_msg.NewMessageClient(conn)
 	resp, _ = client.SendChatMessage(context.Background(), req)
+	return
+}
+
+func (c *msgClient) MessageOperation(req *pb_msg.MessageOperationReq) (resp *pb_msg.MessageOperationResp) {
+	conn := c.GetClientConn()
+	if conn == nil {
+		return
+	}
+	client := pb_msg.NewMessageClient(conn)
+	resp, _ = client.MessageOperation(context.Background(), req)
 	return
 }

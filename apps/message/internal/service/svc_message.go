@@ -11,6 +11,7 @@ import (
 
 type MessageService interface {
 	SendChatMessage(ctx context.Context, req *pb_msg.SendChatMessageReq) (resp *pb_msg.SendChatMessageResp, _ error)
+	MessageOperation(ctx context.Context, req *pb_msg.MessageOperationReq) (resp *pb_msg.MessageOperationResp, err error)
 }
 
 type messageService struct {

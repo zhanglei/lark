@@ -85,7 +85,13 @@ enum INVITE_HANDLE_RESULT
 
 enum AVATAR_OWNER
 {
-    UNKNOWN_AVATAR_OWNER = 0;
-    USER_AVATAR = 1; // 用户头像
-    CHAT_AVATAR = 2; // 群头像
+  UNKNOWN_AVATAR_OWNER = 0;
+  USER_AVATAR = 1; // 用户头像
+  CHAT_AVATAR = 2; // 群头像
+}
+
+enum MSG_OPERATION {
+  UNKNOWN_MSG_OPERATION = 0;
+  RECALL = 1; // 消息撤回
+  URGENT = 2; // 消息加急
 }
