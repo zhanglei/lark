@@ -9,6 +9,7 @@ import (
 	"lark/pkg/common/xkafka"
 	"lark/pkg/global"
 	"lark/pkg/proto/pb_chat_member"
+	"runtime"
 )
 
 type ChatMemberService interface {
@@ -17,13 +18,14 @@ type ChatMemberService interface {
 	GetChatMemberInfo(ctx context.Context, req *pb_chat_member.GetChatMemberInfoReq) (resp *pb_chat_member.GetChatMemberInfoResp, err error)
 	ChatMemberVerify(ctx context.Context, req *pb_chat_member.ChatMemberVerifyReq) (resp *pb_chat_member.ChatMemberVerifyResp, err error)
 	ChatMemberOnline(ctx context.Context, req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp, err error)
-	GetChatMemberPushConfigList(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp, err error)
-	GetChatMemberPushConfig(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp, err error)
+	GetPushMemberList(ctx context.Context, req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp, err error)
+	GetPushMember(ctx context.Context, req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp, err error)
 	GetChatMemberList(ctx context.Context, req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp, err error)
 }
 
 type chatMemberService struct {
 	cfg            *config.Config
+	threads        int
 	chatMemberRepo repo.ChatMemberRepository
 	userClient     user_client.UserClient
 	consumerGroup  *xkafka.MConsumerGroup
@@ -32,7 +34,7 @@ type chatMemberService struct {
 
 func NewChatMemberService(cfg *config.Config, chatMemberRepo repo.ChatMemberRepository) ChatMemberService {
 	userClient := user_client.NewUserClient(cfg.Etcd, cfg.UserServer, cfg.GrpcServer.Jaeger, cfg.Name)
-	svc := &chatMemberService{cfg: cfg, chatMemberRepo: chatMemberRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
+	svc := &chatMemberService{cfg: cfg, threads: runtime.NumCPU() * 2, chatMemberRepo: chatMemberRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},
 		cfg.MsgConsumer.Topic,

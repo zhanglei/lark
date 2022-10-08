@@ -2,26 +2,25 @@ package logic
 
 import (
 	"lark/pkg/proto/pb_chat_member"
-	"lark/pkg/proto/pb_gw"
 	"lark/pkg/utils"
 )
 
-func GetOnlinePushMembersFromHash(hashmap map[string]string) (serverMembers map[int32][]*pb_gw.OnlinePushMember) {
+func GetOnlinePushMembersFromHash(hashmap map[string]string) (serverMembers map[int32][]*pb_chat_member.PushMember) {
 	return pushMessageHandler(true, hashmap, nil)
 }
 
-func GetOnlinePushMembersFromList(configs []*pb_chat_member.ChatMemberPushConfig) (serverMembers map[int32][]*pb_gw.OnlinePushMember) {
-	return pushMessageHandler(false, nil, configs)
+func GetOnlinePushMembersFromList(members []*pb_chat_member.PushMember) (serverMembers map[int32][]*pb_chat_member.PushMember) {
+	return pushMessageHandler(false, nil, members)
 }
 
-func pushMessageHandler(isHash bool, hashmap map[string]string, configs []*pb_chat_member.ChatMemberPushConfig) (serverMembers map[int32][]*pb_gw.OnlinePushMember) {
+func pushMessageHandler(isHash bool, hashmap map[string]string, members []*pb_chat_member.PushMember) (serverMembers map[int32][]*pb_chat_member.PushMember) {
 	var (
 		length int
 	)
 	if isHash == true {
 		length = len(hashmap)
 	} else {
-		length = len(configs)
+		length = len(members)
 	}
 	if length == 0 {
 		return
@@ -30,38 +29,32 @@ func pushMessageHandler(isHash bool, hashmap map[string]string, configs []*pb_ch
 	if isHash {
 		return groupFromHashmap(hashmap)
 	} else {
-		return groupFromConfigs(configs)
+		return groupFromMembers(members)
 	}
 }
 
-func groupFromHashmap(hashmap map[string]string) (serverMembers map[int32][]*pb_gw.OnlinePushMember) {
+func groupFromHashmap(hashmap map[string]string) (serverMembers map[int32][]*pb_chat_member.PushMember) {
 	var (
 		jsonStr string
-		member  *pb_gw.OnlinePushMember
+		member  *pb_chat_member.PushMember
 	)
-	serverMembers = make(map[int32][]*pb_gw.OnlinePushMember)
+	serverMembers = make(map[int32][]*pb_chat_member.PushMember)
 	for _, jsonStr = range hashmap {
-		member = new(pb_gw.OnlinePushMember)
+		member = new(pb_chat_member.PushMember)
 		utils.Unmarshal(jsonStr, member)
 		serverMembers[member.ServerId] = append(serverMembers[member.ServerId], member)
 	}
 	return
 }
 
-func groupFromConfigs(configs []*pb_chat_member.ChatMemberPushConfig) (serverMembers map[int32][]*pb_gw.OnlinePushMember) {
+func groupFromMembers(members []*pb_chat_member.PushMember) (serverMembers map[int32][]*pb_chat_member.PushMember) {
 	var (
-		conf   *pb_chat_member.ChatMemberPushConfig
-		member *pb_gw.OnlinePushMember
+		member *pb_chat_member.PushMember
+		index  int
 	)
-	serverMembers = make(map[int32][]*pb_gw.OnlinePushMember)
-	for _, conf = range configs {
-		member = &pb_gw.OnlinePushMember{
-			Uid:      conf.Uid,
-			ServerId: conf.ServerId,
-			Platform: conf.Platform,
-			Mute:     conf.Mute,
-		}
-		serverMembers[member.ServerId] = append(serverMembers[member.ServerId], member)
+	serverMembers = make(map[int32][]*pb_chat_member.PushMember)
+	for index, member = range members {
+		serverMembers[member.ServerId] = append(serverMembers[member.ServerId], members[index])
 	}
 	return
 }

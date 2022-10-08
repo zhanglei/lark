@@ -2,6 +2,7 @@ package repo
 
 import (
 	"gorm.io/gorm"
+	"lark/domain/do"
 	"lark/domain/po"
 	"lark/pkg/common/xmysql"
 	"lark/pkg/entity"
@@ -11,10 +12,10 @@ import (
 type ChatMemberRepository interface {
 	TxCreate(tx *gorm.DB, chatMember *po.ChatMember) (err error)
 	ChatMemberUidList(w *entity.MysqlWhere) (list []int64, err error)
-	ChatMemberList(w *entity.MysqlWhere) (list []*po.ChatMember, err error)
+	ChatMemberList(w *entity.MysqlWhere) (list []*do.ChatMemberInfo, err error)
 	ChatMemberSetting(w *entity.MysqlWhere) (member *po.ChatMember, err error)
-	ChatMemberPushConfigList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberPushConfig, err error)
-	ChatMemberPushConfig(w *entity.MysqlWhere) (conf *pb_chat_member.ChatMemberPushConfig, err error)
+	PushMemberList(w *entity.MysqlWhere) (list []*pb_chat_member.PushMember, err error)
+	PushMember(w *entity.MysqlWhere) (conf *pb_chat_member.PushMember, err error)
 	ChatMember(w *entity.MysqlWhere) (member *po.ChatMember, err error)
 	UpdateChatMember(u *entity.MysqlUpdate) (err error)
 	TxUpdateChatMember(tx *gorm.DB, u *entity.MysqlUpdate) (err error)
@@ -40,10 +41,12 @@ func (r *chatMemberRepository) ChatMemberUidList(w *entity.MysqlWhere) (list []i
 	return
 }
 
-func (r *chatMemberRepository) ChatMemberList(w *entity.MysqlWhere) (list []*po.ChatMember, err error) {
-	list = make([]*po.ChatMember, 0)
+func (r *chatMemberRepository) ChatMemberList(w *entity.MysqlWhere) (list []*do.ChatMemberInfo, err error) {
+	list = make([]*do.ChatMemberInfo, 0)
 	db := xmysql.GetDB()
-	err = db.Where(w.Query, w.Args...).
+	err = db.Model(po.ChatMember{}).
+		Select("chat_id,uid,mute,platform,server_id").
+		Where(w.Query, w.Args...).
 		Limit(w.Limit).Find(&list).Error
 	return
 }
@@ -55,15 +58,15 @@ func (r *chatMemberRepository) ChatMemberSetting(w *entity.MysqlWhere) (member *
 	return
 }
 
-func (r *chatMemberRepository) ChatMemberPushConfigList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberPushConfig, err error) {
-	list = make([]*pb_chat_member.ChatMemberPushConfig, 0)
+func (r *chatMemberRepository) PushMemberList(w *entity.MysqlWhere) (list []*pb_chat_member.PushMember, err error) {
+	list = make([]*pb_chat_member.PushMember, 0)
 	db := xmysql.GetDB()
-	err = db.Model(po.ChatMember{}).Select("chat_id,uid,mute,platform,server_id").Where(w.Query, w.Args...).Find(&list).Error
+	err = db.Model(po.ChatMember{}).Select("uid,mute,platform,server_id").Where(w.Query, w.Args...).Find(&list).Error
 	return
 }
 
-func (r *chatMemberRepository) ChatMemberPushConfig(w *entity.MysqlWhere) (conf *pb_chat_member.ChatMemberPushConfig, err error) {
-	conf = new(pb_chat_member.ChatMemberPushConfig)
+func (r *chatMemberRepository) PushMember(w *entity.MysqlWhere) (conf *pb_chat_member.PushMember, err error) {
+	conf = new(pb_chat_member.PushMember)
 	db := xmysql.GetDB()
 	err = db.Model(po.ChatMember{}).Select("chat_id,uid,mute,platform,server_id").Where(w.Query, w.Args...).Find(&conf).Error
 	return

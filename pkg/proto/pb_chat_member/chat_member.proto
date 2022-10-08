@@ -1,7 +1,7 @@
 syntax ="proto3";
 import "pb_enum/enum.proto";
 package pb_chat_member;
-option go_package = "./pb_chat_member;pb_chat_member";
+option go_package = "lark/pkg/proto/pb_chat_member;pb_chat_member";
 
 message GetChatMemberUidListReq {
   int64 chat_id = 1;
@@ -13,27 +13,33 @@ message GetChatMemberUidListResp {
   repeated int64 list = 3;
 }
 
-message GetChatMemberPushConfigListReq {
-  int64 chat_id = 1;
-}
-
-message GetChatMemberPushConfigListResp {
-  int32 code = 1;
-  string msg = 2;
-  repeated ChatMemberPushConfig list = 3;
-}
-
-message GetChatMemberPushConfigReq {
+message GetPushMemberReq {
   int64 chat_id = 1;
   int64 uid = 2;
 }
 
-message GetChatMemberPushConfigResp {
+message GetPushMemberResp {
   int32 code = 1;
   string msg = 2;
-  ChatMemberPushConfig config = 3;
+  PushMember member = 3;
 }
 
+message PushMember {
+  int64 uid = 1;
+  int32 server_id = 2;
+  pb_enum.PLATFORM_TYPE platform = 3;
+  pb_enum.MUTE_TYPE mute= 4;
+}
+
+message GetPushMemberListReq {
+  int64 chat_id = 1;
+}
+
+message GetPushMemberListResp {
+  int32 code = 1;
+  string msg = 2;
+  repeated PushMember list = 3;
+}
 
 message GetChatMemberSettingReq {
   int64 chat_id = 1;
@@ -113,19 +119,11 @@ message GetChatMemberListResp {
 
 service ChatMember {
   rpc GetChatMemberUidList(GetChatMemberUidListReq) returns (GetChatMemberUidListResp);
-  rpc GetChatMemberPushConfig(GetChatMemberPushConfigReq) returns (GetChatMemberPushConfigResp);
-  rpc GetChatMemberPushConfigList(GetChatMemberPushConfigListReq) returns (GetChatMemberPushConfigListResp);
+  rpc GetPushMember(GetPushMemberReq) returns (GetPushMemberResp);
+  rpc GetPushMemberList(GetPushMemberListReq) returns (GetPushMemberListResp);
   rpc GetChatMemberSetting(GetChatMemberSettingReq) returns (GetChatMemberSettingResp);
   rpc GetChatMemberInfo(GetChatMemberInfoReq) returns (GetChatMemberInfoResp);
   rpc ChatMemberVerify(ChatMemberVerifyReq) returns (ChatMemberVerifyResp);
   rpc ChatMemberOnline(ChatMemberOnlineReq) returns (ChatMemberOnlineResp);
   rpc GetChatMemberList(GetChatMemberListReq) returns (GetChatMemberListResp);
-}
-
-message ChatMemberPushConfig {
-  int64 chat_id = 1;
-  int64 uid = 2;
-  pb_enum.MUTE_TYPE mute = 3;
-  pb_enum.PLATFORM_TYPE platform = 4;
-  int32 server_id = 5;
 }

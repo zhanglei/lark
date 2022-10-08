@@ -14,8 +14,8 @@ type ChatMemberClient interface {
 	GetChatMemberInfo(req *pb_chat_member.GetChatMemberInfoReq) (resp *pb_chat_member.GetChatMemberInfoResp)
 	ChatMemberVerify(req *pb_chat_member.ChatMemberVerifyReq) (resp *pb_chat_member.ChatMemberVerifyResp)
 	ChatMemberOnline(req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp)
-	GetChatMemberPushConfigList(req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp)
-	GetChatMemberPushConfig(req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp)
+	GetPushMemberList(req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp)
+	GetPushMember(req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp)
 	GetChatMemberList(req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp)
 }
 
@@ -82,23 +82,23 @@ func (c *chatMemberClient) ChatMemberOnline(req *pb_chat_member.ChatMemberOnline
 	return
 }
 
-func (c *chatMemberClient) GetChatMemberPushConfigList(req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp) {
+func (c *chatMemberClient) GetPushMemberList(req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp) {
 	conn := c.GetClientConn()
 	if conn == nil {
 		return
 	}
 	client := pb_chat_member.NewChatMemberClient(conn)
-	resp, _ = client.GetChatMemberPushConfigList(context.Background(), req)
+	resp, _ = client.GetPushMemberList(context.Background(), req)
 	return
 }
 
-func (c *chatMemberClient) GetChatMemberPushConfig(req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp) {
+func (c *chatMemberClient) GetPushMember(req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp) {
 	conn := c.GetClientConn()
 	if conn == nil {
 		return
 	}
 	client := pb_chat_member.NewChatMemberClient(conn)
-	resp, _ = client.GetChatMemberPushConfig(context.Background(), req)
+	resp, _ = client.GetPushMember(context.Background(), req)
 	return
 }
 

@@ -1,13 +1,14 @@
 syntax ="proto3";
 import "pb_enum/enum.proto";
 import "pb_msg/msg.proto";
+import "pb_chat_member/chat_member.proto";
 package pb_gw;
 option go_package = "./pb_gw;pb_gw";
 
 message OnlinePushMessageReq {
   pb_enum.TOPIC topic = 1;
   pb_enum.SUB_TOPIC sub_topic = 2;
-  repeated OnlinePushMember members  = 3;
+  repeated pb_chat_member.PushMember members  = 3;
   pb_msg.SrvChatMessage msg = 4;
 }
 

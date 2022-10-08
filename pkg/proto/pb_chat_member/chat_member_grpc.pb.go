@@ -23,8 +23,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatMemberClient interface {
 	GetChatMemberUidList(ctx context.Context, in *GetChatMemberUidListReq, opts ...grpc.CallOption) (*GetChatMemberUidListResp, error)
-	GetChatMemberPushConfig(ctx context.Context, in *GetChatMemberPushConfigReq, opts ...grpc.CallOption) (*GetChatMemberPushConfigResp, error)
-	GetChatMemberPushConfigList(ctx context.Context, in *GetChatMemberPushConfigListReq, opts ...grpc.CallOption) (*GetChatMemberPushConfigListResp, error)
+	GetPushMember(ctx context.Context, in *GetPushMemberReq, opts ...grpc.CallOption) (*GetPushMemberResp, error)
+	GetPushMemberList(ctx context.Context, in *GetPushMemberListReq, opts ...grpc.CallOption) (*GetPushMemberListResp, error)
 	GetChatMemberSetting(ctx context.Context, in *GetChatMemberSettingReq, opts ...grpc.CallOption) (*GetChatMemberSettingResp, error)
 	GetChatMemberInfo(ctx context.Context, in *GetChatMemberInfoReq, opts ...grpc.CallOption) (*GetChatMemberInfoResp, error)
 	ChatMemberVerify(ctx context.Context, in *ChatMemberVerifyReq, opts ...grpc.CallOption) (*ChatMemberVerifyResp, error)
@@ -49,18 +49,18 @@ func (c *chatMemberClient) GetChatMemberUidList(ctx context.Context, in *GetChat
 	return out, nil
 }
 
-func (c *chatMemberClient) GetChatMemberPushConfig(ctx context.Context, in *GetChatMemberPushConfigReq, opts ...grpc.CallOption) (*GetChatMemberPushConfigResp, error) {
-	out := new(GetChatMemberPushConfigResp)
-	err := c.cc.Invoke(ctx, "/pb_chat_member.ChatMember/GetChatMemberPushConfig", in, out, opts...)
+func (c *chatMemberClient) GetPushMember(ctx context.Context, in *GetPushMemberReq, opts ...grpc.CallOption) (*GetPushMemberResp, error) {
+	out := new(GetPushMemberResp)
+	err := c.cc.Invoke(ctx, "/pb_chat_member.ChatMember/GetPushMember", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *chatMemberClient) GetChatMemberPushConfigList(ctx context.Context, in *GetChatMemberPushConfigListReq, opts ...grpc.CallOption) (*GetChatMemberPushConfigListResp, error) {
-	out := new(GetChatMemberPushConfigListResp)
-	err := c.cc.Invoke(ctx, "/pb_chat_member.ChatMember/GetChatMemberPushConfigList", in, out, opts...)
+func (c *chatMemberClient) GetPushMemberList(ctx context.Context, in *GetPushMemberListReq, opts ...grpc.CallOption) (*GetPushMemberListResp, error) {
+	out := new(GetPushMemberListResp)
+	err := c.cc.Invoke(ctx, "/pb_chat_member.ChatMember/GetPushMemberList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -117,8 +117,8 @@ func (c *chatMemberClient) GetChatMemberList(ctx context.Context, in *GetChatMem
 // for forward compatibility
 type ChatMemberServer interface {
 	GetChatMemberUidList(context.Context, *GetChatMemberUidListReq) (*GetChatMemberUidListResp, error)
-	GetChatMemberPushConfig(context.Context, *GetChatMemberPushConfigReq) (*GetChatMemberPushConfigResp, error)
-	GetChatMemberPushConfigList(context.Context, *GetChatMemberPushConfigListReq) (*GetChatMemberPushConfigListResp, error)
+	GetPushMember(context.Context, *GetPushMemberReq) (*GetPushMemberResp, error)
+	GetPushMemberList(context.Context, *GetPushMemberListReq) (*GetPushMemberListResp, error)
 	GetChatMemberSetting(context.Context, *GetChatMemberSettingReq) (*GetChatMemberSettingResp, error)
 	GetChatMemberInfo(context.Context, *GetChatMemberInfoReq) (*GetChatMemberInfoResp, error)
 	ChatMemberVerify(context.Context, *ChatMemberVerifyReq) (*ChatMemberVerifyResp, error)
@@ -134,11 +134,11 @@ type UnimplementedChatMemberServer struct {
 func (UnimplementedChatMemberServer) GetChatMemberUidList(context.Context, *GetChatMemberUidListReq) (*GetChatMemberUidListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChatMemberUidList not implemented")
 }
-func (UnimplementedChatMemberServer) GetChatMemberPushConfig(context.Context, *GetChatMemberPushConfigReq) (*GetChatMemberPushConfigResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChatMemberPushConfig not implemented")
+func (UnimplementedChatMemberServer) GetPushMember(context.Context, *GetPushMemberReq) (*GetPushMemberResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPushMember not implemented")
 }
-func (UnimplementedChatMemberServer) GetChatMemberPushConfigList(context.Context, *GetChatMemberPushConfigListReq) (*GetChatMemberPushConfigListResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetChatMemberPushConfigList not implemented")
+func (UnimplementedChatMemberServer) GetPushMemberList(context.Context, *GetPushMemberListReq) (*GetPushMemberListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPushMemberList not implemented")
 }
 func (UnimplementedChatMemberServer) GetChatMemberSetting(context.Context, *GetChatMemberSettingReq) (*GetChatMemberSettingResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChatMemberSetting not implemented")
@@ -186,38 +186,38 @@ func _ChatMember_GetChatMemberUidList_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatMember_GetChatMemberPushConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChatMemberPushConfigReq)
+func _ChatMember_GetPushMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPushMemberReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatMemberServer).GetChatMemberPushConfig(ctx, in)
+		return srv.(ChatMemberServer).GetPushMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb_chat_member.ChatMember/GetChatMemberPushConfig",
+		FullMethod: "/pb_chat_member.ChatMember/GetPushMember",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatMemberServer).GetChatMemberPushConfig(ctx, req.(*GetChatMemberPushConfigReq))
+		return srv.(ChatMemberServer).GetPushMember(ctx, req.(*GetPushMemberReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ChatMember_GetChatMemberPushConfigList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetChatMemberPushConfigListReq)
+func _ChatMember_GetPushMemberList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPushMemberListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatMemberServer).GetChatMemberPushConfigList(ctx, in)
+		return srv.(ChatMemberServer).GetPushMemberList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb_chat_member.ChatMember/GetChatMemberPushConfigList",
+		FullMethod: "/pb_chat_member.ChatMember/GetPushMemberList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatMemberServer).GetChatMemberPushConfigList(ctx, req.(*GetChatMemberPushConfigListReq))
+		return srv.(ChatMemberServer).GetPushMemberList(ctx, req.(*GetPushMemberListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -324,12 +324,12 @@ var ChatMember_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ChatMember_GetChatMemberUidList_Handler,
 		},
 		{
-			MethodName: "GetChatMemberPushConfig",
-			Handler:    _ChatMember_GetChatMemberPushConfig_Handler,
+			MethodName: "GetPushMember",
+			Handler:    _ChatMember_GetPushMember_Handler,
 		},
 		{
-			MethodName: "GetChatMemberPushConfigList",
-			Handler:    _ChatMember_GetChatMemberPushConfigList_Handler,
+			MethodName: "GetPushMemberList",
+			Handler:    _ChatMember_GetPushMemberList_Handler,
 		},
 		{
 			MethodName: "GetChatMemberSetting",

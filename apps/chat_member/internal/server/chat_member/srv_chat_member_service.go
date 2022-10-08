@@ -25,12 +25,11 @@ func (s *chatMemberServer) ChatMemberOnline(ctx context.Context, req *pb_chat_me
 	return s.chatMemberService.ChatMemberOnline(ctx, req)
 }
 
-func (s *chatMemberServer) GetChatMemberPushConfigList(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigListReq) (resp *pb_chat_member.GetChatMemberPushConfigListResp, err error) {
-	return s.chatMemberService.GetChatMemberPushConfigList(ctx, req)
+func (s *chatMemberServer) GetPushMemberList(ctx context.Context, req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp, err error) {
+	return s.chatMemberService.GetPushMemberList(ctx, req)
 }
-
-func (s *chatMemberServer) GetChatMemberPushConfig(ctx context.Context, req *pb_chat_member.GetChatMemberPushConfigReq) (resp *pb_chat_member.GetChatMemberPushConfigResp, err error) {
-	return s.chatMemberService.GetChatMemberPushConfig(ctx, req)
+func (s *chatMemberServer) GetPushMember(ctx context.Context, req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp, err error) {
+	return s.chatMemberService.GetPushMember(ctx, req)
 }
 
 func (s *chatMemberServer) GetChatMemberList(ctx context.Context, req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp, err error) {

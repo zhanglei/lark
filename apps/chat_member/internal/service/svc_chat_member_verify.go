@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 	"github.com/jinzhu/copier"
+	"lark/domain/do"
 	"lark/domain/po"
-	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -26,7 +26,7 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 	}
 	var (
 		w    = entity.NewMysqlWhere()
-		list []*po.ChatMember
+		list []*do.ChatMemberInfo
 		err  error
 	)
 	w.Query += " AND chat_id = ?"
@@ -50,9 +50,12 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 			resp.Ok = true
 		}
 	}
-	xgopool.Go(func() {
-		s.CacheChatMemberInfo(req.ChatId, list)
-	})
+	err = s.cachePushMembers(list)
+	if err != nil {
+		setChatMemberVerifyResp(resp, ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED)
+		xlog.Warn(ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED, err.Error())
+		return
+	}
 	return
 }
 

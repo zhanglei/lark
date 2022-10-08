@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"lark/pkg/proto/pb_chat_member"
 	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_gw"
 	"lark/pkg/proto/pb_ofps"
@@ -33,9 +34,9 @@ func SendMessage(req *pb_gw.OnlinePushMessageReq, msgBuf []byte, onlinePushHandl
 	logic.push(req.Members, msgBuf)
 }
 
-func (logic *SendMessageLogic) push(members []*pb_gw.OnlinePushMember, msgBuf []byte) {
+func (logic *SendMessageLogic) push(members []*pb_chat_member.PushMember, msgBuf []byte) {
 	var (
-		member      *pb_gw.OnlinePushMember
+		member      *pb_chat_member.PushMember
 		result      int32
 		ofpsMembers = make([]*pb_ofps.OfflinePushMember, 0)
 	)

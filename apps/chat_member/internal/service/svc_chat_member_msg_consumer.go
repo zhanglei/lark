@@ -2,7 +2,10 @@ package service
 
 import (
 	"google.golang.org/protobuf/proto"
+	"lark/domain/do"
+	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
+	"lark/pkg/constant"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_member"
 	"lark/pkg/proto/pb_mq"
@@ -15,42 +18,43 @@ func (s *chatMemberService) MessageHandler(msg []byte, msgKey string) (err error
 		online = new(pb_mq.UserOnline)
 		u      = entity.NewMysqlUpdate()
 		w      = entity.NewMysqlWhere()
-		list   []*pb_chat_member.ChatMemberPushConfig
+		list   []*do.ChatMemberInfo
 	)
 	proto.Unmarshal(msg, online)
-	u.Query += " AND uid = ?"
-	u.Args = append(u.Args, online.Uid)
-
+	if online.Uid == 0 {
+		xlog.Warn(ERROR_CODE_CHAT_MEMBER_MISS_USER_INFO, ERROR_CHAT_MEMBER_MISS_USER_INFO)
+		return
+	}
+	u.SetFilter("uid = ?", online.Uid)
 	u.Set("server_id", online.ServerId)
 	u.Set("platform", online.Platform)
 	err = s.chatMemberRepo.UpdateChatMember(u)
 	if err != nil {
+		xlog.Warn(ERROR_CODE_CHAT_MEMBER_UPDATE_VALUE_FAILED, ERROR_CHAT_MEMBER_UPDATE_VALUE_FAILED, err.Error())
 		return
 	}
-
-	w.Query += " AND uid = ?"
-	w.Args = append(w.Args, online.Uid)
-	list, err = s.chatMemberRepo.ChatMemberPushConfigList(w)
+	w.SetFilter("uid = ?", online.Uid)
+	list, err = s.chatMemberRepo.ChatMemberList(w)
 	if err != nil {
+		xlog.Warn(ERROR_CODE_CHAT_MEMBER_QUERY_DB_FAILED, ERROR_CHAT_MEMBER_QUERY_DB_FAILED, err.Error())
 		return
 	}
-
-	err = s.cacheMemberPushConfig(list)
+	err = s.cachePushMembers(list)
 	return
 }
 
-func (s *chatMemberService) cacheMemberPushConfig(list []*pb_chat_member.ChatMemberPushConfig) (err error) {
+func (s *chatMemberService) cachePushMembers(list []*do.ChatMemberInfo) (err error) {
 	if len(list) == 0 {
 		return
 	}
 	var (
-		step          = 500
+		step          = 1000
 		consumerCount = int(math.Ceil(float64(len(list)) / float64(step)))
 		errChan       = make(chan error, consumerCount)
 		i             int
 		j             int
 	)
-
+	// TODO:携程优化
 	for i = 0; i < consumerCount; i++ {
 		var (
 			minIndex = i * step
@@ -59,9 +63,10 @@ func (s *chatMemberService) cacheMemberPushConfig(list []*pb_chat_member.ChatMem
 		if maxIndex > len(list) {
 			maxIndex = len(list)
 		}
-		go func(min, max int, configs []*pb_chat_member.ChatMemberPushConfig, errCh chan error) {
+		go func(min, max int, members []*do.ChatMemberInfo, errCh chan error) {
 			var (
-				cfg     *pb_chat_member.ChatMemberPushConfig
+				m       *do.ChatMemberInfo
+				member  *pb_chat_member.PushMember
 				jsonStr string
 				key     string
 				er      error
@@ -70,12 +75,19 @@ func (s *chatMemberService) cacheMemberPushConfig(list []*pb_chat_member.ChatMem
 				errChan <- er
 			}()
 			for j = min; j < max; j++ {
-				cfg = configs[j]
-				jsonStr, er = utils.Marshal(cfg)
+				m = members[j]
+				member = &pb_chat_member.PushMember{
+					Uid:      m.Uid,
+					ServerId: m.ServerId,
+					Platform: m.Platform,
+					Mute:     m.Mute,
+				}
+				jsonStr, er = utils.Marshal(member)
 				if er != nil {
 					break
 				}
-				er = xredis.HSetNX(key, utils.Int64ToStr(cfg.ChatId), jsonStr)
+				key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(m.ChatId)
+				er = xredis.HSetNX(key, utils.Int64ToStr(member.Uid), jsonStr)
 				if er != nil {
 					break
 				}
