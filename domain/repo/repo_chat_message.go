@@ -7,6 +7,7 @@ import (
 )
 
 type ChatMessageRepository interface {
+	Create(message *po.Message) (err error)
 	HistoryMessages(w *entity.MysqlWhere) (list []*po.Message, err error)
 }
 
@@ -15,6 +16,11 @@ type chatMessageRepository struct {
 
 func NewChatMessageRepository() ChatMessageRepository {
 	return &chatMessageRepository{}
+}
+
+func (r *chatMessageRepository) Create(message *po.Message) (err error) {
+	db := xmysql.GetDB()
+	return db.Create(message).Error
 }
 
 func (r *chatMessageRepository) HistoryMessages(w *entity.MysqlWhere) (list []*po.Message, err error) {

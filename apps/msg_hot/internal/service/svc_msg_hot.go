@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/Shopify/sarama"
 	"lark/apps/msg_hot/internal/config"
-	"lark/domain/repo"
+	"lark/domain/mrepo"
 	"lark/pkg/common/xkafka"
 	"lark/pkg/global"
 )
@@ -13,12 +13,12 @@ type MessageHotService interface {
 
 type messageHotService struct {
 	conf           *config.Config
-	messageHotRepo repo.MessageHotRepository
+	messageHotRepo mrepo.MessageHotRepository
 	consumerGroup  *xkafka.MConsumerGroup
 	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewMessageHotService(conf *config.Config, messageHotRepo repo.MessageHotRepository) MessageHotService {
+func NewMessageHotService(conf *config.Config, messageHotRepo mrepo.MessageHotRepository) MessageHotService {
 	svc := &messageHotService{conf: conf, messageHotRepo: messageHotRepo}
 	svc.msgHandle = make(map[string]global.KafkaMessageHandler)
 	svc.msgHandle[conf.MsgConsumer.Topic[0]] = svc.MessageHandler

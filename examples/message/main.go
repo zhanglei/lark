@@ -3,8 +3,8 @@ package main
 import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"lark/domain/mrepo"
 	"lark/domain/po"
-	"lark/domain/repo"
 	"lark/examples/config"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmongo"
@@ -22,7 +22,7 @@ func main() {
 	var (
 		i              int64
 		message        *po.Message
-		messageHotRepo repo.MessageHotRepository
+		messageHotRepo mrepo.MessageHotRepository
 		messages       []*po.Message
 		err            error
 	)
@@ -49,7 +49,7 @@ func main() {
 			DeletedTs:      0,
 		}
 		// 消息入库
-		messageHotRepo = repo.NewMessageHotRepository()
+		messageHotRepo = mrepo.NewMessageHotRepository()
 		if err = messageHotRepo.Create(message); err != nil {
 			xlog.Warn(err.Error())
 			if err.(mongo.WriteException).WriteErrors[0].Code == 11000 {

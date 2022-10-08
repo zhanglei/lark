@@ -14,9 +14,9 @@ var container = dig.New()
 func init() {
 	container.Provide(config.NewConfig)
 	container.Provide(server.NewServer)
-	container.Provide(repo.NewMessageHistoryRepository)
 	container.Provide(msg_history.NewMessageHistoryServer)
 	container.Provide(service.NewMessageHistoryService)
+	container.Provide(repo.NewChatMessageRepository)
 }
 
 func Invoke(i interface{}) error {

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"lark/apps/chat_msg/internal/config"
+	"lark/domain/mrepo"
 	"lark/domain/repo"
 	"lark/pkg/proto/pb_chat_msg"
 )
@@ -14,9 +15,9 @@ type ChatMessageService interface {
 type chatMessageService struct {
 	conf            *config.Config
 	chatMessageRepo repo.ChatMessageRepository
-	messageHotRepo  repo.MessageHotRepository
+	messageHotRepo  mrepo.MessageHotRepository
 }
 
-func NewChatMessageService(conf *config.Config, chatMessageRepo repo.ChatMessageRepository, messageHotRepo repo.MessageHotRepository) ChatMessageService {
+func NewChatMessageService(conf *config.Config, chatMessageRepo repo.ChatMessageRepository, messageHotRepo mrepo.MessageHotRepository) ChatMessageService {
 	return &chatMessageService{conf: conf, chatMessageRepo: chatMessageRepo, messageHotRepo: messageHotRepo}
 }

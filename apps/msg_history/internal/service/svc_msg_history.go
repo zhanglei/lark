@@ -12,14 +12,14 @@ type MessageHistoryService interface {
 }
 
 type messageHistoryService struct {
-	conf               *config.Config
-	messageHistoryRepo repo.MessageHistoryRepository
-	consumerGroup      *xkafka.MConsumerGroup
-	msgHandle          map[string]global.KafkaMessageHandler
+	conf            *config.Config
+	chatMessageRepo repo.ChatMessageRepository
+	consumerGroup   *xkafka.MConsumerGroup
+	msgHandle       map[string]global.KafkaMessageHandler
 }
 
-func NewMessageHistoryService(conf *config.Config, messageHistoryRepo repo.MessageHistoryRepository) MessageHistoryService {
-	svc := &messageHistoryService{conf: conf, messageHistoryRepo: messageHistoryRepo}
+func NewMessageHistoryService(conf *config.Config, chatMessageRepo repo.ChatMessageRepository) MessageHistoryService {
+	svc := &messageHistoryService{conf: conf, chatMessageRepo: chatMessageRepo}
 
 	svc.msgHandle = make(map[string]global.KafkaMessageHandler)
 	svc.msgHandle[conf.MsgConsumer.Topic[0]] = svc.MessageHandler
