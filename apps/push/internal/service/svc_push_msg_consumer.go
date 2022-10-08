@@ -82,7 +82,7 @@ func (s *pushService) GetPushMember(chatId int64, uid int64) (member *pb_chat_me
 		req  *pb_chat_member.GetPushMemberReq
 		resp *pb_chat_member.GetPushMemberResp
 	)
-	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(chatId)
+	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(chatId)
 	list = xredis.HMGet(key, utils.Int64ToStr(uid))
 	if len(list) == 1 && list[0] != nil {
 		member = new(pb_chat_member.PushMember)
@@ -115,7 +115,7 @@ func (s *pushService) groupChatMessagePush(inbox *pb_mq.InboxMessage) {
 		hashmap       map[string]string
 		serverMembers map[int32][]*pb_chat_member.PushMember
 	)
-	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(inbox.Msg.ChatId)
+	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(inbox.Msg.ChatId)
 	hashmap = xredis.HGetAll(key)
 	if len(hashmap) > 1 {
 		serverMembers = logic.GetOnlinePushMembersFromHash(hashmap)

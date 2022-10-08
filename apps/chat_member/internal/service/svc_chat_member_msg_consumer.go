@@ -86,7 +86,7 @@ func (s *chatMemberService) cachePushMembers(list []*do.ChatMemberInfo) (err err
 				if er != nil {
 					break
 				}
-				key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(m.ChatId)
+				key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(m.ChatId)
 				er = xredis.HSetNX(key, utils.Int64ToStr(member.Uid), jsonStr)
 				if er != nil {
 					break

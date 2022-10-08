@@ -72,7 +72,7 @@ func (s *chatMemberService) cachePushMember(list []*pb_chat_member.PushMember, c
 		jsonStr, _ = utils.Marshal(conf)
 		members[utils.Int64ToStr(conf.Uid)] = jsonStr
 	}
-	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_CONF_HASH + utils.Int64ToStr(chatId)
+	key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(chatId)
 	err = xredis.HMSet(key, members)
 	return
 }
