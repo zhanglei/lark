@@ -12,6 +12,18 @@ import (
 )
 
 func (s *messageHotService) MessageHandler(msg []byte, msgKey string) (err error) {
+	switch msgKey {
+	case constant.CONST_MSG_KEY_NEW:
+		err = s.SaveMessage(msg)
+		return
+	case constant.CONST_MSG_KEY_RECALL:
+	default:
+		return
+	}
+	return
+}
+
+func (s *messageHotService) SaveMessage(msg []byte) (err error) {
 	var (
 		req     = new(pb_mq.InboxMessage)
 		message = new(po.Message)
@@ -26,7 +38,7 @@ func (s *messageHotService) MessageHandler(msg []byte, msgKey string) (err error
 	message.UpdatedTs = utils.NowMilli()
 	if err = s.messageHotRepo.Create(message); err != nil {
 		xlog.Warn(err.Error())
-		if err.(*mongo.WriteError).Code == constant.ERROR_CODE_MONGOL_DUPLICATE_ENTRY {
+		if err.(mongo.WriteException).WriteErrors[0].Code == constant.ERROR_CODE_MONGOL_DUPLICATE_ENTRY {
 			err = nil
 		}
 		return

@@ -28,13 +28,13 @@ func NewContext() (ctx context.Context, cancelFunc context.CancelFunc) {
 }
 
 type MongoWhere struct {
-	Filter      map[string]interface{}
+	Filter      bson.D
 	FindOptions *options.FindOptions
 }
 
 func NewMongoWhere() *MongoWhere {
 	return &MongoWhere{
-		Filter:      make(map[string]interface{}),
+		Filter:      bson.D{},
 		FindOptions: new(options.FindOptions),
 	}
 }
@@ -51,6 +51,26 @@ func (m *MongoWhere) SetLimit(limit int64) {
 	m.FindOptions.SetLimit(limit)
 }
 
-func (m *MongoWhere) SetFilter(key string, val interface{}) {
-	m.Filter[key] = val
+func (m *MongoWhere) SetFilter(key string, value interface{}) {
+	m.Filter = append(m.Filter, bson.D{{key, value}}...)
+}
+
+type MongoUpdate struct {
+	Filter bson.D
+	Update bson.D
+}
+
+func NewMongoUpdate() *MongoUpdate {
+	return &MongoUpdate{
+		Filter: bson.D{},
+		Update: bson.D{},
+	}
+}
+
+func (m *MongoUpdate) SetFilter(key string, value interface{}) {
+	m.Filter = append(m.Filter, bson.D{{key, value}}...)
+}
+
+func (m *MongoUpdate) Set(key string, value interface{}) {
+	m.Update = append(m.Update, bson.D{{"$set", bson.D{{key, value}}}}...)
 }
