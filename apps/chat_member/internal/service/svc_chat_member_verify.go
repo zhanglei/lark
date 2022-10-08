@@ -2,16 +2,11 @@ package service
 
 import (
 	"context"
-	"github.com/jinzhu/copier"
 	"lark/domain/do"
-	"lark/domain/po"
 	"lark/pkg/common/xlog"
-	"lark/pkg/common/xredis"
-	"lark/pkg/constant"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat_member"
 	"lark/pkg/proto/pb_enum"
-	"lark/pkg/utils"
 )
 
 func setChatMemberVerifyResp(resp *pb_chat_member.ChatMemberVerifyResp, code int32, msg string) {
@@ -58,26 +53,4 @@ func (s *chatMemberService) ChatMemberVerify(ctx context.Context, req *pb_chat_m
 	//	return
 	//}
 	return
-}
-
-func (s *chatMemberService) CacheChatMemberInfo(chatId int64, list []*po.ChatMember) {
-	if len(list) == 0 {
-		return
-	}
-	var (
-		member   *po.ChatMember
-		pbMember *pb_chat_member.ChatMemberInfo
-		key      string
-		jsonStr  string
-	)
-	for _, member = range list {
-		pbMember = new(pb_chat_member.ChatMemberInfo)
-		copier.Copy(pbMember, member)
-		jsonStr, _ = utils.Marshal(pbMember)
-		if jsonStr == "" {
-			continue
-		}
-		key = constant.RK_SYNC_CHAT_MEMBERS_INFO_HASH + utils.Int64ToStr(chatId)
-		xredis.HSetNX(key, utils.Int64ToStr(pbMember.Uid), jsonStr)
-	}
 }

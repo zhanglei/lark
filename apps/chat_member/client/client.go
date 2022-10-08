@@ -9,9 +9,9 @@ import (
 )
 
 type ChatMemberClient interface {
-	GetChatMemberUidList(req *pb_chat_member.GetChatMemberUidListReq) (resp *pb_chat_member.GetChatMemberUidListResp)
-	GetChatMemberSetting(req *pb_chat_member.GetChatMemberSettingReq) (resp *pb_chat_member.GetChatMemberSettingResp)
-	GetChatMemberInfo(req *pb_chat_member.GetChatMemberInfoReq) (resp *pb_chat_member.GetChatMemberInfoResp)
+	//GetChatMemberUidList(req *pb_chat_member.GetChatMemberUidListReq) (resp *pb_chat_member.GetChatMemberUidListResp)
+	//GetChatMemberSetting(req *pb_chat_member.GetChatMemberSettingReq) (resp *pb_chat_member.GetChatMemberSettingResp)
+	//GetChatMemberInfo(req *pb_chat_member.GetChatMemberInfoReq) (resp *pb_chat_member.GetChatMemberInfoResp)
 	ChatMemberVerify(req *pb_chat_member.ChatMemberVerifyReq) (resp *pb_chat_member.ChatMemberVerifyResp)
 	ChatMemberOnline(req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp)
 	GetPushMemberList(req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp)

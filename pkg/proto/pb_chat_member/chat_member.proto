@@ -68,13 +68,13 @@ message ChatMemberInfo {
   pb_enum.CHAT_TYPE chat_type = 2;
   int64 uid = 3;
   string display_name = 4;
-  string avatar_key = 5;
+  string member_avatar_key = 5;
 }
 
 message ChatMemberBasicInfo {
   int64 uid = 1;
   string display_name = 2;
-  string avatar_key = 3;
+  string member_avatar_key = 3;
 }
 
 message ChatMemberVerifyReq {

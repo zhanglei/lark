@@ -2,6 +2,7 @@ package xredis
 
 import (
 	"context"
+	"github.com/go-redis/redis/v9"
 	"strconv"
 	"time"
 )
@@ -120,4 +121,28 @@ func Srem(key string, members ...interface{}) (err error) {
 func Smembers(key string) []string {
 	key = RealKey(key)
 	return cli.client.SMembers(context.Background(), key).Val()
+}
+
+// 可能只删除部分
+func DelKeysByMatch(match string, timeout time.Duration) (err error) {
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+		iter   *redis.ScanIterator
+	)
+	match = RealKey(match)
+	ctx, cancel = context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	iter = cli.client.Scan(ctx, 0, match, 0).Iterator()
+	for iter.Next(ctx) {
+		err = cli.client.Del(ctx, iter.Val()).Err()
+		if err != nil {
+			return
+		}
+	}
+	if err = iter.Err(); err != nil {
+		return
+	}
+	return
 }

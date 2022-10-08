@@ -93,7 +93,7 @@ func (r *chatMemberRepository) TxUpdateChatMember(tx *gorm.DB, u *entity.MysqlUp
 func (r *chatMemberRepository) ChatMemberBasicInfoList(w *entity.MysqlWhere) (list []*pb_chat_member.ChatMemberBasicInfo, err error) {
 	list = make([]*pb_chat_member.ChatMemberBasicInfo, 0)
 	db := xmysql.GetDB()
-	err = db.Model(po.ChatMember{}).Select("uid,display_name,avatar_key").Where(w.Query, w.Args...).
+	err = db.Model(po.ChatMember{}).Select("uid,display_name,member_avatar_key").Where(w.Query, w.Args...).
 		Limit(w.Limit).Find(&list).Error
 	return
 }

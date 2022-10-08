@@ -6,6 +6,7 @@ import (
 	"lark/pkg/common/xredis"
 	"lark/pkg/proto/pb_gw"
 	"lark/pkg/utils"
+	"time"
 )
 
 func init() {
@@ -14,6 +15,11 @@ func init() {
 }
 
 func main() {
+	key := "JWT:UUID:*"
+	err := xredis.DelKeysByMatch(key, 1*time.Second)
+	if err != nil {
+		xlog.Warn(err.Error())
+	}
 	var maps = map[string]interface{}{}
 	for i := 0; i < 10; i++ {
 		p := pb_gw.OnlinePushMember{
@@ -24,7 +30,7 @@ func main() {
 		}
 		maps[utils.Int64ToStr(p.Uid)], _ = utils.Marshal(p)
 	}
-	err := xredis.HMSet("MEMBERS:2", maps)
+	err = xredis.HMSet("MEMBERS:2", maps)
 	if err != nil {
 		xlog.Warn(err.Error())
 	}

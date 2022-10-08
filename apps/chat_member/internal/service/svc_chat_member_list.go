@@ -19,10 +19,8 @@ func (s *chatMemberService) GetChatMemberList(ctx context.Context, req *pb_chat_
 		list []*pb_chat_member.ChatMemberBasicInfo
 		err  error
 	)
-	w.AndQuery("chat_id=?")
-	w.AppendArg(req.ChatId)
-	w.AndQuery("uid>?")
-	w.AppendArg(req.LastUid)
+	w.SetFilter("chat_id=?", req.ChatId)
+	w.SetFilter("uid>?", req.LastUid)
 	w.SetLimit(req.Limit)
 	list, err = s.chatMemberRepo.ChatMemberBasicInfoList(w)
 	if err != nil {
