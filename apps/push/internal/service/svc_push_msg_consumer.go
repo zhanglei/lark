@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"google.golang.org/protobuf/proto"
 	"lark/apps/push/internal/logic"
+	"lark/pkg/common/xgopool"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -33,7 +34,9 @@ func init() {
 func (s *pushService) MessageHandler(msg []byte, msgKey string) (err error) {
 	switch msgKey {
 	case constant.CONST_MSG_KEY_NEW:
-		err = s.pushMessage(msg)
+		xgopool.Go(func() {
+			s.pushMessage(msg)
+		})
 		return
 	case constant.CONST_MSG_KEY_RECALL:
 		return
@@ -48,6 +51,7 @@ func (s *pushService) pushMessage(buf []byte) (err error) {
 	)
 	if err = proto.Unmarshal(buf, inbox); err != nil {
 		xlog.Warn(ERROR_CODE_PUSH_PROTOCOL_UNMARSHAL_ERR, ERROR_PUSH_PROTOCOL_UNMARSHAL_ERR, err.Error())
+		err = nil
 		return
 	}
 	s.chatMessagePush(inbox)
