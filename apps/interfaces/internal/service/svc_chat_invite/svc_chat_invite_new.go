@@ -8,13 +8,14 @@ import (
 	"lark/pkg/xhttp"
 )
 
-func (s *chatInviteService) NewChatInviteReq(params *dto_chat_invite.NewChatInviteReq) (resp *xhttp.Resp) {
+func (s *chatInviteService) NewChatInviteReq(params *dto_chat_invite.NewChatInviteReq, uid int64) (resp *xhttp.Resp) {
 	resp = new(xhttp.Resp)
 	var (
 		reqArgs = new(pb_invite.NewChatInviteReq)
 		reply   *pb_invite.NewChatInviteResp
 	)
 	copier.Copy(reqArgs, params)
+	reqArgs.InitiatorUid = uid
 	reply = s.chatInviteClient.NewChatInvite(reqArgs)
 	if reply == nil {
 		resp.SetRespInfo(xhttp.ERROR_CODE_HTTP_SERVICE_FAILURE, xhttp.ERROR_HTTP_SERVICE_FAILURE)

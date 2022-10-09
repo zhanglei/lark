@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS `chat_invites`;
 CREATE TABLE `chat_invites` (
   `invite_id` bigint unsigned NOT NULL COMMENT 'invite ID',
-  `invited_ts` bigint NOT NULL COMMENT '邀请时间',
   `chat_id` bigint unsigned NOT NULL COMMENT 'Chat ID',
   `chat_type` tinyint(1) unsigned NOT NULL COMMENT '1:私聊/2:群聊',
   `initiator_uid` bigint unsigned NOT NULL COMMENT '发起人 UID',

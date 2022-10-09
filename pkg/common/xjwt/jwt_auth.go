@@ -35,10 +35,10 @@ func CreateToken(uid int64, platform int32) (tokenString string, expireIn int64)
 		return
 	}
 	tokenString = constant.JWT_FIELD + tokenString
-	xredis.Set(constant.RK_SYNC_JWT_UUID+utils.Int64ToStr(uid)+":"+utils.Int32ToStr(platform), uuid, constant.JWT_TOKEN_EXP)
+	xredis.Set(constant.RK_SYNC_JWT_UUID+utils.Int64ToStr(uid), uuid, constant.JWT_TOKEN_EXP)
 
 	// TODO:开发用
-	xredis.Set(constant.RK_SYNC_JWT_TOKEN+utils.Int64ToStr(uid)+":"+utils.Int32ToStr(platform), tokenString, constant.JWT_TOKEN_EXP)
+	xredis.Set(constant.RK_SYNC_JWT_TOKEN+utils.Int64ToStr(uid), tokenString, constant.JWT_TOKEN_EXP)
 	return
 }
 

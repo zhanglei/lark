@@ -34,12 +34,12 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 	invite, err = s.chatInviteRepo.ChatInvite(w)
 	if err != nil {
 		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-		xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err.Error())
 		return
 	}
 	if invite.InviteId == 0 {
 		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-		xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
 		return
 	}
 	if invite.HandleResult != 0 {
@@ -71,7 +71,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 	err = s.chatInviteRepo.TxUpdateChatInvite(tx, u)
 	if err != nil {
 		setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED)
-		xlog.Warn(ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED, err)
+		xlog.Warn(ERROR_CODE_CHAT_INVITE_UPDATE_VALUE_FAILED, ERROR_CHAT_INVITE_UPDATE_VALUE_FAILED, err.Error())
 		return
 	}
 
@@ -94,9 +94,10 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		case pb_enum.CHAT_TYPE_PRIVATE:
 			// 4 创建Chat
 			chat = &po.Chat{
-				ChatId:   invite.ChatId,
-				ChatHash: utils.MemberHash(invite.InitiatorUid, invite.InviteeUid),
-				ChatType: int(pb_enum.CHAT_TYPE_PRIVATE),
+				ChatId:     invite.ChatId,
+				CreatorUid: invite.InitiatorUid,
+				ChatHash:   utils.MemberHash(invite.InitiatorUid, invite.InviteeUid),
+				ChatType:   int(pb_enum.CHAT_TYPE_PRIVATE),
 			}
 			err = s.chatRepo.TxCreate(tx, chat)
 			if err != nil {
@@ -115,7 +116,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			chat, err = s.chatRepo.TxChat(tx, w)
 			if err != nil {
 				setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-				xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+				xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err.Error())
 				return
 			}
 
@@ -127,7 +128,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		list, err = s.userRepo.UserList(w)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED)
-			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_QUERY_DB_FAILED, ERROR_CHAT_INVITE_QUERY_DB_FAILED, err.Error())
 			return
 		}
 		if len(list) != mumberCount {
@@ -157,7 +158,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		err = s.chatMemberRepo.TxCreateMultiple(tx, members)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
-			xlog.Warn(ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err.Error())
 			return
 		}
 		pushMaps = make(map[string]interface{})
@@ -169,7 +170,7 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 		err = xredis.HMSet(pushKey, pushMaps)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED)
-			xlog.Warn(ERROR_CODE_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, err)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, err.Error())
 			return
 		}
 		// TODO: 邀请成功推送

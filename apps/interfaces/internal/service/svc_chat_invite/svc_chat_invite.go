@@ -8,9 +8,9 @@ import (
 )
 
 type ChatInviteService interface {
-	NewChatInviteReq(params *dto_chat_invite.NewChatInviteReq) (resp *xhttp.Resp)
+	NewChatInviteReq(params *dto_chat_invite.NewChatInviteReq, uid int64) (resp *xhttp.Resp)
 	ChatInviteList(params *dto_chat_invite.ChatInviteListReq) (resp *xhttp.Resp)
-	ChatInviteHandle(params *dto_chat_invite.ChatInviteHandleReq) (resp *xhttp.Resp)
+	ChatInviteHandle(params *dto_chat_invite.ChatInviteHandleReq, uid int64) (resp *xhttp.Resp)
 }
 
 type chatInviteService struct {

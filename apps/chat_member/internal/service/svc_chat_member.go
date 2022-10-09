@@ -27,14 +27,15 @@ type chatMemberService struct {
 	cfg            *config.Config
 	threads        int
 	chatMemberRepo repo.ChatMemberRepository
+	userRepo       repo.UserRepository
 	userClient     user_client.UserClient
 	consumerGroup  *xkafka.MConsumerGroup
 	msgHandle      map[string]global.KafkaMessageHandler
 }
 
-func NewChatMemberService(cfg *config.Config, chatMemberRepo repo.ChatMemberRepository) ChatMemberService {
+func NewChatMemberService(cfg *config.Config, chatMemberRepo repo.ChatMemberRepository, userRepo repo.UserRepository) ChatMemberService {
 	userClient := user_client.NewUserClient(cfg.Etcd, cfg.UserServer, cfg.GrpcServer.Jaeger, cfg.Name)
-	svc := &chatMemberService{cfg: cfg, threads: runtime.NumCPU() * 2, chatMemberRepo: chatMemberRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
+	svc := &chatMemberService{cfg: cfg, threads: runtime.NumCPU() * 2, chatMemberRepo: chatMemberRepo, userRepo: userRepo, userClient: userClient, msgHandle: make(map[string]global.KafkaMessageHandler)}
 	svc.msgHandle[cfg.MsgConsumer.Topic[0]] = svc.MessageHandler
 	svc.consumerGroup = xkafka.NewMConsumerGroup(&xkafka.MConsumerGroupConfig{KafkaVersion: sarama.V3_1_0_0, OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false},
 		cfg.MsgConsumer.Topic,

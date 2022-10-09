@@ -47,7 +47,7 @@ func JwtAuth() gin.HandlerFunc {
 			xhttp.Error(ctx, xhttp.ERROR_CODE_HTTP_JWT_TOKEN_UUID_DOESNOT_EXIST, xhttp.ERROR_HTTP_JWT_TOKEN_UUID_DOESNOT_EXIST)
 			return
 		}
-		uuidKey = constant.RK_SYNC_JWT_UUID + utils.ToString(uid) + ":" + utils.ToString(platform)
+		uuidKey = constant.RK_SYNC_JWT_UUID + utils.ToString(uid)
 		if uuidVal, err = xredis.Get(uuidKey); err != nil {
 			ctx.Abort()
 			xhttp.Error(ctx, xhttp.ERROR_CODE_HTTP_TOKEN_EXPIRED, xhttp.ERROR_HTTP_TOKEN_EXPIRED)

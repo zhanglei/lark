@@ -21,6 +21,7 @@ func (ctrl *ChatCtrl) NewGroupChat(ctx *gin.Context) {
 	}
 	uid = xgin.GetUid(ctx)
 	if uid == 0 {
+		xlog.Warn(xhttp.ERROR_CODE_HTTP_USER_ID_DOESNOT_EXIST, xhttp.ERROR_HTTP_USER_ID_DOESNOT_EXIST)
 		return
 	}
 	resp = ctrl.chatService.NewGroupChat(params, uid)

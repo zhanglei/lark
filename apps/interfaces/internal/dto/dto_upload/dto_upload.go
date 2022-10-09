@@ -1,8 +1,8 @@
 package dto_upload
 
 type UploadAvatarReq struct {
-	OwnerId   int64 `form:"owner_id" json:"owner_id"`
-	OwnerType int32 `form:"owner_type" json:"owner_type"`
+	//OwnerId   int64 `form:"owner_id" json:"owner_id"`
+	OwnerType int32 `form:"owner_type" json:"owner_type" validate:"required,gte=1,lte=2"`
 }
 
 type UploadPhotoResp struct {

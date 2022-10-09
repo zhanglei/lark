@@ -67,7 +67,7 @@ func (s *uploadService) UploadAvatar(ctx *gin.Context, req *dto_upload.UploadAva
 		resultList *xminio.PutResultList
 		pr         *xminio.PutResult
 		avatarReq  = &pb_avatar.SetAvatarReq{
-			OwnerId:   req.OwnerId,
+			OwnerId:   uid,
 			OwnerType: pb_enum.AVATAR_OWNER(req.OwnerType),
 		}
 	)

@@ -33,6 +33,7 @@ func (s *authService) Register(_ context.Context, req *pb_auth.RegisterReq) (res
 	user.AvatarKey = constant.CONST_AVATAR_KEY_SMALL
 	user.Password = utils.MD5(user.Password)
 	user.ServerId = 1
+	user.Platform = int(req.RegPlatform)
 
 	tx = xmysql.GetTX()
 	defer func() {
