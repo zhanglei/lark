@@ -25,5 +25,6 @@ CREATE TABLE `messages` (
   KEY `idx_deletedTs` (`deleted_ts`),
   KEY `idx_chatId` (`chat_id`),
   KEY `idx_chatType` (`chat_type`),
+  KEY `idx_senderId` (`sender_id`),
   KEY `idx_seqId` (`seq_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
