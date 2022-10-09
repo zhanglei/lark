@@ -87,7 +87,7 @@ func (s *chatMemberService) cachePushMembers(list []*do.ChatMemberInfo) (err err
 				member = members[j]
 				key = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(member.ChatId)
 				val = fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute)
-				er = xredis.HSetNX(key, utils.Int64ToStr(member.Uid), val)
+				er = xredis.HMSet(key, map[string]interface{}{utils.Int64ToStr(member.Uid): val})
 				if er != nil {
 					break
 				}

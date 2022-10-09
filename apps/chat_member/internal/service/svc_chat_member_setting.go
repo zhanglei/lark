@@ -36,7 +36,7 @@ func (s *chatMemberService) GetChatMemberSetting(ctx context.Context, req *pb_ch
 	resp.Setting = user.Settings
 	go func(chatId int64, uid int64) {
 		key := constant.RK_SYNC_CHAT_MEMBERS_SETTINGS_HASH + utils.Int64ToStr(chatId)
-		xredis.HSetNX(key, utils.Int64ToStr(user.Uid), user.Settings)
+		xredis.HMSet(key, map[string]interface{}{utils.Int64ToStr(user.Uid): user.Settings})
 	}(req.ChatId, req.Uid)
 	return
 }
