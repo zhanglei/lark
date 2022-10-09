@@ -15,6 +15,7 @@ CREATE TABLE `chat_invites` (
   `deleted_ts` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`invite_id`),
   UNIQUE KEY `invite_id` (`invite_id`),
+  UNIQUE KEY `chatId_inviteeUid_deletedTs` (`chat_id`,`invitee_uid`,`deleted_ts`),
   KEY `idx_deletedTs` (`deleted_ts`),
   KEY `id_chatId` (`chat_id`),
   KEY `id_chatType` (`chat_type`),
