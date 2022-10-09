@@ -14,7 +14,6 @@ type ChatInviteRepository interface {
 	TxChatInvite(tx *gorm.DB, w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
 	ChatInvite(w *entity.MysqlWhere) (invite *po.ChatInvite, err error)
 	ChatInviteList(w *entity.MysqlWhere) (list []*po.ChatInvite, err error)
-	TxChatUsersCreate(tx *gorm.DB, users []*po.ChatMember) (err error)
 }
 
 type chatInviteRepository struct {
@@ -57,10 +56,5 @@ func (r *chatInviteRepository) ChatInviteList(w *entity.MysqlWhere) (list []*po.
 	list = make([]*po.ChatInvite, 0)
 	db := xmysql.GetDB()
 	err = db.Where(w.Query, w.Args...).Limit(w.Limit).Find(&list).Error
-	return
-}
-
-func (r *chatInviteRepository) TxChatUsersCreate(tx *gorm.DB, users []*po.ChatMember) (err error) {
-	err = tx.Create(users).Error
 	return
 }

@@ -2,10 +2,13 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmysql"
+	"lark/pkg/common/xredis"
+	"lark/pkg/constant"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_invite"
@@ -83,6 +86,8 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 			user        *po.User
 			index       int
 			uidList     []int64
+			pushKey     string
+			pushMaps    map[string]interface{}
 		)
 
 		switch pb_enum.CHAT_TYPE(invite.ChatType) {
@@ -148,13 +153,27 @@ func (s *chatInviteService) ChatInviteHandle(ctx context.Context, req *pb_invite
 				member.ChatAvatarKey = chat.AvatarKey
 			}
 		}
-		err = s.chatInviteRepo.TxChatUsersCreate(tx, members)
+		// 5 成为 chat member
+		err = s.chatMemberRepo.TxCreateMultiple(tx, members)
 		if err != nil {
 			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED)
 			xlog.Warn(ERROR_CODE_CHAT_INVITE_INSERT_VALUE_FAILED, ERROR_CHAT_INVITE_INSERT_VALUE_FAILED, err)
 			return
 		}
+		pushMaps = make(map[string]interface{})
+		for _, member = range members {
+			pushMaps[utils.Int64ToStr(member.Uid)] = fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute)
+		}
+		// 6 缓存 chat member
+		pushKey = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(member.ChatId)
+		err = xredis.HMSet(pushKey, pushMaps)
+		if err != nil {
+			setChatInviteHandleResp(resp, ERROR_CODE_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED)
+			xlog.Warn(ERROR_CODE_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_INVITE_CACHE_CHAT_MEMBER_FAILED, err)
+			return
+		}
 		// TODO: 邀请成功推送
+
 	}
 	return
 }

@@ -15,7 +15,7 @@ type ChatMemberClient interface {
 	ChatMemberVerify(req *pb_chat_member.ChatMemberVerifyReq) (resp *pb_chat_member.ChatMemberVerifyResp)
 	ChatMemberOnline(req *pb_chat_member.ChatMemberOnlineReq) (resp *pb_chat_member.ChatMemberOnlineResp)
 	GetPushMemberList(req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp)
-	GetPushMember(req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp)
+	//GetPushMember(req *pb_chat_member.GetPushMemberReq) (resp *pb_chat_member.GetPushMemberResp)
 	GetChatMemberList(req *pb_chat_member.GetChatMemberListReq) (resp *pb_chat_member.GetChatMemberListResp)
 }
 

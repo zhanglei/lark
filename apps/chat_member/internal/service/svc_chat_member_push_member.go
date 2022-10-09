@@ -29,11 +29,5 @@ func (s *chatMemberService) GetPushMember(ctx context.Context, req *pb_chat_memb
 		return
 	}
 	resp.Member = member
-	err = s.cachePushMember([]*pb_chat_member.PushMember{member}, req.ChatId)
-	if err != nil {
-		setGetPushMemberResp(resp, ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED)
-		xlog.Warn(ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED, err.Error())
-		return
-	}
 	return
 }

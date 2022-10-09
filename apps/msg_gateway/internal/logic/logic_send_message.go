@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"lark/pkg/proto/pb_chat_member"
 	"lark/pkg/proto/pb_enum"
 	"lark/pkg/proto/pb_gw"
+	"lark/pkg/proto/pb_obj"
 	"lark/pkg/proto/pb_ofps"
 )
 
@@ -34,24 +34,32 @@ func SendMessage(req *pb_gw.OnlinePushMessageReq, msgBuf []byte, onlinePushHandl
 	logic.push(req.Members, msgBuf)
 }
 
-func (logic *SendMessageLogic) push(members []*pb_chat_member.PushMember, msgBuf []byte) {
+func (logic *SendMessageLogic) push(members []*pb_obj.Int64Array, msgBuf []byte) {
 	var (
-		member      *pb_chat_member.PushMember
+		member      *pb_obj.Int64Array
 		result      int32
 		ofpsMembers = make([]*pb_ofps.OfflinePushMember, 0)
+		uid         int64
+		platform    pb_enum.PLATFORM_TYPE
+		mute        pb_enum.MUTE_TYPE
 	)
+	//member.Uid, member.Platform, member.ServerId, member.Mute
 	for _, member = range members {
-		result = logic.onlinePushHandler(member.Uid, int32(member.Platform), msgBuf)
-		if member.Mute == pb_enum.MUTE_TYPE_OPENED {
+		uid = member.Vals[0]
+		platform = pb_enum.PLATFORM_TYPE(member.Vals[1])
+		mute = pb_enum.MUTE_TYPE(member.Vals[3])
+
+		result = logic.onlinePushHandler(uid, int32(platform), msgBuf)
+		if mute == pb_enum.MUTE_TYPE_OPENED {
 			continue
 		}
-		if member.Uid == logic.req.Msg.SenderId {
+		if uid == logic.req.Msg.SenderId {
 			continue
 		}
 		if result > 0 {
 			ofpsMember := &pb_ofps.OfflinePushMember{
-				Uid:      member.Uid,
-				Platform: member.Platform,
+				Uid:      uid,
+				Platform: platform,
 			}
 			ofpsMembers = append(ofpsMembers, ofpsMember)
 		}

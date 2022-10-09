@@ -2,15 +2,18 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"gorm.io/gorm"
 	"lark/domain/po"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xmysql"
+	"lark/pkg/common/xredis"
 	"lark/pkg/common/xsnowflake"
 	"lark/pkg/constant"
 	"lark/pkg/entity"
 	"lark/pkg/proto/pb_chat"
 	"lark/pkg/proto/pb_enum"
+	"lark/pkg/utils"
 )
 
 func setNewGroupChatResp(resp *pb_chat.NewGroupChatResp, code int32, msg string) {
@@ -34,6 +37,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		uid           int64
 		invite        *po.ChatInvite
 		inviteList    = make([]*po.ChatInvite, 0)
+		pushKey       string
 	)
 
 	// 1 获取创建者信息
@@ -89,7 +93,16 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		return
 	}
 
-	// 5 设置群头像
+	// 5 缓存成员信息
+	pushKey = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(member.ChatId) + ":" + utils.Int64ToStr(member.Uid)
+	err = xredis.HSet(pushKey, fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute))
+	if err != nil {
+		setNewGroupChatResp(resp, ERROR_CODE_CHAT_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_CACHE_CHAT_MEMBER_FAILED)
+		xlog.Warn(ERROR_CODE_CHAT_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_CACHE_CHAT_MEMBER_FAILED, err.Error())
+		return
+	}
+
+	// 6 设置群头像
 	avatar = &po.Avatar{
 		OwnerId:      chat.ChatId,
 		OwnerType:    int(pb_enum.AVATAR_OWNER_CHAT_AVATAR),
@@ -104,7 +117,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		return
 	}
 
-	// 6 构建邀请信息
+	// 7 构建邀请信息
 	invitationMsg = creator.Nickname + CONST_CHAT_INVITE_TITLE_CONJUNCTION + chat.Title
 	for _, uid = range req.UidList {
 		if uid == req.CreatorUid {
@@ -124,7 +137,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		return
 	}
 
-	// 7 邀请信息入库
+	// 8 邀请信息入库
 	err = s.chatInviteRepo.TxNewChatInviteList(tx, inviteList)
 	if err != nil {
 		setNewGroupChatResp(resp, ERROR_CODE_CHAT_INSERT_VALUE_FAILED, ERROR_CHAT_INSERT_VALUE_FAILED)

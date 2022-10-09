@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"lark/pkg/common/xlog"
 	"lark/pkg/common/xredis"
 	"lark/pkg/constant"
@@ -16,18 +17,26 @@ func setGetPushMemberListResp(resp *pb_chat_member.GetPushMemberListResp, code i
 }
 
 func (s *chatMemberService) GetPushMemberList(ctx context.Context, req *pb_chat_member.GetPushMemberListReq) (resp *pb_chat_member.GetPushMemberListResp, _ error) {
-	resp = new(pb_chat_member.GetPushMemberListResp)
+	resp = &pb_chat_member.GetPushMemberListResp{List: make([]string, 0)}
 	var (
 		w       = entity.NewMysqlWhere()
 		count   int
 		lastUid int64
 		members []*pb_chat_member.PushMember
+		member  *pb_chat_member.PushMember
+		key     = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(req.ChatId)
 		err     error
 	)
 
 	w.Sort = "uid ASC"
 	w.Limit = 5000
 	for {
+		var (
+			values []string
+			index  int
+			value  string
+			maps   = make(map[string]interface{})
+		)
 		w.Args = nil
 		w.Query = "chat_id = ?"
 		w.Args = append(w.Args, req.ChatId)
@@ -43,13 +52,19 @@ func (s *chatMemberService) GetPushMemberList(ctx context.Context, req *pb_chat_
 		if count == 0 {
 			break
 		}
-		err = s.cachePushMember(members, req.ChatId)
+		values = make([]string, count)
+		for index, member = range members {
+			value = fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute)
+			values[index] = value
+			maps[utils.Int64ToStr(member.Uid)] = value
+		}
+		err = xredis.HMSet(key, maps)
 		if err != nil {
 			setGetPushMemberListResp(resp, ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED)
 			xlog.Warn(ERROR_CODE_CHAT_MEMBER_CHCHE_MEMBER_FAILED, ERROR_CHAT_MEMBER_CHCHE_MEMBER_FAILED, err.Error())
 			return
 		}
-		resp.List = append(resp.List, members...)
+		resp.List = append(resp.List, values...)
 		if count < w.Limit {
 			break
 		}

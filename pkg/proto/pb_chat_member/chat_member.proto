@@ -38,7 +38,7 @@ message GetPushMemberListReq {
 message GetPushMemberListResp {
   int32 code = 1;
   string msg = 2;
-  repeated PushMember list = 3;
+  repeated string list = 3;
 }
 
 message GetChatMemberSettingReq {

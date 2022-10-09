@@ -11,6 +11,7 @@ import (
 
 type ChatMemberRepository interface {
 	TxCreate(tx *gorm.DB, chatMember *po.ChatMember) (err error)
+	TxCreateMultiple(tx *gorm.DB, users []*po.ChatMember) (err error)
 	ChatMemberUidList(w *entity.MysqlWhere) (list []int64, err error)
 	ChatMemberList(w *entity.MysqlWhere) (list []*do.ChatMemberInfo, err error)
 	ChatMemberSetting(w *entity.MysqlWhere) (member *po.ChatMember, err error)
@@ -31,6 +32,11 @@ func NewChatMemberRepository() ChatMemberRepository {
 
 func (r *chatMemberRepository) TxCreate(tx *gorm.DB, chatMember *po.ChatMember) (err error) {
 	err = tx.Create(chatMember).Error
+	return
+}
+
+func (r *chatMemberRepository) TxCreateMultiple(tx *gorm.DB, users []*po.ChatMember) (err error) {
+	err = tx.Create(users).Error
 	return
 }
 
