@@ -79,6 +79,7 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 		ChatId:          chat.ChatId,
 		ChatType:        chat.ChatType,
 		Uid:             creator.Uid,
+		RoleId:          1, // 超级管理员
 		DisplayName:     creator.Nickname,
 		MemberAvatarKey: creator.AvatarKey,
 		ChatAvatarKey:   chat.AvatarKey,
@@ -94,8 +95,8 @@ func (s *chatService) NewGroupChat(ctx context.Context, req *pb_chat.NewGroupCha
 	}
 
 	// 5 缓存成员信息
-	pushKey = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(member.ChatId) + ":" + utils.Int64ToStr(member.Uid)
-	err = xredis.HSet(pushKey, fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute))
+	pushKey = constant.RK_SYNC_CHAT_MEMBERS_PUSH_MEMBER_HASH + utils.Int64ToStr(member.ChatId)
+	err = xredis.HSetNX(pushKey, utils.Int64ToStr(member.Uid), fmt.Sprintf("%d,%d,%d,%d", member.Uid, member.Platform, member.ServerId, member.Mute))
 	if err != nil {
 		setNewGroupChatResp(resp, ERROR_CODE_CHAT_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_CACHE_CHAT_MEMBER_FAILED)
 		xlog.Warn(ERROR_CODE_CHAT_CACHE_CHAT_MEMBER_FAILED, ERROR_CHAT_CACHE_CHAT_MEMBER_FAILED, err.Error())

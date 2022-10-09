@@ -3,6 +3,7 @@ CREATE TABLE `chat_members` (
   `chat_id` bigint unsigned NOT NULL COMMENT 'chat ID',
   `chat_type` tinyint(1) unsigned NOT NULL COMMENT 'chat type 1:私聊/2:群聊',
   `uid` bigint unsigned NOT NULL COMMENT '用户ID',
+  `role_id` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '角色ID',
   `mute` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否开启免打扰',
   `display_name` VARCHAR(64) NOT NULL COMMENT '显示名称',
   `member_avatar_key` varchar(50) NOT NULL COMMENT 'member头像 72*72',
